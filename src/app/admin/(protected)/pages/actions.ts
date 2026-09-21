@@ -87,6 +87,7 @@ export async function updatePageAction(
 
   await logAction({ userId: user.id, action: "UPDATE", entity: "Page", entityId: id });
   revalidatePublicPages();
+  revalidatePath(`/${validated.data.slug}`);
   redirect("/admin/pages");
 }
 
@@ -97,7 +98,7 @@ export async function setPageStatusAction(id: string, status: ContentStatus) {
     throw new Error("You do not have permission to change this page's status.");
   }
 
-  await pageService.setPageStatus(id, status, user.id);
+  const updated = await pageService.setPageStatus(id, status, user.id);
   await logAction({
     userId: user.id,
     action: status === "PUBLISHED" ? "PUBLISH" : status === "ARCHIVED" ? "ARCHIVE" : "UNPUBLISH",
@@ -106,6 +107,7 @@ export async function setPageStatusAction(id: string, status: ContentStatus) {
   });
   revalidatePublicPages();
   revalidatePath("/admin/pages");
+  if (updated) revalidatePath(`/${updated.slug}`);
 }
 
 export async function deletePageAction(id: string) {
@@ -114,8 +116,9 @@ export async function deletePageAction(id: string) {
     throw new Error("You do not have permission to delete pages.");
   }
 
-  await pageService.deletePage(id);
+  const deleted = await pageService.deletePage(id);
   await logAction({ userId: user.id, action: "DELETE", entity: "Page", entityId: id });
   revalidatePublicPages();
+  if (deleted) revalidatePath(`/${deleted.slug}`);
   redirect("/admin/pages");
 }

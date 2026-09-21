@@ -1,7 +1,7 @@
 import "server-only";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Page, type PageDocument } from "@/models/Page";
-import { getPagination, totalPages } from "@/lib/utils";
+import { getPagination, totalPages, startOfMonth } from "@/lib/utils";
 import type { ContentStatus } from "@/lib/constants";
 import type { PageInput } from "@/validations/page.schema";
 
@@ -12,10 +12,17 @@ export type PageListItem = Pick<
 
 // --- Admin queries: any status, paginated, no public/DRAFT filtering ---
 
-export async function listPagesAdmin(params: { page?: string | number; limit?: string | number; status?: ContentStatus }) {
+export async function listPagesAdmin(params: {
+  page?: string | number;
+  limit?: string | number;
+  status?: ContentStatus;
+  search?: string;
+}) {
   await connectToDatabase();
   const { page, limit, skip } = getPagination(params);
-  const filter = params.status ? { status: params.status } : {};
+  const filter: Record<string, unknown> = {};
+  if (params.status) filter.status = params.status;
+  if (params.search) filter.title = { $regex: params.search, $options: "i" };
 
   const [items, count] = await Promise.all([
     Page.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit).lean(),
@@ -40,11 +47,14 @@ export async function listPagesAdmin(params: { page?: string | number; limit?: s
 
 export async function getPageStats() {
   await connectToDatabase();
-  const [published, draft] = await Promise.all([
+  const since = startOfMonth();
+  const [published, draft, publishedThisMonth, draftThisMonth] = await Promise.all([
     Page.countDocuments({ status: "PUBLISHED" }),
     Page.countDocuments({ status: "DRAFT" }),
+    Page.countDocuments({ status: "PUBLISHED", createdAt: { $gte: since } }),
+    Page.countDocuments({ status: "DRAFT", createdAt: { $gte: since } }),
   ]);
-  return { published, draft };
+  return { published, draft, publishedThisMonth, draftThisMonth };
 }
 
 export async function getPageByIdAdmin(id: string) {
