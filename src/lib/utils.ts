@@ -1,5 +1,12 @@
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
 
+type ClassValue = string | false | null | undefined;
+
+/** Minimal class joiner — the public site has no need for a full clsx dependency. */
+export function cn(...values: ClassValue[]): string {
+  return values.filter(Boolean).join(" ");
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()

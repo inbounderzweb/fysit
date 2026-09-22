@@ -1,17 +1,8 @@
 import type { Resource } from "@/lib/permissions";
 
-export type NavItem = { label: string; href: string };
-
-export const publicNavigation: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Projects", href: "/projects" },
-  { label: "Industries", href: "/industries" },
-  { label: "Blog", href: "/blog" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact", href: "/contact" },
-];
+// Public-site navigation lives in the design itself (components/layout/Header.tsx,
+// NAV_ITEMS in @/lib/content) — the site is a single scrolling page with anchor
+// links, not a set of separate routes, so there is no public nav config here.
 
 export type AdminNavItem = { label: string; href: string; resource: Resource };
 
