@@ -28,11 +28,11 @@ export const SITE = {
 } as const;
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/", hasDropdown: true },
-  { label: "Pages", href: "#pages", hasDropdown: true },
-  { label: "Services", href: "#services", hasDropdown: true },
-  { label: "Case Studies", href: "#case-studies", hasDropdown: true },
-  { label: "Blogs", href: "#blog", hasDropdown: true },
+  { label: "Home", href: "/", hasDropdown: false },
+  { label: "About", href: "/about", hasDropdown: false },
+  { label: "Services", href: "#services", hasDropdown: false },
+  { label: "Case Studies", href: "#case-studies", hasDropdown: false },
+  { label: "Blogs", href: "/blog", hasDropdown: false },
   { label: "Contact", href: "#contact" },
 ];
 

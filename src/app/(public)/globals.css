@@ -173,3 +173,229 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Blog post body — the stored Tiptap HTML, styled to the reference theme's
+   single-post typography rather than through a prose plugin, so the pieces
+   the editor actually emits (headings, lists, images, blockquotes, tables)
+   are the ones that carry brand values.
+--------------------------------------------------------------------------- */
+@layer components {
+  .blog-prose {
+    color: var(--color-body);
+    font-size: 16px;
+    line-height: 26px;
+  }
+
+  .blog-prose > :first-child {
+    margin-top: 0;
+  }
+
+  .blog-prose > :last-child {
+    margin-bottom: 0;
+  }
+
+  .blog-prose p,
+  .blog-prose ul,
+  .blog-prose ol,
+  .blog-prose table,
+  .blog-prose pre {
+    margin-bottom: 20px;
+  }
+
+  .blog-prose h1,
+  .blog-prose h2,
+  .blog-prose h3,
+  .blog-prose h4,
+  .blog-prose h5,
+  .blog-prose h6 {
+    color: var(--color-navy);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+
+  /* Reference h2–h6 scale, one step down on small screens. */
+  .blog-prose h1,
+  .blog-prose h2 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.25;
+  }
+
+  .blog-prose h3 {
+    font-size: clamp(1.5rem, 2.4vw, 2.125rem); /* → 34px */
+    line-height: 1.29;
+  }
+
+  .blog-prose h4 {
+    font-size: clamp(1.375rem, 2vw, 1.75rem); /* → 28px */
+    line-height: 1.36;
+  }
+
+  .blog-prose h5 {
+    font-size: 1.5rem;
+    line-height: 1.42;
+  }
+
+  .blog-prose h6 {
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .blog-prose a {
+    color: var(--color-teal-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .blog-prose a:hover {
+    color: var(--color-teal);
+  }
+
+  .blog-prose strong {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+
+  .blog-prose ul,
+  .blog-prose ol {
+    padding-left: 1.25rem;
+  }
+
+  .blog-prose ul {
+    list-style: disc;
+  }
+
+  .blog-prose ol {
+    list-style: decimal;
+  }
+
+  .blog-prose li {
+    margin-bottom: 10px;
+  }
+
+  .blog-prose li::marker {
+    color: var(--color-teal);
+  }
+
+  .blog-prose img {
+    border-radius: 20px;
+    display: block;
+    height: auto;
+    margin: 30px 0;
+    max-width: 100%;
+  }
+
+  .blog-prose figure {
+    margin: 30px 0;
+  }
+
+  .blog-prose figcaption {
+    font-size: 14px;
+    line-height: 22px;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* The reference pull-quote: mint card, teal rule, oversized closing mark. */
+  .blog-prose blockquote {
+    background: var(--color-mint);
+    border-left: 2px solid var(--color-teal);
+    border-radius: 20px;
+    color: var(--color-navy);
+    font-size: 18px;
+    line-height: 28px;
+    margin: 30px 0;
+    overflow: hidden;
+    padding: 30px;
+    position: relative;
+  }
+
+  .blog-prose blockquote::after {
+    bottom: -10px;
+    color: var(--color-teal);
+    content: "\201D";
+    font-family: var(--font-display);
+    font-size: 100px;
+    line-height: 1;
+    opacity: 0.25;
+    pointer-events: none;
+    position: absolute;
+    right: 24px;
+  }
+
+  .blog-prose blockquote p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Tiptap stores the attribution as a trailing inline element. */
+  .blog-prose blockquote cite,
+  .blog-prose blockquote > span {
+    display: block;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    margin-top: 20px;
+    text-decoration: underline;
+    text-transform: uppercase;
+  }
+
+  .blog-prose hr {
+    border-color: var(--color-rule);
+    margin: 40px 0;
+  }
+
+  /* `display: block` lets a table wider than the column scroll inside
+     itself instead of widening the page; the rows still get an anonymous
+     table box, so the layout holds. */
+  .blog-prose table {
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .blog-prose th,
+  .blog-prose td {
+    border: 1px solid var(--color-rule);
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  .blog-prose th {
+    background: var(--color-surface);
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+
+  .blog-prose code {
+    background: var(--color-surface);
+    border-radius: 4px;
+    color: var(--color-teal-dark);
+    font-size: 0.9em;
+    padding: 2px 6px;
+  }
+
+  .blog-prose pre {
+    background: var(--color-navy);
+    border-radius: 12px;
+    color: #fff;
+    overflow-x: auto;
+    padding: 20px;
+  }
+
+  .blog-prose pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .blog-prose blockquote {
+      font-size: 20px;
+      line-height: 30px;
+      padding: 40px 140px 40px 40px;
+    }
+  }
+}
