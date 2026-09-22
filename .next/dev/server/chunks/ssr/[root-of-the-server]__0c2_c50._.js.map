@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///Users/macbook15/Desktop/SD2025/inbounderz/fysit/be-thefysit/src/app/(public)/page.tsx"],"sourcesContent":["import { siteConfig } from \"@/config/site\";\n\nexport default function HomePage() {\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <h1 className=\"text-3xl font-semibold\">{siteConfig.name}</h1>\n      <p className=\"text-neutral-600\">{siteConfig.tagline}</p>\n      <p className=\"text-sm text-neutral-500\">\n        This is a placeholder homepage. Real content is managed through the admin CMS.\n      </p>\n    </div>\n  );\n}\n"],"names":["HomePage","className","name","tagline"],"mappings":";;;;;AAAA;;;AAEe,SAASA;IACtB,qBACE,8OAAC;QAAIC,WAAU;;0BACb,8OAAC;gBAAGA,WAAU;0BAA0B,mIAAU,CAACC,IAAI;;;;;;0BACvD,8OAAC;gBAAED,WAAU;0BAAoB,mIAAU,CAACE,OAAO;;;;;;0BACnD,8OAAC;gBAAEF,WAAU;0BAA2B;;;;;;;;;;;;AAK9C"}},
-    {"offset": {"line": 64, "column": 0}, "map": {"version":3,"sources":["file:///Users/macbook15/Desktop/SD2025/inbounderz/fysit/be-thefysit/src/app/favicon.ico.mjs%20(structured%20image%20object)"],"sourcesContent":["import src from \"IMAGE\";\nexport default { src, width: 256, height: 256 }\n"],"names":["src","width","height"],"mappings":";;;;AAAA;;uCACe;IAAEA,KAAAA,0IAAG;IAAEC,OAAO;IAAKC,QAAQ;AAAI"}}]
-}

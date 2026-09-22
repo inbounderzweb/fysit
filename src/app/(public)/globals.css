@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — extracted verbatim from the Figma frame "1920w light".
+   The file defines no Figma variables, so raw values are tokenised here.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: var(--font-mona-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Playfair Display Italic is the accent face inside headings (Figma 1:106) */
+  --font-display: var(--font-playfair), ui-serif, Georgia, serif;
+
+  /* Brand */
+  --color-teal: #43C2D1;
+  --color-teal-dark: #128296;
+  --color-navy: #0f1e4c;
+  --color-ink: #001a1e;
+
+  /* Neutrals */
+  --color-body: #444444;
+  --color-line: #cdcdcd;
+  --color-rule: #dcdcdc;
+  --color-surface: #f5f7fa;
+  /* Sampled from the Figma render: case-studies band, dark banner, footer */
+  --color-mint: #f0f4f0;
+  --color-banner: #222235;
+  --color-footer: #04102c;
+
+  /* Glass — header pill / hero badge */
+  --color-glass: rgb(255 255 255 / 0.05);
+  --color-glass-border: rgb(255 255 255 / 0.06);
+
+  /* Radii */
+  --radius-btn: 8px;
+  --radius-square: 5px;
+  --radius-card: 12px;
+  --radius-slider: 14px;
+
+  /* Elevation */
+  --shadow-glass: 0 10px 35px 0 rgb(0 0 0 / 0.1);
+  --shadow-slider: 0 20px 8.75px rgb(8 29 82 / 0.13);
+  --shadow-card: 0 18px 50px -20px rgb(8 29 82 / 0.16);
+
+  /* Layout — 1920 frame: body inset 300/310 → 1320/1300 content */
+  --container-wide: 1320px;
+  --container-narrow: 1300px;
+
+  /* Motion */
+  --animate-marquee: marquee 60s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 60s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #fff;
+    color: var(--color-navy);
+    font-family: var(--font-sans);
+    /* Figma: every text node carries fontVariationSettings "wdth" 100 */
+    font-variation-settings: "wdth" 100;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  /* Marquee word with the teal → navy gradient fill (Figma node 1:143) */
+  .text-gradient-brand {
+    background-image: linear-gradient(
+      to right,
+      var(--color-teal),
+      var(--color-navy)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .fluid-display {
+    font-size: clamp(2.5rem, 5.21vw, 6.25rem); /* → 100px @ 1920 */
+    line-height: 1.1; /* 110/100 */
+    letter-spacing: -0.05em; /* -5px @ 100px */
+  }
+
+  /* Figma 1:104 — 60px / 70 line-height / -3px tracking */
+  .fluid-heading {
+    font-size: clamp(2rem, 3.125vw, 3.75rem);
+    line-height: 1.1667;
+    letter-spacing: -0.05em;
+  }
+
+  /* Figma 1:417 / 1:444 — the oversized band headings (~120px, 155px leading) */
+  .fluid-heading-xl {
+    font-size: clamp(2.75rem, 6.25vw, 7.5rem);
+    line-height: 1.29;
+    letter-spacing: -0.05em;
+  }
+
+  /* Figma 1:127 — 250px / -12.5px tracking, image-filled */
+  .fluid-stat {
+    font-size: clamp(6rem, 13vw, 15.625rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  .fluid-marquee {
+    font-size: clamp(3.25rem, 10.42vw, 12.5rem); /* → 200px @ 1920 */
+    line-height: 1;
+  }
+
+  /* The accent clause inside a heading: Playfair Display Italic, teal */
+  .heading-accent {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-teal);
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — marquees hold still, reveals resolve to their end state.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
