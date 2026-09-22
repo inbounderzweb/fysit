@@ -1,15 +1,8 @@
 import type { Resource } from "@/lib/permissions";
 
-export type NavItem = { label: string; href: string };
-
-// Only routes that actually exist. Add an item back once its public page
-// ships (e.g. Services/Projects once they get a public route, About once
-// a "about" CMS Page is published and linked here).
-export const publicNavigation: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
-];
+// Public-site navigation lives in the design itself (components/layout/Header.tsx,
+// NAV_ITEMS in @/lib/content) — the site is a single scrolling page with anchor
+// links, not a set of separate routes, so there is no public nav config here.
 
 export type AdminNavItem = { label: string; href: string; resource: Resource };
 
