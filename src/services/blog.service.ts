@@ -1,5 +1,6 @@
 import "server-only";
 import "@/models/Media";
+import "@/models/User";
 import type { Types } from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import { BlogPost, type BlogPostDocument } from "@/models/BlogPost";
