@@ -10,7 +10,7 @@ export async function getSiteSettings() {
   if (settings) return settings;
 
   // No settings document yet — fall back to the build-time config so the
-  // form has sensible starting values instead of appearing empty.
+  // form has sensible starting values instead of appearing emptyttt.
   return {
     siteName: siteConfig.name,
     tagline: siteConfig.tagline,
