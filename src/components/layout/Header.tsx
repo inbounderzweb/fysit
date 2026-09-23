@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { MobileNav } from "@/components/layout/MobileNav";
@@ -41,6 +42,7 @@ function useStuck(threshold = 200) {
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const stuck = useStuck();
+  const pathname = usePathname();
 
   return (
     <>
@@ -75,8 +77,15 @@ export function Header() {
                 : "border-white/[0.06] bg-white/[0.05]",
             )}
           >
-            {NAV_ITEMS.map((item, index) => {
-              const isActive = index === 0;
+            {NAV_ITEMS.map((item) => {
+              // Hash links (#services, #contact, …) point at sections on
+              // the home page and never match a route of their own; only an
+              // absolute path (/, /blog, /about) can be "current".
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : item.href.startsWith("/") &&
+                    (pathname === item.href || pathname.startsWith(`${item.href}/`));
               // Navy on light once stuck, whether active or not; white on
               // the dark hero overlay otherwise (active keeps its white pill).
               const isDark = isActive || stuck;

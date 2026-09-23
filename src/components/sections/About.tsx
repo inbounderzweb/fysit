@@ -109,7 +109,7 @@ export function About() {
                   [0, 1, 2].map((index) => (
                     <Image
                       key={index}
-                      src={`/images/avatar-0${index + 1}.png`}
+                      src={`/images/doctor-0${index + 1}.jpg`}
                       alt=""
                       width={55}
                       height={55}

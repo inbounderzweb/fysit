@@ -10,8 +10,16 @@
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@tiptap/extension-image": "^3.31.3",
+    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/extension-text-align": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
+    "file-type": "^22.1.1",
+    "image-size": "^2.0.4",
     "jose": "^6.2.12",
     "mongoose": "^9.10.1",
     "motion": "^13.4.0",
@@ -23,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

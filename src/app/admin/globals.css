@@ -1,4 +1,12 @@
 @import "tailwindcss";
+/*
+ * Bare-specifier resolution (`@plugin "@tailwindcss/typography"`) fails under
+ * Turbopack for this package: it ships only a "main" field, no "exports" map,
+ * and Turbopack's CSS-level plugin resolver (unlike Node's require.resolve)
+ * doesn't fall back to "main" for bare specifiers. A relative path bypasses
+ * that resolver entirely, so it works regardless.
+ */
+@plugin "../../../node_modules/@tailwindcss/typography";
 
 :root {
   --background: #ffffff;

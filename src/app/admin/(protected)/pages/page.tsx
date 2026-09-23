@@ -40,7 +40,7 @@ export default async function PagesListPage({
         )}
       </div>
 
-      <div className="overflow-hidden rounded border border-neutral-200 bg-white">
+      <div className="overflow-x-auto rounded border border-neutral-200 bg-white">
         <table className="w-full text-left text-sm">
           <thead className="bg-neutral-50 text-neutral-500">
             <tr>

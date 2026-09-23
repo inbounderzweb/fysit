@@ -29,7 +29,7 @@ export async function uploadToCloudinary(
   const result = await new Promise<import("cloudinary").UploadApiResponse>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: `website/${options.folder}`,
+        folder: `fysit/${options.folder}`,
         public_id: options.filename,
         resource_type: "auto",
       },

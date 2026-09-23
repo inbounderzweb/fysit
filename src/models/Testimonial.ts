@@ -7,14 +7,15 @@ const testimonialSchema = new Schema(
     authorRole: { type: String, trim: true },
     company: { type: String, trim: true },
     quote: { type: String, required: true },
-    avatar: { type: String, trim: true },
+    image: { type: Schema.Types.ObjectId, ref: "Media" },
     rating: { type: Number, min: 1, max: 5 },
+    displayOrder: { type: Number, default: 0 },
     status: { type: String, enum: CONTENT_STATUSES, required: true, default: "DRAFT" },
   },
   { timestamps: true }
 );
 
-testimonialSchema.index({ status: 1 });
+testimonialSchema.index({ status: 1, displayOrder: 1 });
 
 export type TestimonialDocument = InferSchemaType<typeof testimonialSchema>;
 

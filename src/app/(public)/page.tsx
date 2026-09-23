@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { siteConfig } from "@/config/site";
+import { buildMetadata } from "@/lib/seo";
 import { About } from "@/components/sections/About";
 import { Appointment } from "@/components/sections/Appointment";
 import { Blog } from "@/components/sections/Blog";
@@ -12,10 +15,33 @@ import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY } from "@/lib/content";
 
+export const metadata: Metadata = buildMetadata(
+  { canonical: siteConfig.url },
+  { title: siteConfig.name, description: siteConfig.description }
+);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+  },
+];
+
 /** Section order follows the Figma frame "1920w light" top to bottom. */
 export default function HomePage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <Hero />
       <About />
       <MarqueeBand words={MARQUEE_PRIMARY} />
