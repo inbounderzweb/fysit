@@ -29,7 +29,7 @@ export function Footer() {
       <div className="relative mx-auto w-full max-w-[1300px] px-5 pt-[70px] sm:px-8 lg:pt-[120px]">
         <div className="grid gap-[50px] lg:grid-cols-[361fr_207fr_207fr_414fr]">
           {/* Clinic card */}
-          <div className="rounded-[10px] bg-white/[0.04] p-[30px] backdrop-blur-sm">
+          <div className="rounded-[10px] bg-white p-[30px] backdrop-blur-sm">
             <Image
               src="/icons/logo.svg"
               alt={`${SITE.name} — Wellness Simplified`}
@@ -37,7 +37,7 @@ export function Footer() {
               height={66}
               className="h-[52px] w-auto"
             />
-            <p className="mt-[21px] text-[16px] leading-[24px] text-white/70">
+            <p className="mt-[21px] text-[16px] leading-[24px] text-black">
               {FOOTER.blurb}
             </p>
             <dl className="mt-[22px] text-[16px]">
@@ -46,12 +46,12 @@ export function Footer() {
                   key={hour.label}
                   className={`flex items-center justify-between py-[8px] ${
                     index < OPENING_HOURS.length - 1
-                      ? "border-b border-white/[0.14]"
+                      ? "border-b border-black/30"
                       : ""
                   }`}
                 >
-                  <dt className="leading-[26px] text-white/70">{hour.label}</dt>
-                  <dd className="font-medium leading-[26px]">{hour.value}</dd>
+                  <dt className="leading-[26px] text-black">{hour.label}</dt>
+                  <dd className="font-medium leading-[26px] text-black">{hour.value}</dd>
                 </div>
               ))}
             </dl>
@@ -151,7 +151,7 @@ export function Footer() {
           {FOOTER.marquee.map((word) => (
             <span key={word} className="flex shrink-0 items-center">
               <span
-                className="whitespace-nowrap text-[clamp(2.5rem,4.7vw,5.625rem)] leading-[1.1] text-transparent"
+                className="whitespace-nowrap text-[clamp(2.5rem,4.7vw,5.625rem)] leading-[1.1] uppercase"
                 style={{ WebkitTextStroke: "1px rgba(255,255,255,0.35)" }}
               >
                 {word}
@@ -161,7 +161,7 @@ export function Footer() {
                 alt=""
                 width={50}
                 height={50}
-                className="mx-[42px] size-[clamp(24px,2.6vw,50px)] shrink-0 opacity-40 brightness-0 invert"
+                className="mx-[42px] size-[clamp(24px,2.6vw,50px)] shrink-0  invert"
                 unoptimized
               />
             </span>
