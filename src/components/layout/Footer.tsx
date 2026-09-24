@@ -145,7 +145,7 @@ export function Footer() {
         </ul>
       </div>
 
-      {/* Outlined department marquee — Figma 1:705 */}
+      {/* Outlined department marquee — Figma 1:70 */}
       <div className="relative mt-[60px]" aria-hidden>
         <Marquee speed={47}>
           {FOOTER.marquee.map((word) => (
