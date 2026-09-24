@@ -26,7 +26,7 @@ export function ServiceSlideCard({ service, className }: ServiceSlideCardProps) 
           width={300}
           height={300}
           sizes="(max-width: 640px) 80vw, 300px"
-          className="aspect-square w-full shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+          className="aspect-square w-full shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05] rounded-2xl "
         />
 
         <div className="flex flex-1 flex-col px-[30px] pb-[28px] pt-[26px]">
