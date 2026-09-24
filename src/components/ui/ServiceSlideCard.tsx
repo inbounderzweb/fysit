@@ -23,21 +23,21 @@ export function ServiceSlideCard({ service, className }: ServiceSlideCardProps) 
         <Image
           src={service.image}
           alt={service.title}
-          width={300}
-          height={300}
-          sizes="(max-width: 640px) 80vw, 300px"
+          width={340}
+          height={340}
+          sizes="(max-width: 640px) 82vw, 340px"
           className="aspect-square w-full shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05] rounded-2xl "
         />
 
-        <div className="flex flex-1 flex-col px-[30px] pb-[28px] pt-[26px]">
-          <h3 className="text-[20px] leading-[28px] tracking-[-0.8px] text-navy">
+        <div className="flex flex-1 flex-col px-[34px] pb-[72px] pt-[30px]">
+          <h3 className="text-[25px] leading-[31px] tracking-[-0.9px] text-navy">
             <Link href={service.href} className="transition-colors hover:text-sky">
               {service.title}
             </Link>
           </h3>
           {/* The extra right padding keeps the clamped second line clear of
-              the pocket, which reaches 52px in from the card's right edge. */}
-          <p className="mt-[9px] line-clamp-2 pr-[26px] text-[15px] leading-[24px] text-body">
+              the pocket, which reaches 57px in from the card's right edge. */}
+          <p className="mt-[10px] line-clamp-2 pr-[30px] text-[16px] leading-[26px] text-body">
             {service.description}
           </p>
         </div>
@@ -47,15 +47,15 @@ export function ServiceSlideCard({ service, className }: ServiceSlideCardProps) 
         href={service.href}
         aria-label={`Learn more about ${service.title}`}
         className={cn(
-          "absolute bottom-0 right-0 grid size-[36px] place-items-center rounded-[14px]",
+          "absolute bottom-0 right-0 grid size-[45px] place-items-center rounded-[16px]",
           "bg-navy transition-colors duration-300 group-hover:bg-sky",
         )}
       >
         <Image
           src="/icons/arrow-up-right.svg"
           alt=""
-          width={15}
-          height={14}
+          width={17}
+          height={16}
           className="-rotate-45 brightness-0 invert transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
           unoptimized
         />

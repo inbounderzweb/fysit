@@ -176,18 +176,19 @@
 
   /*
     The physiotherapy card's bottom-right pocket, which its arrow button nests
-    into: a 52px bite (36px button + 16px clearance) whose inner corner is
-    rounded to 30px and whose junctions with the card's edges are eased by two
-    28px fillets — all measured off the reference render.
+    into: a 57px bite (40px button + 17px clearance) whose inner corner is
+    rounded to 33px and whose junctions with the card's edges are eased by two
+    31px fillets — the reference render's proportions, scaled with the card.
 
     Built as three additive mask layers: two bands covering the body, plus a
-    fixed 80 × 80 corner tile holding the curve. The tile keeps its exact shape
+    fixed 88 × 88 corner tile holding the curve. Its viewBox stays 80 units, so
+    resizing the tile alone rescales the whole bite. The tile keeps its shape
     at any card height, which one SVG stretched over the whole card would not.
     A box-shadow would be clipped by the mask, so these cards carry none —
     matching the reference, which has none either.
   */
   .card-pocket {
-    --pocket-tile: 80px;
+    --pocket-tile: 88px;
     -webkit-mask-image:
       linear-gradient(#fff, #fff), linear-gradient(#fff, #fff),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M0 0H80A28 28 0 0 1 52 28A30 30 0 0 0 28 52A28 28 0 0 1 0 80Z' fill='%23fff'/%3E%3C/svg%3E");
