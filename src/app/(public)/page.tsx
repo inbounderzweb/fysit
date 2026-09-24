@@ -10,6 +10,8 @@ import { DepartmentStrip } from "@/components/sections/DepartmentStrip";
 import { FeatureBand } from "@/components/sections/FeatureBand";
 import { Hero } from "@/components/sections/Hero";
 import { MarqueeBand } from "@/components/sections/MarqueeBand";
+import { PhysioHighlights } from "@/components/sections/PhysioHighlights";
+import { PhysioServices } from "@/components/sections/PhysioServices";
 import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -43,9 +45,12 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <Hero />
+      {/* <PhysioHighlights /> */}
       <About />
       <MarqueeBand words={MARQUEE_PRIMARY} />
-      <Services />
+      <PhysioHighlights />
+      {/* <Services /> */}
+      <PhysioServices />
       <DarkBanner />
       <DepartmentStrip />
       <Team />

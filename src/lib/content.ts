@@ -6,6 +6,7 @@ import type {
   MarqueeWord,
   NavItem,
   OpeningHour,
+  PhysioService,
   Service,
   Testimonial,
 } from "./types";
@@ -181,6 +182,69 @@ export const SERVICES: Service[] = [
       "It recognizes that health is influenced by a combination of physical, emotional, mental, social, and spiritual factors.",
     icon: "/icons/service-holistic.svg",
     hoverImage: "/images/service-bg-09.jpg",
+    href: "#services",
+  },
+];
+
+/* -------------------------------------------------------------------------
+   Physiotherapy Services carousel — a snap-scrolling slider of treatment
+   cards on a mint band, separate from the icon-tile `SERVICES` grid above.
+   Its accent colour is a one-off sky blue (`--color-sky`), not the site's
+   teal — sampled directly from the reference render.
+------------------------------------------------------------------------- */
+export const PHYSIO_SERVICES_HEADING = {
+  eyebrow: "Physiotherapy Services",
+  lead: "Effective, Hands-On Treatment",
+  accent: "Physiotherapy Solutions",
+} as const;
+
+export const PHYSIO_SERVICES: PhysioService[] = [
+  {
+    id: "manual-therapy",
+    title: "Manual Therapy",
+    description:
+      "Hands-on techniques to relieve tension, improve joint mobility, and reduce pain.",
+    image: "/images/service-slide-manual-therapy.jpg",
+    href: "#services",
+  },
+  {
+    id: "exercise-therapy",
+    title: "Exercise Therapy",
+    description:
+      "Customized strengthening and mobility programs for long-term recovery and improved function.",
+    image: "/images/service-slide-exercise-therapy.jpg",
+    href: "#services",
+  },
+  {
+    id: "sports-injury-rehab",
+    title: "Sports Injury Rehab",
+    description:
+      "Treatment for sprains, strains, tendonitis, and other athletic injuries.",
+    image: "/images/service-slide-sports-injury.jpg",
+    href: "#services",
+  },
+  {
+    id: "knee-pain-arthritis",
+    title: "Knee Pain & Arthritis",
+    description:
+      "Treatment for chronic knee pain, osteoarthritis, patellofemoral syndrome, and joint stiffness.",
+    image: "/images/service-slide-knee-pain.jpg",
+    href: "#services",
+  },
+  {
+    id: "back-neck-pain",
+    title: "Back & Neck Pain",
+    description:
+      "Relief for common issues like lower back pain, sciatica, and neck stiffness.",
+    image: "/images/service-slide-back-neck.jpg",
+    href: "#services",
+  },
+  {
+    id: "foot-ankle-therapy",
+    title: "Foot & Ankle Therapy",
+    description:
+      "Care for plantar fasciitis, Achilles tendinopathy, ankle sprains, and post-injury recovery.",
+    image: "/images/service-slide-foot-ankle.jpg",
     href: "#services",
   },
 ];

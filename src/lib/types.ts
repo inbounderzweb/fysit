@@ -31,6 +31,15 @@ export type Service = {
   href: string;
 };
 
+/** A single slide in the "Physiotherapy Services" carousel. */
+export type PhysioService = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  href: string;
+};
+
 export type Doctor = {
   id: string;
   name: string;

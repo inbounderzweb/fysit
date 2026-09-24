@@ -12,6 +12,8 @@ type SectionHeadingProps = {
   as?: "h1" | "h2" | "h3";
   className?: string;
   id?: string;
+  /** Overrides the accent clause's colour — every heading is teal (Figma default) unless a section calls for something else. */
+  accentClassName?: string;
 };
 
 export function SectionHeading({
@@ -20,10 +22,11 @@ export function SectionHeading({
   as: Tag = "h2",
   className,
   id,
+  accentClassName,
 }: SectionHeadingProps) {
   return (
     <Tag id={id} className={cn("fluid-heading font-normal text-navy", className)}>
-      {lead} <span className="heading-accent">{accent}</span>
+      {lead} <span className={cn("heading-accent", accentClassName)}>{accent}</span>
     </Tag>
   );
 }
