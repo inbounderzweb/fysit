@@ -45,10 +45,11 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <Hero />
-      <PhysioHighlights />
+      {/* <PhysioHighlights /> */}
       <About />
       <MarqueeBand words={MARQUEE_PRIMARY} />
-      <Services />
+      <PhysioHighlights />
+      {/* <Services /> */}
       <PhysioServices />
       <DarkBanner />
       <DepartmentStrip />
