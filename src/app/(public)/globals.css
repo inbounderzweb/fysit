@@ -50,6 +50,7 @@
   /* Motion */
   --animate-marquee: marquee 60s linear infinite;
   --animate-marquee-reverse: marquee-reverse 60s linear infinite;
+  --animate-heading-spin: heading-spin 16s linear infinite;
 }
 
 @keyframes marquee {
@@ -67,6 +68,21 @@
   }
   to {
     transform: translate3d(0, 0, 0);
+  }
+}
+
+/*
+  The band heading's cross turns on the spot. Deliberately `transform` and not
+  the `rotate` property: the element's own `rotate` holds the reference's -64°
+  tilt, and the two compose, so when the reduced-motion rule below collapses
+  this animation the icon settles back onto that tilt rather than upright.
+*/
+@keyframes heading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
