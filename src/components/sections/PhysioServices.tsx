@@ -34,7 +34,7 @@ export function PhysioServices() {
             lead={PHYSIO_SERVICES_HEADING.lead}
             accent={PHYSIO_SERVICES_HEADING.accent}
             accentClassName="!text-sky"
-            className="mt-[10px] max-w-[715px] text-center"
+            className="mt-[10px] max-w-[810px] text-center !text-[clamp(2.25rem,3.6vw,4.25rem)]"
           />
         </Reveal>
       </Container>
@@ -62,7 +62,7 @@ export function PhysioServices() {
               <li
                 key={isLoopCopy ? `${service.id}-loop` : service.id}
                 inert={isLoopCopy}
-                className="w-[78vw] max-w-[300px] shrink-0 snap-start sm:w-[300px]"
+                className="w-[82vw] max-w-[340px] shrink-0 snap-start sm:w-[340px]"
               >
                 <ServiceSlideCard service={service} className="h-full" />
               </li>
