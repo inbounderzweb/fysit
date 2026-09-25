@@ -2,6 +2,7 @@ import type {
   BlogPost,
   CaseStudy,
   Doctor,
+  HeroBanner,
   HeroSlide,
   MarqueeWord,
   NavItem,
@@ -41,6 +42,18 @@ export const NAV_ITEMS: NavItem[] = [
    Hero — Figma 1:3. Four stacked groups make up a two-slide slider; the
    hidden duplicates differ only by background image and CTA label.
 ------------------------------------------------------------------------- */
+export const HERO_BANNER: HeroBanner = {
+  video: "/videos/hero-banner.webm",
+  heading: "Your Trusted Partner Health and Wellness",
+  cta: { label: "Schedule a Checkup", href: "#appointment" },
+  word: "Physiotherapy",
+  stats: [
+    { value: 20, suffix: "+", label: "Years of Excellence" },
+    { value: 15000, suffix: "+", label: "Successful Treatments" },
+  ],
+  body: "Hands-on physiotherapy and rehabilitation from clinicians who listen — a plan built around your body, your pace and your goals.",
+};
+
 const HERO_CARD_BODY =
   "Our experienced medical team combines the latest technology with personalized attention to provide you with exceptional healthcare tailored to your unique needs.";
 

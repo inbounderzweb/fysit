@@ -5,6 +5,17 @@ export type NavItem = {
   hasDropdown?: boolean;
 };
 
+/** The video banner at the top of the home page. */
+export type HeroBanner = {
+  video: string;
+  heading: string;
+  cta: { label: string; href: string };
+  /** The oversized word set across the banner's middle. */
+  word: string;
+  stats: { value: number; suffix: string; label: string }[];
+  body: string;
+};
+
 export type HeroSlide = {
   id: string;
   image: string;
