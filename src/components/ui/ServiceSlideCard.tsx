@@ -48,7 +48,7 @@ export function ServiceSlideCard({ service, className }: ServiceSlideCardProps) 
         aria-label={`Learn more about ${service.title}`}
         className={cn(
           "absolute bottom-0 right-0 grid size-[45px] place-items-center rounded-[16px]",
-          "bg-navy transition-colors duration-300 group-hover:bg-sky",
+          "bg-[#7170B1] transition-colors duration-300 group-hover:bg-sky",
         )}
       >
         <Image

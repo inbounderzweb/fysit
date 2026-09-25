@@ -58,7 +58,7 @@ export function About() {
                 <ConcaveCorner className="absolute -left-[30px] bottom-[83.81px] hidden size-[30px] sm:block" />
                 <ConcaveCorner className="absolute -bottom-[30px] right-0 hidden size-[30px] rotate-180 sm:block" />
 
-                <div className="sm:rounded-[30px] sm:bg-teal sm:p-[30px]">
+                <div className="sm:rounded-[30px] sm:bg-[#7170B1] sm:p-[30px]">
                   <h3 className="text-[24px] leading-[34px] tracking-[-0.48px]">
                     {OPENING_HOURS_TITLE}
                   </h3>

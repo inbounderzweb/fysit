@@ -33,7 +33,7 @@ export function PhysioServices() {
           <SectionHeading
             lead={PHYSIO_SERVICES_HEADING.lead}
             accent={PHYSIO_SERVICES_HEADING.accent}
-            accentClassName="!text-sky"
+            accentClassName="text-sky"
             className="mt-[10px] max-w-[810px] text-center !text-[clamp(2.25rem,3.6vw,4.25rem)]"
           />
         </Reveal>

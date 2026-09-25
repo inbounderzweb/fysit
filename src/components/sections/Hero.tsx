@@ -82,7 +82,17 @@ export function Hero() {
       </div>
 
       <div className={cn("relative z-[2]", COLUMN)}>
-        <Reveal y={50} className="pb-[100px] pt-[160px] md:pt-[250px]">
+        {/*
+          The reference's 250px head and 100px foot are fixed, which pushes the
+          banner past the fold on a short laptop screen (a 956px-tall MacBook
+          Air cut off the counters). These hold the reference's values on any
+          viewport taller than ~1090px and give ground proportionally below it,
+          so the whole banner still lands inside the first screen.
+        */}
+        <Reveal
+          y={50}
+          className="pb-[min(100px,9svh)] pt-[160px] md:pt-[min(250px,23svh)]"
+        >
           <h1
             className={cn(
               "font-normal text-white",
@@ -122,14 +132,20 @@ export function Hero() {
             </span>
           </Link>
 
-          {/* The reference sets its word at 60/120/180/220px, filling ~91% of
-              the column. Ours is three letters longer, so the ramp is scaled
-              to hold that same proportion instead of running past the edge. */}
+          {/*
+            The reference steps its word through 60/120/180/220px so it fills
+            roughly 91% of the column. Stepping leaves a hole at the widths
+            between two steps — a 1470px screen sat on the 176px step with
+            233px of dead space beside it — so this tracks the column width
+            continuously instead: the column is `100vw` less its gutters, and
+            0.149 of that lands this word at the reference's proportion. The
+            197px cap is where the column stops growing at 1320px.
+          */}
           <div
             className={cn(
-              "my-[50px] font-medium text-white lg:text-right",
-              "text-[46px] leading-[46px] md:text-[94px] md:leading-[94px]",
-              "xl:text-[176px] xl:leading-[176px] 2xl:text-[200px] 2xl:leading-[200px]",
+              "my-[min(50px,5svh)] font-medium leading-none text-white lg:text-right",
+              "text-[calc(14.9vw-12px)] md:text-[calc(14.9vw-21px)]",
+              "lg:text-[min(197px,calc(14.9vw-15px))]",
             )}
           >
             {HERO_BANNER.word}

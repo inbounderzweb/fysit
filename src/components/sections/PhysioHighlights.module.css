@@ -31,12 +31,12 @@
 }
 
 .card[data-tone="dark"] {
-  background: #07112f;
+  background: #7170B1;
   color: #fff;
 }
 
 .card[data-tone="blue"] {
-  background: #4a90e2;
+  background: #43C2D1;
   color: #fff;
 }
 
