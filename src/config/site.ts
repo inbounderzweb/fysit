@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/content";
+
 // Brand identity, mirrored from the public site's own SITE object
 // (src/lib/content.ts) so sitemap/robots/manifest/SEO fallbacks agree with
 // what visitors actually see. Real values should move into SiteSettings
@@ -8,7 +10,15 @@ export const siteConfig = {
   tagline: "Your Trusted Partner Health and Wellness",
   description:
     "We’re committed to offering compassionate and comprehensive healthcare tailored to your needs. At TheFysit, your health is our priority every step of the way.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  // `metadataBase` (src/app/layout.tsx) resolves every relative OG/Twitter
+  // image path against this value, so a missing NEXT_PUBLIC_SITE_URL used to
+  // fall back to "http://localhost:3000" — a URL no external crawler
+  // (WhatsApp, Facebook, iMessage…) can ever reach, silently killing link
+  // previews in production. Falling back to SITE.url instead means a
+  // deployment that never got the env var configured still emits the real
+  // domain; NEXT_PUBLIC_SITE_URL remains the way to override it (e.g. for a
+  // staging deploy on its own subdomain).
+  url: process.env.NEXT_PUBLIC_SITE_URL || SITE.url,
   defaultOgImage: "/images/hero-slide-1.jpg",
   locale: "en_US",
 } as const;
