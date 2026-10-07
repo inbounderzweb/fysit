@@ -8,6 +8,12 @@ type MarqueeBandProps = {
   words: MarqueeWord[];
   /** Pixels per second. The reference build runs this band at 93. */
   speed?: number;
+  /**
+   * `fluid` (home page) scales the words with the viewport and reaches 200px
+   * at 1920. `fixed` is the reference About page's band: 200px words (130px
+   * on a phone) set flush to the top with 100px below.
+   */
+  size?: "fluid" | "fixed";
   className?: string;
 };
 
@@ -19,19 +25,29 @@ type MarqueeBandProps = {
 export function MarqueeBand({
   words,
   speed = 93,
+  size = "fluid",
   className,
 }: MarqueeBandProps) {
+  const fixed = size === "fixed";
+
   return (
     <section
       aria-hidden
-      className={cn("w-full overflow-hidden py-6 lg:py-0", className)}
+      className={cn(
+        "w-full overflow-hidden",
+        fixed ? "pb-[100px]" : "py-6 lg:py-0",
+        className,
+      )}
     >
       <Marquee speed={speed}>
         {words.map((word) => (
           <div key={word.text} className="flex shrink-0 items-center">
             <span
               className={cn(
-                "fluid-marquee whitespace-nowrap font-medium uppercase",
+                "whitespace-nowrap font-medium uppercase",
+                fixed
+                  ? "text-[130px] leading-[130px] md:text-[200px] md:leading-[200px]"
+                  : "fluid-marquee",
                 word.variant === "gradient"
                   ? "text-gradient-brand"
                   : "text-navy",
@@ -44,7 +60,12 @@ export function MarqueeBand({
               alt=""
               width={100}
               height={100}
-              className="mx-[clamp(16px,2.9vw,55px)] size-[clamp(30px,5.2vw,100px)] shrink-0"
+              className={cn(
+                "shrink-0",
+                fixed
+                  ? "mx-[44px] size-[65px] md:mx-[67px] md:size-[100px]"
+                  : "mx-[clamp(16px,2.9vw,55px)] size-[clamp(30px,5.2vw,100px)]",
+              )}
               unoptimized
             />
           </div>

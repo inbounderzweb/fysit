@@ -96,6 +96,42 @@ export const ABOUT = {
   cta: { label: "Discover More", href: "#services" },
 } as const;
 
+/* -------------------------------------------------------------------------
+   About page (/about) — laid out after the reference theme's About Us page.
+   Copy is ours wherever the home page already says it; the mission line and
+   section headings follow the reference's wording.
+------------------------------------------------------------------------- */
+export const ABOUT_PAGE = {
+  banner: { title: "About Us", image: "/images/banner-about.jpg" },
+  mission:
+    "Our mission is simple: to serve with care, act with integrity, and always put your needs first.",
+  intro: {
+    label: "Who are we?",
+    years: Number.parseInt(ABOUT.statValue, 10),
+    yearsLabel: "Years of Medical Health Care",
+    avatars: ["/images/doctor-01.jpg", "/images/doctor-04.jpg", "/images/doctor-06.jpg"],
+    trusted: ABOUT.statHeading,
+    body: `${ABOUT.body} ${HERO_CARD_BODY}`,
+    link: { label: "Let’s create something extraordinary!", href: "/contact" },
+    image: ABOUT.image,
+    imageAlt: ABOUT.imageAlt,
+  },
+  departments: {
+    eyebrow: "Our Department",
+    lead: "Comprehensive Physiotherapy Services for",
+    accent: "Your Health",
+    linkLabel: "Explore Service",
+  },
+  team: {
+    eyebrow: "Doctor of Physiotherapy",
+    lead: "Medical Health Solutions Led by",
+    accent: "Experienced Doctor",
+    stat: "250+",
+    statLabel: "Doctor of Healthcare",
+    cta: { label: "Explore More", href: "/#team" },
+  },
+} as const;
+
 export const OPENING_HOURS_TITLE = "Opening Hours:";
 
 export const OPENING_HOURS: OpeningHour[] = [
@@ -218,6 +254,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Hands-on techniques to relieve tension, improve joint mobility, and reduce pain.",
     image: "/images/service-slide-manual-therapy.jpg",
+    icon: "/icons/physio-departments/manual-therapy.svg",
     href: "#services",
   },
   {
@@ -226,6 +263,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Customized strengthening and mobility programs for long-term recovery and improved function.",
     image: "/images/service-slide-exercise-therapy.jpg",
+    icon: "/icons/physio-departments/exercise-therapy.svg",
     href: "#services",
   },
   {
@@ -234,6 +272,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Treatment for sprains, strains, tendonitis, and other athletic injuries.",
     image: "/images/service-slide-sports-injury.jpg",
+    icon: "/icons/physio-departments/sports-injury.svg",
     href: "#services",
   },
   {
@@ -242,6 +281,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Treatment for chronic knee pain, osteoarthritis, patellofemoral syndrome, and joint stiffness.",
     image: "/images/service-slide-knee-pain.jpg",
+    icon: "/icons/physio-departments/knee-pain.svg",
     href: "#services",
   },
   {
@@ -250,6 +290,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Relief for common issues like lower back pain, sciatica, and neck stiffness.",
     image: "/images/service-slide-back-neck.jpg",
+    icon: "/icons/physio-departments/back-neck.svg",
     href: "#services",
   },
   {
@@ -258,6 +299,7 @@ export const PHYSIO_SERVICES: PhysioService[] = [
     description:
       "Care for plantar fasciitis, Achilles tendinopathy, ankle sprains, and post-injury recovery.",
     image: "/images/service-slide-foot-ankle.jpg",
+    icon: "/icons/physio-departments/foot-ankle.svg",
     href: "#services",
   },
 ];

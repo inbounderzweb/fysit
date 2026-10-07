@@ -48,6 +48,8 @@ export type PhysioService = {
   title: string;
   description: string;
   image: string;
+  /** Line icon for the About page's department cards, used as a CSS mask. */
+  icon: string;
   href: string;
 };
 
