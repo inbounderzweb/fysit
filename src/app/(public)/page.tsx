@@ -16,6 +16,7 @@ import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY } from "@/lib/content";
+import { AboutTeam } from "@/components/sections/AboutTeam";
 
 export const metadata: Metadata = buildMetadata(
   { canonical: siteConfig.url },
@@ -53,7 +54,8 @@ export default function HomePage() {
       <PhysioServices />
       <DarkBanner />
       <DepartmentStrip />
-      <Team />
+      {/* <Team /> */}
+      <AboutTeam/>
       <MarqueeBand words={MARQUEE_EMERGENCY} speed={68} />
       <Appointment />
       <CaseStudies />
