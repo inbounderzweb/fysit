@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Container } from "@/components/ui/Container";
 import { EdgeNotch } from "@/components/ui/EdgeNotch";
 import { cn } from "@/lib/utils";
 
@@ -28,9 +27,9 @@ type PageBannerProps = {
   /** Decorative by default; the heading already names the page. */
   imageAlt?: string;
   /**
-   * Replaces the default `fluid-heading` scale rather than layering over it —
-   * both live in the same CSS layer, so a second font size would not reliably
-   * win. Pass a full size/leading set when a long title needs a smaller one.
+   * Replaces the default 40/50px → 60/70px title scale rather than layering
+   * over it — two font sizes in the same CSS layer would not reliably resolve.
+   * Pass a full size/leading set when a long title needs a smaller one.
    */
   titleClassName?: string;
 };
@@ -65,12 +64,14 @@ export function PageBanner({
       />
       <div aria-hidden className="absolute inset-0" style={{ backgroundImage: SCRIM }} />
 
-      <Container className="relative">
-        <div className="max-w-[660px] pt-[140px] sm:pt-[170px] lg:pt-[220px]">
+      {/* The reference's container: 1320px with a 12px gutter at desktop, so
+          the title sits 192px in on a 1680px screen; wider gutters below. */}
+      <div className="relative mx-auto w-full max-w-[1320px] px-[42px] md:px-[36px] xl:px-[12px]">
+        <div className="max-w-[660px] pt-[180px] md:pt-[220px]">
           <h1
             className={cn(
-              "text-balance font-medium text-white",
-              titleClassName ?? "fluid-heading",
+              "text-balance font-medium tracking-[-0.05em] text-white",
+              titleClassName ?? "text-[40px] leading-[50px] md:text-[60px] md:leading-[70px]",
             )}
           >
             {title}
@@ -78,7 +79,7 @@ export function PageBanner({
 
           <nav
             aria-label="Breadcrumb"
-            className="relative mt-[50px] inline-flex rounded-t-[15px] bg-white px-[15px] pb-[10px] pt-[15px] lg:mt-[100px]"
+            className="relative mt-[60px] inline-flex rounded-t-[15px] bg-white px-[15px] pb-[10px] pt-[15px] md:mt-[100px]"
           >
             {/* Folds the tab's white into the page body behind the band. */}
             <EdgeNotch corner="tl" className="absolute -left-5 bottom-0" />
@@ -128,7 +129,7 @@ export function PageBanner({
             </ol>
           </nav>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

@@ -8,7 +8,12 @@ import { TESTIMONIALS, TESTIMONIALS_HEADING } from "@/lib/content";
  * Figma 1:444 … 1:580 — two 1700px-wide masked rows of 400px cards. The
  * mask fades both ends; the rows travel in opposite directions.
  */
-export function Testimonials() {
+type TestimonialsProps = {
+  /** Passed to the band heading — the About page uses the reference's larger setting. */
+  headingSize?: "default" | "large";
+};
+
+export function Testimonials({ headingSize = "default" }: TestimonialsProps) {
   // Both rows carry the full set so neither track shows a gap; the second is
   // rotated so the two rows never sit in step.
   const firstRow = TESTIMONIALS;
@@ -25,6 +30,7 @@ export function Testimonials() {
     <section id="testimonials" className="bg-white pb-[64px] pt-[70px] lg:pb-[120px] lg:pt-[130px]">
       <Reveal className="px-5">
         <BandHeading
+          size={headingSize}
           lead={TESTIMONIALS_HEADING.lead}
           accent={TESTIMONIALS_HEADING.accent}
         />
