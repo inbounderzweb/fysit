@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { AdminNavItem } from "@/config/navigation";
+import { ADMIN_NAV_GROUPS, type AdminNavItem } from "@/config/navigation";
 import type { SafeUser } from "@/lib/dal";
+import { cn } from "@/lib/utils";
 import { GlobalSearch } from "@/components/admin/global-search";
 import { NotificationBell, type ActivityItem } from "@/components/admin/notification-bell";
 import { UserMenu } from "@/components/admin/user-menu";
@@ -12,156 +13,247 @@ import {
   HomeIcon,
   DocumentIcon,
   ChatIcon,
-  MailIcon,
+  InboxIcon,
   ImageIcon,
   GearIcon,
-  ExternalLinkIcon,
-  LeafIcon,
-  ChevronRightIcon,
+  GlobeIcon,
   MenuIcon,
+  SidebarIcon,
+  XIcon,
 } from "@/components/admin/icons";
 
-const NAV_ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const NAV_ICONS: Record<string, IconType> = {
   blog: DocumentIcon,
   testimonials: ChatIcon,
-  enquiries: MailIcon,
+  enquiries: InboxIcon,
   media: ImageIcon,
   settings: GearIcon,
 };
+
+const COLLAPSE_KEY = "fysit-admin-sidebar-collapsed";
 
 export function AdminShell({
   user,
   visibleNav,
   logoutAction,
   recentActivity,
+  badges = {},
+  canEditSettings = false,
   children,
 }: {
   user: SafeUser;
   visibleNav: AdminNavItem[];
   logoutAction: () => void;
   recentActivity: ActivityItem[];
+  /** Counts shown beside nav items, keyed by href. Zero hides the badge. */
+  badges?: Record<string, number>;
+  canEditSettings?: boolean;
   children: React.ReactNode;
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
 
-  return (
-    <div className="flex min-h-screen bg-[#f6f7fb]">
-      {/* Mobile top bar */}
-      <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 lg:hidden">
-        <p className="font-semibold text-neutral-900">Fysit Admin</p>
-        <button
-          type="button"
-          onClick={() => setIsMobileOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={isMobileOpen}
-          className="rounded p-2 text-neutral-600 hover:bg-neutral-100"
-        >
-          <MenuIcon className="h-6 w-6" />
-        </button>
-      </div>
+  // The collapsed preference is per browser; storage can be unavailable
+  // (private mode, blocked site data), in which case it simply isn't kept.
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- restoring a stored preference after hydration
+      if (localStorage.getItem(COLLAPSE_KEY) === "1") setIsCollapsed(true);
+    } catch {}
+  }, []);
 
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+  function toggleCollapsed() {
+    setIsCollapsed((prev) => {
+      try {
+        localStorage.setItem(COLLAPSE_KEY, prev ? "0" : "1");
+      } catch {}
+      return !prev;
+    });
+  }
+
+  // The mobile drawer closes on Escape and locks the page behind it.
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setIsMobileOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const closeMobile = () => setIsMobileOpen(false);
+
+  return (
+    <div className="flex min-h-screen bg-surface">
+      <a
+        href="#admin-main"
+        className="sr-only z-[60] rounded-lg bg-white px-3 py-2 text-sm font-medium text-primary-700 shadow-pop focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
+      >
+        Skip to content
+      </a>
+
+      {/* Mobile drawer backdrop */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-[2px] transition-opacity duration-200 lg:hidden",
+          isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={closeMobile}
+        aria-hidden="true"
+      />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex -translate-x-full flex-col border-r border-neutral-200 bg-white transition-all duration-200 ease-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${
-          isMobileOpen ? "translate-x-0" : ""
-        } ${isCollapsed ? "lg:w-20" : "w-64"}`}
+        aria-label="Admin navigation"
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-line bg-white transition-[transform,width] duration-200 ease-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
+          isMobileOpen ? "translate-x-0 shadow-pop" : "-translate-x-full",
+          isCollapsed && "lg:w-[76px]",
+        )}
       >
-        <div className="flex items-center justify-between gap-2 border-b border-neutral-100 p-4">
-          {!isCollapsed && (
-            <div className="min-w-0">
-              <p className="truncate font-semibold text-neutral-900">The Fysit</p>
-              <p className="truncate text-xs text-teal-600">Wellness Simplified</p>
-            </div>
-          )}
-          {isCollapsed && (
-            <span className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-teal-500 to-indigo-600 text-sm font-bold text-white">
-              F
+        <div className={cn("flex h-16 shrink-0 items-center justify-between gap-2 px-5", isCollapsed && "lg:justify-center lg:px-0")}>
+          <Link href="/admin/dashboard" onClick={closeMobile} aria-label="The Fysit admin — dashboard" className="block">
+            {/* The full lockup, or only its mark (the left 58 of 172 units) when collapsed. */}
+            <span className={cn("block overflow-hidden", isCollapsed ? "w-[132px] lg:w-[45px]" : "w-[132px]")}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}
+              <img src="/icons/logo.svg" alt="" width={132} height={40} className="h-10 w-[132px] max-w-none" />
             </span>
-          )}
+          </Link>
           <button
             type="button"
-            onClick={() => setIsMobileOpen(false)}
+            onClick={closeMobile}
             aria-label="Close menu"
-            className="rounded p-1 text-neutral-500 hover:bg-neutral-100 lg:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 lg:hidden"
           >
-            ✕
+            <XIcon className="size-5" />
           </button>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
-          {!isCollapsed && <p className="px-2 pb-1 text-xs font-semibold tracking-wide text-neutral-400">MAIN</p>}
-
-          <NavLink
-            href="/admin/dashboard"
-            icon={HomeIcon}
-            label="Dashboard"
-            collapsed={isCollapsed}
-            active={pathname === "/admin/dashboard"}
-            onNavigate={() => setIsMobileOpen(false)}
-          />
-          {visibleNav.map((item) => (
+        <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 pb-4 pt-3">
+          <NavSection title="Overview" collapsed={isCollapsed}>
             <NavLink
-              key={item.href}
-              href={item.href}
-              icon={NAV_ICONS[item.resource] ?? DocumentIcon}
-              label={item.label}
+              href="/admin/dashboard"
+              icon={HomeIcon}
+              label="Dashboard"
               collapsed={isCollapsed}
-              active={pathname === item.href || pathname.startsWith(`${item.href}/`)}
-              onNavigate={() => setIsMobileOpen(false)}
+              active={isActive("/admin/dashboard")}
+              onNavigate={closeMobile}
             />
-          ))}
+          </NavSection>
 
-          <div className="my-2 border-t border-neutral-100" />
+          {ADMIN_NAV_GROUPS.map((group) => {
+            const items = visibleNav.filter((item) => item.group === group);
+            if (items.length === 0) return null;
+            return (
+              <NavSection key={group} title={group} collapsed={isCollapsed}>
+                {items.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    href={item.href}
+                    icon={NAV_ICONS[item.resource] ?? DocumentIcon}
+                    label={item.label}
+                    badge={badges[item.href]}
+                    collapsed={isCollapsed}
+                    active={isActive(item.href)}
+                    onNavigate={closeMobile}
+                  />
+                ))}
+              </NavSection>
+            );
+          })}
+        </nav>
 
+        <div className="shrink-0 border-t border-line p-3">
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-100"
+            title={isCollapsed ? "View website" : undefined}
+            className={cn(
+              "flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900",
+              isCollapsed && "lg:justify-center lg:px-0",
+            )}
           >
-            <ExternalLinkIcon className="h-5 w-5 shrink-0" />
-            {!isCollapsed && "View Website"}
+            <GlobeIcon className="size-5 shrink-0" />
+            <span className={cn(isCollapsed && "lg:sr-only")}>View website</span>
           </a>
-        </nav>
-
-        {!isCollapsed && (
-          <div className="m-3 rounded-xl bg-teal-50 p-3">
-            <LeafIcon className="h-5 w-5 text-teal-600" />
-            <p className="mt-2 text-sm font-semibold text-neutral-900">Help &amp; Support</p>
-            <p className="mt-1 text-xs text-neutral-500">Need help? Check our documentation or contact support.</p>
-          </div>
-        )}
-
-        <button
-          type="button"
-          onClick={() => setIsCollapsed((prev) => !prev)}
-          className="hidden items-center gap-2 border-t border-neutral-100 px-4 py-3 text-sm text-neutral-500 hover:bg-neutral-50 lg:flex"
-        >
-          <ChevronRightIcon className={`h-4 w-4 transition-transform ${isCollapsed ? "" : "rotate-180"}`} />
-          {!isCollapsed && "Collapse Menu"}
-        </button>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            aria-pressed={isCollapsed}
+            title={isCollapsed ? "Expand sidebar" : undefined}
+            className={cn(
+              "hidden h-10 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 lg:flex",
+              isCollapsed && "lg:justify-center lg:px-0",
+            )}
+          >
+            <SidebarIcon className="size-5 shrink-0" />
+            <span className={cn(isCollapsed && "sr-only")}>{isCollapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
+          </button>
+        </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 hidden items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-3 lg:flex">
-          <GlobalSearch />
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-white/90 px-4 backdrop-blur-md sm:px-6">
+          <button
+            type="button"
+            onClick={() => setIsMobileOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={isMobileOpen}
+            className="-ml-1 inline-flex size-10 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 lg:hidden"
+          >
+            <MenuIcon className="size-5" />
+          </button>
+          <Link href="/admin/dashboard" className="shrink-0 sm:hidden" aria-label="Dashboard">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}
+            <img src="/icons/logo.svg" alt="" width={106} height={32} className="h-8 w-[106px]" />
+          </Link>
+
+          <div className="hidden min-w-0 flex-1 sm:block">
+            <GlobalSearch />
+          </div>
+
+          <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <NotificationBell activity={recentActivity} />
-            <UserMenu user={user} logoutAction={logoutAction} />
+            <span aria-hidden className="mx-1 hidden h-6 w-px bg-line sm:block" />
+            <UserMenu user={user} logoutAction={logoutAction} canEditSettings={canEditSettings} />
           </div>
         </header>
 
-        <main className="flex-1 p-4 pt-20 lg:p-6 lg:pt-6">{children}</main>
+        <main id="admin-main" className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          {children}
+        </main>
       </div>
+    </div>
+  );
+}
+
+function NavSection({
+  title,
+  collapsed,
+  children,
+}: {
+  title: string;
+  collapsed: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <p
+        className={cn(
+          "mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-400",
+          collapsed && "lg:sr-only",
+        )}
+      >
+        {title}
+      </p>
+      {collapsed && <span aria-hidden className="mx-auto mb-2 hidden h-px w-6 bg-line lg:block" />}
+      <ul className="flex flex-col gap-1">{children}</ul>
     </div>
   );
 }
@@ -170,28 +262,47 @@ function NavLink({
   href,
   icon: Icon,
   label,
+  badge,
   collapsed,
   active,
   onNavigate,
 }: {
   href: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: IconType;
   label: string;
+  badge?: number;
   collapsed: boolean;
   active: boolean;
   onNavigate: () => void;
 }) {
   return (
-    <Link
-      href={href}
-      onClick={onNavigate}
-      title={collapsed ? label : undefined}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
-        active ? "bg-indigo-50 font-medium text-indigo-600" : "text-neutral-700 hover:bg-neutral-100"
-      }`}
-    >
-      <Icon className="h-5 w-5 shrink-0" />
-      {!collapsed && label}
-    </Link>
+    <li>
+      <Link
+        href={href}
+        onClick={onNavigate}
+        aria-current={active ? "page" : undefined}
+        title={collapsed ? label : undefined}
+        className={cn(
+          "group relative flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+          active ? "bg-primary-50 text-primary-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+          collapsed && "lg:justify-center lg:px-0",
+        )}
+      >
+        {active && <span aria-hidden className="absolute -left-3 top-2 bottom-2 w-1 rounded-r-full bg-primary-500" />}
+        <Icon className={cn("size-5 shrink-0", active ? "text-primary-600" : "text-slate-400 group-hover:text-slate-600")} />
+        <span className={cn("truncate", collapsed && "lg:sr-only")}>{label}</span>
+        {badge ? (
+          <span
+            className={cn(
+              "ml-auto rounded-full bg-primary-600 px-1.5 py-px text-[11px] font-semibold tabular-nums text-white",
+              collapsed && "lg:absolute lg:right-2 lg:top-1 lg:ml-0 lg:min-w-4 lg:px-1 lg:text-[10px]",
+            )}
+          >
+            {badge > 99 ? "99+" : badge}
+            <span className="sr-only"> new</span>
+          </span>
+        ) : null}
+      </Link>
+    </li>
   );
 }

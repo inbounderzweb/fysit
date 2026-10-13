@@ -18,7 +18,7 @@ export async function listTestimonialsAdmin(params: {
   if (params.search) filter.authorName = { $regex: params.search, $options: "i" };
 
   const [items, count] = await Promise.all([
-    Testimonial.find(filter).sort({ displayOrder: 1 }).skip(skip).limit(limit).lean(),
+    Testimonial.find(filter).populate("image").sort({ displayOrder: 1 }).skip(skip).limit(limit).lean(),
     Testimonial.countDocuments(filter),
   ]);
 

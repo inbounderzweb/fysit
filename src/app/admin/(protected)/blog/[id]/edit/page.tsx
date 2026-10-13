@@ -5,6 +5,11 @@ import { getCurrentUser } from "@/lib/dal";
 import { can } from "@/lib/permissions";
 import { BlogForm, type BlogFormDefaults } from "../../blog-form";
 import { updateBlogPostAction, setBlogPostStatusAction } from "../../actions";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/badge";
+import { ButtonLink } from "@/components/admin/ui/button";
+import { ActionButton } from "@/components/admin/ui/confirm-action";
+import { ArchiveIcon, CheckCircleIcon, EyeIcon } from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Edit Blog Post" };
 
@@ -44,36 +49,45 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-neutral-900">Edit Blog Post</h1>
-        {canPublish && (
-          <div className="flex gap-2">
-            {post.status !== "PUBLISHED" && (
+      <PageHeader
+        back={{ href: "/admin/blog", label: "All posts" }}
+        title="Edit blog post"
+        meta={<StatusBadge status={post.status} />}
+        description={post.title}
+        actions={
+          <>
+            <ButtonLink href={`/admin/blog/${id}/preview`} variant="secondary">
+              <EyeIcon />
+              Preview
+            </ButtonLink>
+            {canPublish && post.status !== "PUBLISHED" && (
               <form action={setBlogPostStatusAction.bind(null, id, "PUBLISHED")}>
-                <button type="submit" className="rounded bg-green-600 px-3 py-1.5 text-sm text-white">
+                <ActionButton variant="primary" size="md" pendingLabel="Publishing…">
+                  <CheckCircleIcon />
                   Publish
-                </button>
+                </ActionButton>
               </form>
             )}
-            {post.status === "PUBLISHED" && (
+            {canPublish && post.status === "PUBLISHED" && (
               <form action={setBlogPostStatusAction.bind(null, id, "DRAFT")}>
-                <button type="submit" className="rounded bg-yellow-600 px-3 py-1.5 text-sm text-white">
+                <ActionButton variant="secondary" size="md" pendingLabel="Updating…">
                   Unpublish
-                </button>
+                </ActionButton>
               </form>
             )}
-            {post.status !== "ARCHIVED" && (
+            {canPublish && post.status !== "ARCHIVED" && (
               <form action={setBlogPostStatusAction.bind(null, id, "ARCHIVED")}>
-                <button type="submit" className="rounded bg-neutral-600 px-3 py-1.5 text-sm text-white">
+                <ActionButton variant="secondary" size="md" pendingLabel="Archiving…">
+                  <ArchiveIcon />
                   Archive
-                </button>
+                </ActionButton>
               </form>
             )}
-          </div>
-        )}
-      </div>
+          </>
+        }
+      />
 
-      <BlogForm action={boundUpdate} submitLabel="Save Changes" defaultValues={defaultValues} />
+      <BlogForm action={boundUpdate} submitLabel="Save changes" defaultValues={defaultValues} />
     </div>
   );
 }

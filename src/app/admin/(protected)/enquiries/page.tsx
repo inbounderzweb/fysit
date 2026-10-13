@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listEnquiriesAdmin } from "@/services/enquiry.service";
+import { countEnquiriesByStatus, listEnquiriesAdmin } from "@/services/enquiry.service";
 import { ENQUIRY_STATUSES, type EnquiryStatus } from "@/lib/constants";
+import { Card } from "@/components/admin/ui/card";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge, statusLabel } from "@/components/admin/ui/badge";
+import { EmptyState } from "@/components/admin/ui/feedback";
+import { FilterTabs, Pagination, SearchForm, hrefWith } from "@/components/admin/ui/list-controls";
+import { Table, TBody, THead, Td, Th, Tr, RowActions } from "@/components/admin/ui/table";
+import { ButtonLink } from "@/components/admin/ui/button";
+import { ChevronRightIcon, InboxIcon } from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Enquiries" };
 
 function parseStatus(value: string | undefined): EnquiryStatus | undefined {
   return ENQUIRY_STATUSES.includes(value as EnquiryStatus) ? (value as EnquiryStatus) : undefined;
 }
+
+const formatDate = (value: Date | string) =>
+  new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 
 export default async function EnquiriesListPage({
   searchParams,
@@ -16,116 +27,136 @@ export default async function EnquiriesListPage({
 }) {
   const params = await searchParams;
   const status = parseStatus(params.status);
-  const result = await listEnquiriesAdmin({ page: params.page, status, search: params.search });
+  const search = params.search?.trim() || undefined;
+  const [result, counts] = await Promise.all([
+    listEnquiriesAdmin({ page: params.page, status, search }),
+    countEnquiriesByStatus(),
+  ]);
+  const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold text-neutral-900">Enquiries</h1>
+      <PageHeader
+        title="Enquiries"
+        description="Messages and appointment requests sent from the website’s Contact page."
+      />
 
-      <div className="flex flex-wrap items-center gap-2 border-b border-neutral-200 pb-2">
-        <StatusTab href="/admin/enquiries" active={!status} label="All" />
-        {ENQUIRY_STATUSES.map((s) => (
-          <StatusTab key={s} href={`/admin/enquiries?status=${s}`} active={status === s} label={s.replace("_", " ")} />
-        ))}
-      </div>
-
-      <form method="get" className="flex gap-3">
-        {status && <input type="hidden" name="status" value={status} />}
-        <input
-          type="text"
-          name="search"
-          defaultValue={params.search}
-          placeholder="Search by name or email…"
-          className="rounded border border-neutral-300 px-3 py-2 text-sm"
-        />
-        <button type="submit" className="rounded border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50">
-          Search
-        </button>
-      </form>
-
-      <div className="overflow-x-auto rounded border border-neutral-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-neutral-50 text-neutral-500">
-            <tr>
-              <th className="p-3 font-medium">Name</th>
-              <th className="p-3 font-medium">Email</th>
-              <th className="p-3 font-medium">Subject</th>
-              <th className="p-3 font-medium">Status</th>
-              <th className="p-3 font-medium">Received</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-neutral-100">
-            {result.items.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-4 text-neutral-500">
-                  No enquiries found.
-                </td>
-              </tr>
-            )}
-            {result.items.map((item) => (
-              <tr key={item._id.toString()} className="hover:bg-neutral-50">
-                <td className="p-3">
-                  <Link href={`/admin/enquiries/${item._id}`} className="text-neutral-900 underline">
-                    {item.name}
-                  </Link>
-                </td>
-                <td className="p-3 text-neutral-600">{item.email}</td>
-                <td className="p-3 text-neutral-600">{item.subject || "—"}</td>
-                <td className="p-3">
-                  <StatusBadge status={item.status} />
-                </td>
-                <td className="p-3 text-neutral-500">{new Date(item.createdAt).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex items-center justify-between text-sm text-neutral-500">
-        <span>
-          Page {result.page} of {result.pages} · {result.total} total
-        </span>
-        <div className="flex gap-2">
-          {result.page > 1 && (
-            <Link href={`/admin/enquiries?page=${result.page - 1}${status ? `&status=${status}` : ""}`} className="underline">
-              Previous
-            </Link>
-          )}
-          {result.page < result.pages && (
-            <Link href={`/admin/enquiries?page=${result.page + 1}${status ? `&status=${status}` : ""}`} className="underline">
-              Next
-            </Link>
-          )}
+      <Card className="overflow-hidden">
+        <div className="flex flex-col gap-4 p-4 sm:p-5 xl:flex-row xl:items-center xl:justify-between">
+          <FilterTabs
+            label="Filter by status"
+            tabs={[
+              { label: "All", href: hrefWith("/admin/enquiries", { search }), active: !status, count: total },
+              ...ENQUIRY_STATUSES.map((s) => ({
+                label: statusLabel(s, "enquiry"),
+                href: hrefWith("/admin/enquiries", { status: s, search }),
+                active: status === s,
+                count: counts[s] ?? 0,
+              })),
+            ]}
+          />
+          <SearchForm placeholder="Search name or email" defaultValue={search} keep={{ status }} />
         </div>
-      </div>
+
+        {result.items.length === 0 ? (
+          <EmptyState
+            icon={InboxIcon}
+            title={search || status ? "No matching enquiries" : "No enquiries yet"}
+            description={
+              search || status
+                ? "Try a different search or status filter."
+                : "Messages sent from the website’s Contact page will appear here."
+            }
+            action={
+              search || status ? (
+                <ButtonLink href="/admin/enquiries" variant="secondary">
+                  Clear filters
+                </ButtonLink>
+              ) : undefined
+            }
+            className="border-t border-line"
+          />
+        ) : (
+          <Table minWidth={0}>
+            <THead>
+              <tr>
+                <Th>Patient</Th>
+                <Th hideBelow="sm">Request</Th>
+                <Th hideBelow="lg">Preferred date</Th>
+                <Th>Status</Th>
+                <Th hideBelow="md">Received</Th>
+                <Th align="right">
+                  <span className="sr-only">Actions</span>
+                </Th>
+              </tr>
+            </THead>
+            <TBody>
+              {result.items.map((item) => (
+                <Tr key={item._id.toString()} className={item.status === "NEW" ? "bg-sky-50/30" : undefined}>
+                  <Td>
+                    <Link href={`/admin/enquiries/${item._id}`} className="group flex items-center gap-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-50 text-xs font-semibold text-primary-700">
+                        {initials(item.name)}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium text-navy-900 group-hover:text-primary-700">
+                          {item.name}
+                        </span>
+                        <span className="block truncate text-xs text-slate-500">{item.email}</span>
+                      </span>
+                    </Link>
+                  </Td>
+                  <Td hideBelow="sm">
+                    <span className="block max-w-[260px] truncate text-slate-700">
+                      {item.department || item.subject || "General enquiry"}
+                    </span>
+                    <span className="block max-w-[260px] truncate text-xs text-slate-400">
+                      {item.doctor || item.phone || "—"}
+                    </span>
+                  </Td>
+                  <Td hideBelow="lg" className="tabular-nums">
+                    {item.preferredDate ? formatDate(`${item.preferredDate}T00:00:00`) : "—"}
+                  </Td>
+                  <Td>
+                    <StatusBadge status={item.status} kind="enquiry" />
+                  </Td>
+                  <Td hideBelow="md" className="whitespace-nowrap tabular-nums">
+                    {formatDate(item.createdAt)}
+                  </Td>
+                  <Td align="right">
+                    <RowActions>
+                      <ButtonLink
+                        href={`/admin/enquiries/${item._id}`}
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Open enquiry from ${item.name}`}
+                      >
+                        Open
+                        <ChevronRightIcon />
+                      </ButtonLink>
+                    </RowActions>
+                  </Td>
+                </Tr>
+              ))}
+            </TBody>
+          </Table>
+        )}
+
+        <Pagination
+          path="/admin/enquiries"
+          page={result.page}
+          pages={result.pages}
+          total={result.total}
+          limit={result.limit}
+          params={{ status, search }}
+          noun="enquiries"
+        />
+      </Card>
     </div>
   );
 }
 
-function StatusTab({ href, active, label }: { href: string; active: boolean; label: string }) {
-  return (
-    <Link
-      href={href}
-      className={`rounded-t px-3 py-1.5 text-sm font-medium ${
-        active ? "border-b-2 border-indigo-600 text-indigo-600" : "text-neutral-500 hover:text-neutral-700"
-      }`}
-    >
-      {label}
-    </Link>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    NEW: "bg-blue-100 text-blue-800",
-    CONTACTED: "bg-indigo-100 text-indigo-800",
-    IN_PROGRESS: "bg-yellow-100 text-yellow-800",
-    RESOLVED: "bg-green-100 text-green-800",
-    ARCHIVED: "bg-neutral-200 text-neutral-700",
-  };
-  return (
-    <span className={`rounded px-2 py-1 text-xs font-medium ${colors[status] ?? ""}`}>
-      {status.replace("_", " ")}
-    </span>
-  );
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 }

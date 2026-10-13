@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getTestimonialByIdAdmin } from "@/services/testimonial.service";
 import { TestimonialForm, type TestimonialFormDefaults } from "../../testimonial-form";
 import { updateTestimonialAction } from "../../actions";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/badge";
 
 export const metadata: Metadata = { title: "Edit Testimonial" };
 
@@ -31,10 +33,15 @@ export default async function EditTestimonialPage({ params }: { params: Promise<
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold text-neutral-900">Edit Testimonial</h1>
+      <PageHeader
+        back={{ href: "/admin/testimonials", label: "All testimonials" }}
+        title="Edit testimonial"
+        meta={<StatusBadge status={testimonial.status} kind="testimonial" />}
+        description={testimonial.authorName}
+      />
       <TestimonialForm
         action={updateTestimonialAction.bind(null, id)}
-        submitLabel="Save Changes"
+        submitLabel="Save changes"
         defaultValues={defaultValues}
       />
     </div>

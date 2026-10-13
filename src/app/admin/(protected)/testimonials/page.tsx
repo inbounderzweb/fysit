@@ -3,7 +3,17 @@ import Link from "next/link";
 import { listTestimonialsAdmin } from "@/services/testimonial.service";
 import { getCurrentUser } from "@/lib/dal";
 import { can } from "@/lib/permissions";
+import { asPopulatedMedia } from "@/types/media";
+import { cloudinaryThumbnail } from "@/lib/cloudinary-url";
 import { deleteTestimonialAction, reorderTestimonialAction, setTestimonialStatusAction } from "./actions";
+import { Card } from "@/components/admin/ui/card";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/badge";
+import { Alert, EmptyState } from "@/components/admin/ui/feedback";
+import { Table, TBody, THead, Td, Th, Tr, RowActions } from "@/components/admin/ui/table";
+import { ButtonLink } from "@/components/admin/ui/button";
+import { ActionButton, ConfirmAction } from "@/components/admin/ui/confirm-action";
+import { ArrowDownIcon, ArrowUpIcon, ChatIcon, PencilIcon, PlusIcon, StarIcon, TrashIcon } from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Testimonials" };
 
@@ -21,107 +31,174 @@ export default async function TestimonialsListPage({
   const canCreate = can(user.role, "create", "testimonials");
   const canDelete = can(user.role, "delete", "testimonials");
   const canPublish = can(user.role, "publish", "testimonials");
+  const activeCount = result.items.filter((item) => item.status === "PUBLISHED").length;
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-neutral-900">Testimonials</h1>
-        {canCreate && (
-          <Link href="/admin/testimonials/new" className="rounded bg-neutral-900 px-4 py-2 text-sm text-white">
-            Add Testimonial
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title="Testimonials"
+        description="Patient feedback shown on the Home and About pages, in the order below."
+        actions={
+          canCreate && (
+            <ButtonLink href="/admin/testimonials/new">
+              <PlusIcon />
+              Add testimonial
+            </ButtonLink>
+          )
+        }
+      />
 
-      <div className="overflow-x-auto rounded border border-neutral-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-neutral-50 text-neutral-500">
-            <tr>
-              <th className="p-3 font-medium">Order</th>
-              <th className="p-3 font-medium">Name</th>
-              <th className="p-3 font-medium">Status</th>
-              <th className="p-3 font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-neutral-100">
-            {result.items.length === 0 && (
+      {result.items.length > 0 && activeCount === 0 && (
+        <Alert tone="info" title="No testimonials are active yet">
+          The website keeps showing its built-in testimonials until at least one here is set to Active.
+        </Alert>
+      )}
+
+      <Card className="overflow-hidden">
+        {result.items.length === 0 ? (
+          <EmptyState
+            icon={ChatIcon}
+            title="No testimonials yet"
+            description="Add patient feedback to show it on the website. Until then, the built-in testimonials are shown."
+            action={
+              canCreate ? (
+                <ButtonLink href="/admin/testimonials/new">
+                  <PlusIcon />
+                  Add testimonial
+                </ButtonLink>
+              ) : undefined
+            }
+          />
+        ) : (
+          <Table minWidth={600}>
+            <THead>
               <tr>
-                <td colSpan={4} className="p-4 text-neutral-500">
-                  No testimonials yet.
-                </td>
+                {canPublish && <Th className="w-[88px]">Order</Th>}
+                <Th>Patient</Th>
+                <Th hideBelow="lg">Testimonial</Th>
+                <Th hideBelow="md">Rating</Th>
+                <Th>Status</Th>
+                <Th align="right">Actions</Th>
               </tr>
-            )}
-            {result.items.map((item, index) => (
-              <tr key={item._id.toString()}>
-                <td className="p-3">
-                  <div className="flex items-center gap-1">
-                    {canPublish && index > 0 && (
-                      <form action={reorderTestimonialAction.bind(null, item._id.toString(), "up")}>
-                        <button type="submit" className="text-neutral-500 hover:text-neutral-800" aria-label="Move up">
-                          ↑
-                        </button>
-                      </form>
+            </THead>
+            <TBody>
+              {result.items.map((item, index) => {
+                const id = item._id.toString();
+                const image = asPopulatedMedia(item.image);
+                return (
+                  <Tr key={id}>
+                    {canPublish && (
+                      <Td>
+                        <div className="flex items-center gap-0.5">
+                          <span className="w-5 text-xs tabular-nums text-slate-400">{index + 1}</span>
+                          {index > 0 ? (
+                            <form action={reorderTestimonialAction.bind(null, id, "up")}>
+                              <ActionButton variant="ghost" label={`Move ${item.authorName} up`}>
+                                <ArrowUpIcon />
+                              </ActionButton>
+                            </form>
+                          ) : (
+                            <span className="size-8" />
+                          )}
+                          {index < result.items.length - 1 && (
+                            <form action={reorderTestimonialAction.bind(null, id, "down")}>
+                              <ActionButton variant="ghost" label={`Move ${item.authorName} down`}>
+                                <ArrowDownIcon />
+                              </ActionButton>
+                            </form>
+                          )}
+                        </div>
+                      </Td>
                     )}
-                    {canPublish && index < result.items.length - 1 && (
-                      <form action={reorderTestimonialAction.bind(null, item._id.toString(), "down")}>
-                        <button type="submit" className="text-neutral-500 hover:text-neutral-800" aria-label="Move down">
-                          ↓
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </td>
-                <td className="p-3">{item.authorName}</td>
-                <td className="p-3">
-                  <StatusBadge status={item.status} />
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center gap-3">
-                    <Link href={`/admin/testimonials/${item._id}/edit`} className="text-neutral-700 underline">
-                      Edit
-                    </Link>
-                    {canPublish && item.status !== "PUBLISHED" && (
-                      <form action={setTestimonialStatusAction.bind(null, item._id.toString(), "PUBLISHED")}>
-                        <button type="submit" className="text-green-700 underline">
-                          Activate
-                        </button>
-                      </form>
-                    )}
-                    {canPublish && item.status === "PUBLISHED" && (
-                      <form action={setTestimonialStatusAction.bind(null, item._id.toString(), "DRAFT")}>
-                        <button type="submit" className="text-yellow-700 underline">
-                          Deactivate
-                        </button>
-                      </form>
-                    )}
-                    {canDelete && (
-                      <form action={deleteTestimonialAction.bind(null, item._id.toString())}>
-                        <button type="submit" className="text-red-600 underline">
-                          Delete
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                    <Td>
+                      <Link href={`/admin/testimonials/${id}/edit`} className="group flex items-center gap-3">
+                        {image ? (
+                          // eslint-disable-next-line @next/next/no-img-element -- admin list thumbnail
+                          <img
+                            src={cloudinaryThumbnail(image.secureUrl, 80)}
+                            alt=""
+                            className="size-9 shrink-0 rounded-full object-cover ring-2 ring-white"
+                          />
+                        ) : (
+                          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent-100 text-xs font-semibold text-accent-600">
+                            {initials(item.authorName)}
+                          </span>
+                        )}
+                        <span className="min-w-0">
+                          <span className="block truncate font-medium text-navy-900 group-hover:text-primary-700">
+                            {item.authorName}
+                          </span>
+                          <span className="block truncate text-xs text-slate-500">
+                            {[item.authorRole, item.company].filter(Boolean).join(", ") || "—"}
+                          </span>
+                        </span>
+                      </Link>
+                    </Td>
+                    <Td hideBelow="lg">
+                      <p className="line-clamp-2 max-w-[360px] text-[13px] leading-5">“{item.quote}”</p>
+                    </Td>
+                    <Td hideBelow="md">
+                      {item.rating ? (
+                        <span className="inline-flex items-center gap-1 text-[13px] font-medium tabular-nums text-slate-700">
+                          <StarIcon className="size-4 text-amber-400" />
+                          {item.rating}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">—</span>
+                      )}
+                    </Td>
+                    <Td>
+                      <StatusBadge status={item.status} kind="testimonial" />
+                    </Td>
+                    <Td align="right">
+                      <RowActions>
+                        {canPublish && item.status !== "PUBLISHED" && (
+                          <form action={setTestimonialStatusAction.bind(null, id, "PUBLISHED")}>
+                            <ActionButton variant="success-soft" pendingLabel="…">
+                              Activate
+                            </ActionButton>
+                          </form>
+                        )}
+                        {canPublish && item.status === "PUBLISHED" && (
+                          <form action={setTestimonialStatusAction.bind(null, id, "DRAFT")}>
+                            <ActionButton variant="warning-soft" pendingLabel="…">
+                              Deactivate
+                            </ActionButton>
+                          </form>
+                        )}
+                        <ButtonLink
+                          href={`/admin/testimonials/${id}/edit`}
+                          variant="ghost"
+                          size="sm"
+                          aria-label={`Edit ${item.authorName}`}
+                          title="Edit"
+                        >
+                          <PencilIcon />
+                        </ButtonLink>
+                        {canDelete && (
+                          <ConfirmAction
+                            action={deleteTestimonialAction.bind(null, id)}
+                            title="Delete this testimonial?"
+                            description={`The testimonial from ${item.authorName} will be permanently removed and disappear from the website. This can’t be undone.`}
+                            confirmLabel="Delete testimonial"
+                            triggerLabel={`Delete ${item.authorName}`}
+                            trigger={<TrashIcon />}
+                          />
+                        )}
+                      </RowActions>
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </TBody>
+          </Table>
+        )}
+      </Card>
     </div>
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const labels: Record<string, string> = { PUBLISHED: "ACTIVE", DRAFT: "INACTIVE", ARCHIVED: "ARCHIVED" };
-  const colors: Record<string, string> = {
-    PUBLISHED: "bg-green-100 text-green-800",
-    DRAFT: "bg-yellow-100 text-yellow-800",
-    ARCHIVED: "bg-neutral-200 text-neutral-700",
-  };
-  return (
-    <span className={`rounded px-2 py-1 text-xs font-medium ${colors[status] ?? ""}`}>
-      {labels[status] ?? status}
-    </span>
-  );
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 }

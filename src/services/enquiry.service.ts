@@ -78,7 +78,11 @@ export async function getEnquiryStats() {
 
 export async function listRecentEnquiries(limit = 5) {
   await connectToDatabase();
-  return ContactEnquiry.find().select("name subject status createdAt").sort({ createdAt: -1 }).limit(limit).lean();
+  return ContactEnquiry.find()
+    .select("name email subject department doctor preferredDate status createdAt")
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .lean();
 }
 
 /** Daily enquiry counts for the last `days` calendar days (oldest first), for the dashboard chart. */
@@ -88,21 +92,83 @@ export async function getEnquiryDailyCounts(days = 7): Promise<{ date: string; c
   const rangeStart = new Date(today);
   rangeStart.setDate(rangeStart.getDate() - (days - 1));
 
+  // Days are grouped and keyed in the server's own time zone. Keying local
+  // midnight with toISOString() shifted every day back by one wherever the
+  // server runs ahead of UTC.
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const rows = await ContactEnquiry.aggregate<{ _id: string; count: number }>([
     { $match: { createdAt: { $gte: rangeStart } } },
     {
       $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone } },
         count: { $sum: 1 },
       },
     },
   ]);
   const countsByDate = new Map(rows.map((row) => [row._id, row.count]));
+  const localKey = (date: Date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   return Array.from({ length: days }, (_, i) => {
     const date = new Date(rangeStart);
     date.setDate(date.getDate() + i);
-    const key = date.toISOString().slice(0, 10);
+    const key = localKey(date);
     return { date: key, count: countsByDate.get(key) ?? 0 };
   });
+}
+
+/** Enquiries nobody has picked up yet — the sidebar's badge count. */
+export async function countNewEnquiries() {
+  await connectToDatabase();
+  return ContactEnquiry.countDocuments({ status: "NEW" });
+}
+
+/**
+ * Dashboard analytics, all read-only: enquiries by status, appointment
+ * requests (enquiries that name a department) by department, this month
+ * against last month, and how many requested dates are still ahead.
+ */
+export async function getEnquiryInsights() {
+  await connectToDatabase();
+  const thisMonth = startOfMonth();
+  const lastMonth = new Date(thisMonth.getFullYear(), thisMonth.getMonth() - 1, 1);
+  const today = new Date().toISOString().slice(0, 10);
+  const isAppointment = { department: { $exists: true, $nin: [null, ""] } };
+
+  const [byStatusRows, byDepartmentRows, totalThisMonth, totalLastMonth, apptThisMonth, apptLastMonth, upcoming] =
+    await Promise.all([
+      ContactEnquiry.aggregate<{ _id: string; count: number }>([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+      ContactEnquiry.aggregate<{ _id: string; count: number }>([
+        { $match: isAppointment },
+        { $group: { _id: "$department", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+      ]),
+      ContactEnquiry.countDocuments({ createdAt: { $gte: thisMonth } }),
+      ContactEnquiry.countDocuments({ createdAt: { $gte: lastMonth, $lt: thisMonth } }),
+      ContactEnquiry.countDocuments({ ...isAppointment, createdAt: { $gte: thisMonth } }),
+      ContactEnquiry.countDocuments({ ...isAppointment, createdAt: { $gte: lastMonth, $lt: thisMonth } }),
+      ContactEnquiry.countDocuments({
+        preferredDate: { $gte: today },
+        status: { $nin: ["RESOLVED", "ARCHIVED"] },
+      }),
+    ]);
+
+  return {
+    byStatus: Object.fromEntries(byStatusRows.map((row) => [row._id, row.count])) as Record<string, number>,
+    byDepartment: byDepartmentRows.map((row) => ({ label: row._id, count: row.count })),
+    totalThisMonth,
+    totalLastMonth,
+    appointmentsThisMonth: apptThisMonth,
+    appointmentsLastMonth: apptLastMonth,
+    upcomingAppointments: upcoming,
+  };
+}
+
+/** Per-status totals for the Enquiries list's filter tabs. */
+export async function countEnquiriesByStatus() {
+  await connectToDatabase();
+  const rows = await ContactEnquiry.aggregate<{ _id: string; count: number }>([
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+  return Object.fromEntries(rows.map((row) => [row._id, row.count])) as Record<string, number>;
 }

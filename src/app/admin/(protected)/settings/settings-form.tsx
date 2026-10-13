@@ -2,6 +2,10 @@
 
 import { useActionState } from "react";
 import { updateSettingsAction, type SettingsFormState } from "./actions";
+import { Card } from "@/components/admin/ui/card";
+import { Field, FormFooter, FormSection, Input, Textarea } from "@/components/admin/ui/form";
+import { Alert } from "@/components/admin/ui/feedback";
+import { buttonClasses } from "@/components/admin/ui/button";
 
 export function SettingsForm({
   defaultValues,
@@ -9,76 +13,61 @@ export function SettingsForm({
   defaultValues: { siteName: string; tagline?: string; contactEmail?: string; contactPhone?: string; address?: string };
 }) {
   const [state, formAction, pending] = useActionState<SettingsFormState, FormData>(updateSettingsAction, undefined);
+  const errors = state?.errors;
 
   return (
-    <form action={formAction} className="flex max-w-xl flex-col gap-5" noValidate>
-      <Field label="Site Name" name="siteName" defaultValue={defaultValues.siteName} error={state?.errors?.siteName} required />
-      <Field label="Tagline" name="tagline" defaultValue={defaultValues.tagline} />
-      <Field label="Contact Email" name="contactEmail" type="email" defaultValue={defaultValues.contactEmail} error={state?.errors?.contactEmail} />
-      <Field label="Contact Phone" name="contactPhone" defaultValue={defaultValues.contactPhone} />
+    <Card className="max-w-5xl">
+      <form action={formAction} noValidate>
+        <FormSection title="Clinic identity" description="The clinic’s name and tagline.">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Site name" htmlFor="siteName" error={errors?.siteName} required>
+              <Input
+                id="siteName"
+                name="siteName"
+                defaultValue={defaultValues.siteName}
+                required
+                invalid={!!errors?.siteName}
+              />
+            </Field>
+            <Field label="Tagline" htmlFor="tagline">
+              <Input id="tagline" name="tagline" defaultValue={defaultValues.tagline} />
+            </Field>
+          </div>
+        </FormSection>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="address" className="text-sm font-medium">
-          Address
-        </label>
-        <textarea
-          id="address"
-          name="address"
-          rows={3}
-          defaultValue={defaultValues.address}
-          className="rounded border border-neutral-300 px-3 py-2 text-sm"
-        />
-      </div>
+        <FormSection
+          title="Contact details"
+          description="Shown on the website’s Contact page and used for its map. Leave a field blank to use the default."
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Contact email" htmlFor="contactEmail" error={errors?.contactEmail}>
+              <Input
+                id="contactEmail"
+                name="contactEmail"
+                type="email"
+                defaultValue={defaultValues.contactEmail}
+                invalid={!!errors?.contactEmail}
+              />
+            </Field>
+            <Field label="Contact phone" htmlFor="contactPhone" error={errors?.contactPhone}>
+              <Input id="contactPhone" name="contactPhone" type="tel" defaultValue={defaultValues.contactPhone} />
+            </Field>
+          </div>
+          <Field label="Clinic address" htmlFor="address" error={errors?.address}>
+            <Textarea id="address" name="address" rows={3} defaultValue={defaultValues.address} />
+          </Field>
+        </FormSection>
 
-      {state?.success && (
-        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">Settings saved.</p>
-      )}
-      {state?.message && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
-          {state.message}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-fit rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-60"
-      >
-        {pending ? "Saving…" : "Save Settings"}
-      </button>
-    </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  defaultValue,
-  error,
-  required,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  defaultValue?: string;
-  error?: string[];
-  required?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-sm font-medium">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        defaultValue={defaultValue}
-        required={required}
-        className="rounded border border-neutral-300 px-3 py-2 text-sm"
-      />
-      {error && <p className="text-sm text-red-600">{error[0]}</p>}
-    </div>
+        <FormFooter>
+          <div aria-live="polite" className="sm:mr-auto">
+            {state?.success && <Alert tone="success">Settings saved. The website has been updated.</Alert>}
+            {state?.message && <Alert tone="error">{state.message}</Alert>}
+          </div>
+          <button type="submit" disabled={pending} className={buttonClasses()}>
+            {pending ? "Saving…" : "Save settings"}
+          </button>
+        </FormFooter>
+      </form>
+    </Card>
   );
 }

@@ -4,16 +4,21 @@ import type { Resource } from "@/lib/permissions";
 // NAV_ITEMS in @/lib/content) — the site is a single scrolling page with anchor
 // links, not a set of separate routes, so there is no public nav config here.
 
-export type AdminNavItem = { label: string; href: string; resource: Resource };
+export type AdminNavGroup = "Patient care" | "Website content" | "System";
+
+export type AdminNavItem = { label: string; href: string; resource: Resource; group: AdminNavGroup };
+
+/** Sidebar section order; groups with no visible items are skipped. */
+export const ADMIN_NAV_GROUPS: AdminNavGroup[] = ["Patient care", "Website content", "System"];
 
 // `resource` maps to lib/permissions.ts so the admin layout can filter this
 // list down to what the signed-in user's role is actually allowed to see.
 export const adminNavigation: AdminNavItem[] = [
-  { label: "Blog", href: "/admin/blog", resource: "blog" },
-  { label: "Testimonials", href: "/admin/testimonials", resource: "testimonials" },
-  { label: "Enquiries", href: "/admin/enquiries", resource: "enquiries" },
-  { label: "Media", href: "/admin/media", resource: "media" },
-  { label: "Settings", href: "/admin/settings", resource: "settings" }
+  { label: "Enquiries", href: "/admin/enquiries", resource: "enquiries", group: "Patient care" },
+  { label: "Testimonials", href: "/admin/testimonials", resource: "testimonials", group: "Patient care" },
+  { label: "Blog", href: "/admin/blog", resource: "blog", group: "Website content" },
+  { label: "Media Library", href: "/admin/media", resource: "media", group: "Website content" },
+  { label: "Settings", href: "/admin/settings", resource: "settings", group: "System" },
 ];
 // export const adminNavigation: AdminNavItem[] = [
 //   { label: "Pages", href: "/admin/pages", resource: "pages" },

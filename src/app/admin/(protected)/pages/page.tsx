@@ -5,6 +5,15 @@ import { getCurrentUser } from "@/lib/dal";
 import { can } from "@/lib/permissions";
 import { CONTENT_STATUSES, type ContentStatus } from "@/lib/constants";
 import { deletePageAction } from "./actions";
+import { Card } from "@/components/admin/ui/card";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge, statusLabel } from "@/components/admin/ui/badge";
+import { EmptyState } from "@/components/admin/ui/feedback";
+import { FilterTabs, Pagination, hrefWith } from "@/components/admin/ui/list-controls";
+import { Table, TBody, THead, Td, Th, Tr, RowActions } from "@/components/admin/ui/table";
+import { ButtonLink } from "@/components/admin/ui/button";
+import { ConfirmAction } from "@/components/admin/ui/confirm-action";
+import { DocumentIcon, PencilIcon, PlusIcon, TrashIcon } from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Pages" };
 
@@ -18,101 +27,124 @@ export default async function PagesListPage({
   searchParams: Promise<{ page?: string; status?: string }>;
 }) {
   const params = await searchParams;
-  const [user, result] = await Promise.all([
-    getCurrentUser(),
-    listPagesAdmin({
-      page: params.page,
-      status: parseStatus(params.status),
-    }),
-  ]);
+  const status = parseStatus(params.status);
+  const [user, result] = await Promise.all([getCurrentUser(), listPagesAdmin({ page: params.page, status })]);
 
   const canCreate = can(user.role, "create", "pages");
   const canDelete = can(user.role, "delete", "pages");
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-neutral-900">Pages</h1>
-        {canCreate && (
-          <Link href="/admin/pages/new" className="rounded bg-neutral-900 px-4 py-2 text-sm text-white">
-            New Page
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title="Pages"
+        description="Standalone content pages on the website."
+        actions={
+          canCreate && (
+            <ButtonLink href="/admin/pages/new">
+              <PlusIcon />
+              New page
+            </ButtonLink>
+          )
+        }
+      />
 
-      <div className="overflow-x-auto rounded border border-neutral-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-neutral-50 text-neutral-500">
-            <tr>
-              <th className="p-3 font-medium">Title</th>
-              <th className="p-3 font-medium">Status</th>
-              <th className="p-3 font-medium">Updated</th>
-              <th className="p-3 font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-neutral-100">
-            {result.items.length === 0 && (
-              <tr>
-                <td colSpan={4} className="p-4 text-neutral-500">
-                  No pages yet.
-                </td>
-              </tr>
-            )}
-            {result.items.map((item) => (
-              <tr key={item.id}>
-                <td className="p-3">{item.title}</td>
-                <td className="p-3">
-                  <StatusBadge status={item.status} />
-                </td>
-                <td className="p-3 text-neutral-500">{new Date(item.updatedAt).toLocaleDateString()}</td>
-                <td className="p-3">
-                  <div className="flex items-center gap-3">
-                    <Link href={`/admin/pages/${item.id}/edit`} className="text-neutral-700 underline">
-                      Edit
-                    </Link>
-                    {canDelete && (
-                      <form action={deletePageAction.bind(null, item.id)}>
-                        <button type="submit" className="text-red-600 underline">
-                          Delete
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex items-center justify-between text-sm text-neutral-500">
-        <span>
-          Page {result.page} of {result.pages} · {result.total} total
-        </span>
-        <div className="flex gap-2">
-          {result.page > 1 && (
-            <Link href={`/admin/pages?page=${result.page - 1}`} className="underline">
-              Previous
-            </Link>
-          )}
-          {result.page < result.pages && (
-            <Link href={`/admin/pages?page=${result.page + 1}`} className="underline">
-              Next
-            </Link>
-          )}
+      <Card className="overflow-hidden">
+        <div className="p-4 sm:p-5">
+          <FilterTabs
+            label="Filter by status"
+            tabs={[
+              { label: "All", href: "/admin/pages", active: !status },
+              ...CONTENT_STATUSES.map((s) => ({
+                label: statusLabel(s),
+                href: hrefWith("/admin/pages", { status: s }),
+                active: status === s,
+              })),
+            ]}
+          />
         </div>
-      </div>
-    </div>
-  );
-}
 
-function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    PUBLISHED: "bg-green-100 text-green-800",
-    DRAFT: "bg-yellow-100 text-yellow-800",
-    ARCHIVED: "bg-neutral-200 text-neutral-700",
-  };
-  return (
-    <span className={`rounded px-2 py-1 text-xs font-medium ${colors[status] ?? ""}`}>{status}</span>
+        {result.items.length === 0 ? (
+          <EmptyState
+            icon={DocumentIcon}
+            title={status ? "No pages with this status" : "No pages yet"}
+            action={
+              canCreate && !status ? (
+                <ButtonLink href="/admin/pages/new">
+                  <PlusIcon />
+                  New page
+                </ButtonLink>
+              ) : undefined
+            }
+            className="border-t border-line"
+          />
+        ) : (
+          <Table>
+            <THead>
+              <tr>
+                <Th>Page</Th>
+                <Th>Status</Th>
+                <Th hideBelow="md">Updated</Th>
+                <Th align="right">Actions</Th>
+              </tr>
+            </THead>
+            <TBody>
+              {result.items.map((item) => (
+                <Tr key={item.id}>
+                  <Td>
+                    <Link href={`/admin/pages/${item.id}/edit`} className="font-medium text-navy-900 hover:text-primary-700">
+                      {item.title}
+                    </Link>
+                    <p className="mt-0.5 text-xs text-slate-400">/{item.slug}</p>
+                  </Td>
+                  <Td>
+                    <StatusBadge status={item.status} />
+                  </Td>
+                  <Td hideBelow="md" className="whitespace-nowrap tabular-nums">
+                    {new Date(item.updatedAt).toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </Td>
+                  <Td align="right">
+                    <RowActions>
+                      <ButtonLink
+                        href={`/admin/pages/${item.id}/edit`}
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Edit ${item.title}`}
+                        title="Edit"
+                      >
+                        <PencilIcon />
+                      </ButtonLink>
+                      {canDelete && (
+                        <ConfirmAction
+                          action={deletePageAction.bind(null, item.id)}
+                          title="Delete this page?"
+                          description={`“${item.title}” will be permanently removed. This can’t be undone.`}
+                          confirmLabel="Delete page"
+                          triggerLabel={`Delete ${item.title}`}
+                          trigger={<TrashIcon />}
+                        />
+                      )}
+                    </RowActions>
+                  </Td>
+                </Tr>
+              ))}
+            </TBody>
+          </Table>
+        )}
+
+        <Pagination
+          path="/admin/pages"
+          page={result.page}
+          pages={result.pages}
+          total={result.total}
+          limit={result.limit}
+          params={{ status }}
+          noun="pages"
+        />
+      </Card>
+    </div>
   );
 }

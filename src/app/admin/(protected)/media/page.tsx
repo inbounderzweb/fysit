@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { listMediaAdmin } from "@/services/media.service";
 import { MediaLibrary } from "@/components/admin/media-library";
 import type { MediaItem } from "@/types/media";
+import { PageHeader } from "@/components/admin/ui/page-header";
 
 export const metadata: Metadata = { title: "Media" };
 
@@ -10,7 +11,7 @@ export default async function MediaPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold text-neutral-900">Media Library</h1>
+      <PageHeader title="Media library" description="Images used in blog posts and testimonials. Images in use can’t be deleted." />
       <MediaLibrary
         initial={{
           items: JSON.parse(JSON.stringify(result.items)) as MediaItem[],
