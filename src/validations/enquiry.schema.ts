@@ -10,6 +10,16 @@ export const enquiryInputSchema = z.object({
     .optional()
     .or(z.literal("")),
   subject: z.string().trim().max(150).optional(),
+  // Appointment details from the Contact page form; all optional so a
+  // plain message still goes through.
+  department: z.string().trim().max(120).optional(),
+  doctor: z.string().trim().max(120).optional(),
+  preferredDate: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Choose a valid date")
+    .optional()
+    .or(z.literal("")),
   message: z.string().trim().min(1, "Message is required").max(2000),
   // Honeypot: real users never see or fill this field; bots that
   // autofill every input do. Non-empty means "reject silently".

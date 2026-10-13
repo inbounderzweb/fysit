@@ -35,7 +35,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Services", href: "#services", hasDropdown: false },
   { label: "Case Studies", href: "#case-studies", hasDropdown: false },
   { label: "Blogs", href: "/blog", hasDropdown: false },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 /* -------------------------------------------------------------------------
@@ -567,6 +567,53 @@ export const BLOG_POSTS: BlogPost[] = [
 ];
 
 export const BLOG_AUTHOR = "admin";
+
+/* -------------------------------------------------------------------------
+   Contact page — mednix.themeht.com/contact. The clinic address, email and
+   phone here are defaults: the page prefers the values saved under
+   Admin → Settings when they're set.
+------------------------------------------------------------------------- */
+export const CONTACT_PAGE = {
+  banner: { title: "Contact", image: "/images/banner-about.jpg" },
+  emergency: {
+    title: "In Case of Emergency",
+    // Rendered with the number in bold, as the reference sets it.
+    lead: "If you are experiencing a medical emergency, please call",
+    number: "911",
+    tail: "immediately or go to your nearest emergency room.",
+  },
+  contacts: {
+    clinic: { label: "Visit Our Clinic", icon: "/icons/contact/clinic.svg" },
+    email: { label: "General Inquiries", icon: "/icons/contact/mail.svg" },
+    phone: { label: "Appointment Scheduling", icon: "/icons/contact/phone.svg" },
+  },
+  defaults: {
+    address: "5th Street, 21st Floor, New York, USA",
+    email: SITE.email,
+    phone: SITE.phone,
+  },
+  hoursTitle: "Opening Hours",
+  socials: [
+    { label: "Facebook", href: "#", icon: "/icons/contact/facebook.svg" },
+    { label: "X", href: "#", icon: "/icons/contact/x.svg" },
+    { label: "LinkedIn", href: "#", icon: "/icons/contact/linkedin.svg" },
+    { label: "WhatsApp", href: "#", icon: "/icons/contact/whatsapp.svg" },
+  ],
+  form: {
+    eyebrow: "Contact Us",
+    title: "Book an Appointment",
+    body: "We’re here to help you with your healthcare needs. Whether you have questions, need to schedule an appointment.",
+    name: "Your Name",
+    email: "Email Address",
+    phone: "Phone",
+    department: "Select Department",
+    doctor: "Select Doctor",
+    date: "Preferred Date",
+    message: "Type Your Message",
+    submit: "Book Appointment",
+    success: "Thank you for your message. It has been sent — we’ll get back to you the same day.",
+  },
+} as const;
 
 /* -------------------------------------------------------------------------
    Footer — Figma 1:632 … 1:718

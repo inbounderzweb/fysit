@@ -26,8 +26,10 @@ function buildInputFromFormData(formData: FormData) {
   };
 }
 
+// Pages that render the public testimonials section.
 function revalidateHome() {
   revalidatePath("/");
+  revalidatePath("/about");
 }
 
 export async function createTestimonialAction(

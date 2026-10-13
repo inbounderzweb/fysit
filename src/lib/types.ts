@@ -74,8 +74,10 @@ export type Testimonial = {
   quote: string;
   name: string;
   role: string;
-  avatar: string;
-  rating: number;
+  /** Optional for admin-managed testimonials; the card shows initials instead. */
+  avatar?: string;
+  /** Optional for admin-managed testimonials; the card omits the stars. */
+  rating?: number;
 };
 
 export type BlogPost = {
