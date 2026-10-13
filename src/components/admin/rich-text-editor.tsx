@@ -31,7 +31,7 @@ export function RichTextEditor({
     content: initialContent,
     editorProps: {
       attributes: {
-        class: "prose prose-neutral max-w-none min-h-[300px] focus:outline-none",
+        class: "prose prose-slate max-w-none min-h-[320px] focus:outline-none prose-headings:text-navy-900 prose-a:text-primary-700",
       },
     },
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
@@ -40,9 +40,9 @@ export function RichTextEditor({
   return (
     <div className="flex flex-col gap-2">
       <input type="hidden" name={name} value={html} />
-      <div className="rounded-xl border border-neutral-200">
+      <div className="rounded-xl border border-line bg-white transition-[border-color,box-shadow] focus-within:border-primary-500 focus-within:ring-4 focus-within:ring-primary-500/15">
         {editor && <Toolbar editor={editor} onInsertImage={() => setIsImagePickerOpen(true)} />}
-        <div className="px-4 py-3">
+        <div className="px-4 py-4 sm:px-5">
           <EditorContent editor={editor} />
         </div>
       </div>
@@ -63,13 +63,14 @@ export function RichTextEditor({
 
 function Toolbar({ editor, onInsertImage }: { editor: Editor; onInsertImage: () => void }) {
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-neutral-200 p-2">
+    <div role="toolbar" aria-label="Formatting" className="sticky top-16 z-10 flex flex-wrap items-center gap-0.5 rounded-t-xl border-b border-line bg-slate-50/95 p-1.5 backdrop-blur">
       <ToolbarButton active={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
         H2
       </ToolbarButton>
       <ToolbarButton active={editor.isActive("heading", { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
         H3
       </ToolbarButton>
+      <Divider />
       <ToolbarButton active={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
         <strong>B</strong>
       </ToolbarButton>
@@ -86,6 +87,7 @@ function Toolbar({ editor, onInsertImage }: { editor: Editor; onInsertImage: () 
       >
         Link
       </ToolbarButton>
+      <Divider />
       <ToolbarButton active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>
         • List
       </ToolbarButton>
@@ -95,6 +97,7 @@ function Toolbar({ editor, onInsertImage }: { editor: Editor; onInsertImage: () 
       <ToolbarButton active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
         Quote
       </ToolbarButton>
+      <Divider />
       <ToolbarButton active={editor.isActive({ textAlign: "left" })} onClick={() => editor.chain().focus().setTextAlign("left").run()}>
         Left
       </ToolbarButton>
@@ -104,6 +107,7 @@ function Toolbar({ editor, onInsertImage }: { editor: Editor; onInsertImage: () 
       <ToolbarButton active={editor.isActive({ textAlign: "right" })} onClick={() => editor.chain().focus().setTextAlign("right").run()}>
         Right
       </ToolbarButton>
+      <Divider />
       <ToolbarButton active={false} onClick={onInsertImage}>
         Image
       </ToolbarButton>
@@ -124,9 +128,16 @@ function ToolbarButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded px-2.5 py-1.5 text-sm ${active ? "bg-indigo-100 text-indigo-700" : "text-neutral-600 hover:bg-neutral-100"}`}
+      aria-pressed={active}
+      className={`h-8 rounded-lg px-2.5 text-[13px] font-medium transition-colors ${
+        active ? "bg-primary-100 text-primary-800" : "text-slate-600 hover:bg-white hover:text-slate-900"
+      }`}
     >
       {children}
     </button>
   );
+}
+
+function Divider() {
+  return <span aria-hidden className="mx-1 h-5 w-px bg-line" />;
 }

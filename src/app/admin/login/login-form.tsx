@@ -12,11 +12,11 @@ export function LoginForm() {
   return (
     <form action={formAction} className="flex flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-neutral-700">
+        <label htmlFor="email" className="text-[13px] font-medium text-slate-700">
           Email
         </label>
         <div className="relative">
-          <MailIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+          <MailIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
           <input
             id="email"
             name="email"
@@ -26,22 +26,22 @@ export function LoginForm() {
             placeholder="Email address"
             aria-invalid={state?.errors?.email ? true : undefined}
             aria-describedby={state?.errors?.email ? "email-error" : undefined}
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            className="h-12 w-full rounded-xl border border-line bg-white pl-11 pr-4 text-sm text-slate-900 shadow-[0_1px_2px_rgb(15_30_76/0.03)] placeholder:text-slate-400 transition-[border-color,box-shadow] hover:border-slate-300 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/15 focus-visible:outline-none aria-invalid:border-red-300"
           />
         </div>
         {state?.errors?.email && (
-          <p id="email-error" className="text-sm text-red-600">
+          <p id="email-error" className="text-xs font-medium text-red-600">
             {state.errors.email[0]}
           </p>
         )}
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm font-medium text-neutral-700">
+        <label htmlFor="password" className="text-[13px] font-medium text-slate-700">
           Password
         </label>
         <div className="relative">
-          <LockIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400" />
+          <LockIcon className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
           <input
             id="password"
             name="password"
@@ -51,27 +51,27 @@ export function LoginForm() {
             placeholder="Password"
             aria-invalid={state?.errors?.password ? true : undefined}
             aria-describedby={state?.errors?.password ? "password-error" : undefined}
-            className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pl-11 pr-11 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            className="h-12 w-full rounded-xl border border-line bg-white pl-11 pr-11 text-sm text-slate-900 shadow-[0_1px_2px_rgb(15_30_76/0.03)] placeholder:text-slate-400 transition-[border-color,box-shadow] hover:border-slate-300 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/15 focus-visible:outline-none aria-invalid:border-red-300"
           />
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             aria-label={showPassword ? "Hide password" : "Show password"}
             aria-pressed={showPassword}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
           >
             {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>
         </div>
         {state?.errors?.password && (
-          <p id="password-error" className="text-sm text-red-600">
+          <p id="password-error" className="text-xs font-medium text-red-600">
             {state.errors.password[0]}
           </p>
         )}
       </div>
 
       {state?.message && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
           {state.message}
         </p>
       )}
@@ -79,9 +79,9 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60"
+        className="mt-2 h-12 w-full rounded-xl bg-primary-600 px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-700 disabled:opacity-60"
       >
-        {pending ? "Signing in…" : "Login"}
+        {pending ? "Signing in…" : "Sign in"}
       </button>
     </form>
   );

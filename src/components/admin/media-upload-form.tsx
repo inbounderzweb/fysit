@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import { uploadFileWithProgress } from "@/lib/upload-with-progress";
 import type { MediaItem } from "@/types/media";
+import { Alert } from "@/components/admin/ui/feedback";
+import { UploadIcon } from "@/components/admin/icons";
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
@@ -62,12 +64,18 @@ export function MediaUploadForm({
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") inputRef.current?.click();
         }}
+        aria-label="Upload an image: drag and drop, or press Enter to browse"
         className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ${
-          isDragging ? "border-indigo-500 bg-indigo-50" : "border-neutral-300 bg-neutral-50 hover:bg-neutral-100"
+          isDragging ? "border-primary-500 bg-primary-50" : "border-line bg-slate-50/60 hover:border-primary-300 hover:bg-primary-50/40"
         }`}
       >
-        <p className="text-sm font-medium text-neutral-700">Drag & drop an image, or click to browse</p>
-        <p className="text-xs text-neutral-500">JPG, PNG, WEBP, or AVIF — up to 2 MB</p>
+        <span className="mb-1 flex size-11 items-center justify-center rounded-xl bg-white text-primary-600 shadow-card">
+          <UploadIcon className="size-5" />
+        </span>
+        <p className="text-sm font-medium text-slate-700">
+          Drag and drop an image, or <span className="text-primary-700 underline underline-offset-2">browse</span>
+        </p>
+        <p className="text-xs text-slate-500">JPG, PNG, WEBP or AVIF, up to 2 MB</p>
         <input
           ref={inputRef}
           type="file"
@@ -83,14 +91,21 @@ export function MediaUploadForm({
 
       {progress !== null && (
         <div className="flex flex-col gap-1">
-          <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200">
-            <div className="h-full bg-indigo-600 transition-all" style={{ width: `${progress}%` }} />
+          <div
+            className="h-2 w-full overflow-hidden rounded-full bg-slate-100"
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Upload progress"
+          >
+            <div className="h-full rounded-full bg-primary-500 transition-all" style={{ width: `${progress}%` }} />
           </div>
-          <p className="text-xs text-neutral-500">Uploading… {progress}%</p>
+          <p className="text-xs tabular-nums text-slate-500">Uploading… {progress}%</p>
         </div>
       )}
 
-      {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+      {error && <Alert tone="error">{error}</Alert>}
     </div>
   );
 }

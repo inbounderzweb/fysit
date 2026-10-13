@@ -5,6 +5,10 @@ import { getCurrentUser } from "@/lib/dal";
 import { can } from "@/lib/permissions";
 import { PageForm } from "../../page-form";
 import { updatePageAction, setPageStatusAction } from "../../actions";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/badge";
+import { ActionButton } from "@/components/admin/ui/confirm-action";
+import { ArchiveIcon, CheckCircleIcon } from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Edit Page" };
 
@@ -21,38 +25,45 @@ export default async function EditPagePage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-neutral-900">Edit Page</h1>
-        {canPublish && (
-          <div className="flex gap-2">
-            {page.status !== "PUBLISHED" && (
-              <form action={setPageStatusAction.bind(null, id, "PUBLISHED")}>
-                <button type="submit" className="rounded bg-green-600 px-3 py-1.5 text-sm text-white">
-                  Publish
-                </button>
-              </form>
-            )}
-            {page.status === "PUBLISHED" && (
-              <form action={setPageStatusAction.bind(null, id, "DRAFT")}>
-                <button type="submit" className="rounded bg-yellow-600 px-3 py-1.5 text-sm text-white">
-                  Unpublish
-                </button>
-              </form>
-            )}
-            {page.status !== "ARCHIVED" && (
-              <form action={setPageStatusAction.bind(null, id, "ARCHIVED")}>
-                <button type="submit" className="rounded bg-neutral-600 px-3 py-1.5 text-sm text-white">
-                  Archive
-                </button>
-              </form>
-            )}
-          </div>
-        )}
-      </div>
+      <PageHeader
+        back={{ href: "/admin/pages", label: "All pages" }}
+        title="Edit page"
+        meta={<StatusBadge status={page.status} />}
+        description={page.title}
+        actions={
+          canPublish && (
+            <>
+              {page.status !== "PUBLISHED" && (
+                <form action={setPageStatusAction.bind(null, id, "PUBLISHED")}>
+                  <ActionButton variant="primary" size="md" pendingLabel="Publishing…">
+                    <CheckCircleIcon />
+                    Publish
+                  </ActionButton>
+                </form>
+              )}
+              {page.status === "PUBLISHED" && (
+                <form action={setPageStatusAction.bind(null, id, "DRAFT")}>
+                  <ActionButton variant="secondary" size="md" pendingLabel="Updating…">
+                    Unpublish
+                  </ActionButton>
+                </form>
+              )}
+              {page.status !== "ARCHIVED" && (
+                <form action={setPageStatusAction.bind(null, id, "ARCHIVED")}>
+                  <ActionButton variant="secondary" size="md" pendingLabel="Archiving…">
+                    <ArchiveIcon />
+                    Archive
+                  </ActionButton>
+                </form>
+              )}
+            </>
+          )
+        }
+      />
 
       <PageForm
         action={boundUpdate}
-        submitLabel="Save Changes"
+        submitLabel="Save changes"
         defaultValues={{
           title: page.title,
           slug: page.slug,

@@ -4,6 +4,12 @@ import { useActionState } from "react";
 import { CONTENT_STATUSES } from "@/lib/constants";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { Card, CardHeader } from "@/components/admin/ui/card";
+import { Field, Input, Select, Textarea } from "@/components/admin/ui/form";
+import { Alert } from "@/components/admin/ui/feedback";
+import { buttonClasses } from "@/components/admin/ui/button";
+import { statusLabel } from "@/components/admin/ui/badge";
+import { DocumentIcon, GlobeIcon, ImageIcon, LayersIcon } from "@/components/admin/icons";
 import type { MediaItem } from "@/types/media";
 import type { BlogFormState } from "./actions";
 
@@ -35,102 +41,89 @@ export function BlogForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const errors = state?.errors;
 
   return (
-    <form action={formAction} className="flex max-w-3xl flex-col gap-5" noValidate>
-      <Field label="Title" name="title" error={state?.errors?.title} defaultValue={defaultValues?.title} required />
-      <Field label="Slug" name="slug" error={state?.errors?.slug} defaultValue={defaultValues?.slug} required />
-      <Field label="Excerpt" name="excerpt" defaultValue={defaultValues?.excerpt} />
+    <form action={formAction} className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]" noValidate>
+      <Card>
+        <CardHeader icon={DocumentIcon} title="Post content" />
+        <div className="flex flex-col gap-5 p-5">
+          <Field label="Title" htmlFor="title" error={errors?.title} required>
+            <Input id="title" name="title" defaultValue={defaultValues?.title} required invalid={!!errors?.title} />
+          </Field>
+          <Field
+            label="Slug"
+            htmlFor="slug"
+            error={errors?.slug}
+            hint="The post’s address: thefysit.com/blog/your-slug"
+            required
+          >
+            <Input id="slug" name="slug" defaultValue={defaultValues?.slug} required invalid={!!errors?.slug} />
+          </Field>
+          <Field label="Excerpt" htmlFor="excerpt" hint="A one or two sentence summary shown on blog cards.">
+            <Textarea id="excerpt" name="excerpt" rows={2} defaultValue={defaultValues?.excerpt} />
+          </Field>
+          <Field label="Content" htmlFor="content" error={errors?.content}>
+            <RichTextEditor name="content" initialContent={defaultValues?.content} placeholder="Write your post…" />
+          </Field>
+        </div>
+      </Card>
 
-      <MediaPicker
-        name="featuredImage"
-        label="Featured Image"
-        folder="blog"
-        initial={defaultValues?.featuredImage ?? null}
-      />
+      <div className="flex flex-col gap-6 xl:sticky xl:top-24">
+        <Card>
+          <CardHeader icon={LayersIcon} title="Publishing" />
+          <div className="flex flex-col gap-4 p-5">
+            <Field label="Status" htmlFor="status">
+              <Select id="status" name="status" defaultValue={defaultValues?.status ?? "DRAFT"}>
+                {CONTENT_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {statusLabel(status)}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            {state?.message && <Alert tone="error">{state.message}</Alert>}
+            {errors && !state?.message && <Alert tone="error">Please fix the highlighted fields.</Alert>}
+            <button type="submit" disabled={pending} className={buttonClasses({ className: "w-full" })}>
+              {pending ? "Saving…" : submitLabel}
+            </button>
+          </div>
+        </Card>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="content" className="text-sm font-medium">
-          Content
-        </label>
-        <RichTextEditor name="content" initialContent={defaultValues?.content} placeholder="Write your post…" />
-        {state?.errors?.content && <p className="text-sm text-red-600">{state.errors.content[0]}</p>}
+        <Card>
+          <CardHeader icon={ImageIcon} title="Featured image" />
+          <div className="p-5">
+            <MediaPicker
+              name="featuredImage"
+              label="Featured image"
+              hideLabel
+              folder="blog"
+              initial={defaultValues?.featuredImage ?? null}
+            />
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader icon={GlobeIcon} title="SEO" description="How the post appears in search and social shares" />
+          <div className="flex flex-col gap-4 p-5">
+            <Field label="SEO title" htmlFor="seoTitle">
+              <Input id="seoTitle" name="seoTitle" defaultValue={defaultValues?.seo?.title} />
+            </Field>
+            <Field label="SEO description" htmlFor="seoDescription">
+              <Textarea id="seoDescription" name="seoDescription" rows={3} defaultValue={defaultValues?.seo?.description} />
+            </Field>
+            <Field label="Canonical URL" htmlFor="seoCanonical">
+              <Input id="seoCanonical" name="seoCanonical" defaultValue={defaultValues?.seo?.canonical} />
+            </Field>
+            <Field label="Keywords" htmlFor="seoKeywords" hint="Separate with commas.">
+              <Input id="seoKeywords" name="seoKeywords" defaultValue={defaultValues?.seo?.keywords?.join(", ")} />
+            </Field>
+            <Field label="OG image URL" htmlFor="seoOgImage">
+              <Input id="seoOgImage" name="seoOgImage" defaultValue={defaultValues?.seo?.ogImage} />
+            </Field>
+          </div>
+        </Card>
       </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="status" className="text-sm font-medium">
-          Status
-        </label>
-        <select
-          id="status"
-          name="status"
-          defaultValue={defaultValues?.status ?? "DRAFT"}
-          className="rounded border border-neutral-300 px-3 py-2"
-        >
-          {CONTENT_STATUSES.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <fieldset className="flex flex-col gap-3 rounded border border-neutral-200 p-4">
-        <legend className="px-1 text-sm font-medium">SEO</legend>
-        <Field label="SEO Title" name="seoTitle" defaultValue={defaultValues?.seo?.title} />
-        <Field label="SEO Description" name="seoDescription" defaultValue={defaultValues?.seo?.description} />
-        <Field label="Canonical URL" name="seoCanonical" defaultValue={defaultValues?.seo?.canonical} />
-        <Field
-          label="Keywords (comma separated)"
-          name="seoKeywords"
-          defaultValue={defaultValues?.seo?.keywords?.join(", ")}
-        />
-        <Field label="OG Image URL" name="seoOgImage" defaultValue={defaultValues?.seo?.ogImage} />
-      </fieldset>
-
-      {state?.message && (
-        <p role="alert" className="text-sm text-red-600">
-          {state.message}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-fit rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-60"
-      >
-        {pending ? "Saving…" : submitLabel}
-      </button>
     </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  defaultValue,
-  error,
-  required,
-}: {
-  label: string;
-  name: string;
-  defaultValue?: string;
-  error?: string[];
-  required?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-sm font-medium">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        required={required}
-        className="rounded border border-neutral-300 px-3 py-2"
-      />
-      {error && <p className="text-sm text-red-600">{error[0]}</p>}
-    </div>
   );
 }

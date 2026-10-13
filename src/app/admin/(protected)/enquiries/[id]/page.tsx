@@ -5,16 +5,24 @@ import { getCurrentUser } from "@/lib/dal";
 import { can } from "@/lib/permissions";
 import { ENQUIRY_STATUSES } from "@/lib/constants";
 import { setEnquiryStatusAction, deleteEnquiryAction } from "../actions";
+import { Card, CardHeader } from "@/components/admin/ui/card";
+import { PageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge, statusLabel } from "@/components/admin/ui/badge";
+import { ActionButton, ConfirmAction } from "@/components/admin/ui/confirm-action";
+import { buttonClasses } from "@/components/admin/ui/button";
+import {
+  CalendarIcon,
+  CheckIcon,
+  ClockIcon,
+  InboxIcon,
+  MailIcon,
+  PhoneIcon,
+  StethoscopeIcon,
+  TrashIcon,
+  UserIcon,
+} from "@/components/admin/icons";
 
 export const metadata: Metadata = { title: "Enquiry Detail" };
-
-const STATUS_LABELS: Record<string, string> = {
-  NEW: "Mark as New",
-  CONTACTED: "Mark as Contacted",
-  IN_PROGRESS: "Mark as In Progress",
-  RESOLVED: "Mark as Resolved",
-  ARCHIVED: "Archive",
-};
 
 export default async function EnquiryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -26,78 +34,169 @@ export default async function EnquiryDetailPage({ params }: { params: Promise<{ 
 
   const canUpdate = can(user.role, "update", "enquiries");
   const canDelete = can(user.role, "delete", "enquiries");
+  const received = new Date(enquiry.createdAt);
+  const preferred = enquiry.preferredDate
+    ? new Date(`${enquiry.preferredDate}T00:00:00`).toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold text-neutral-900">{enquiry.subject || "Enquiry"}</h1>
-
-      <dl className="grid grid-cols-[120px_1fr] gap-y-2 rounded border border-neutral-200 bg-white p-4 text-sm">
-        <dt className="text-neutral-500">Name</dt>
-        <dd className="text-neutral-900">{enquiry.name}</dd>
-        <dt className="text-neutral-500">Email</dt>
-        <dd>
-          <a href={`mailto:${enquiry.email}`} className="text-indigo-600 underline">
-            {enquiry.email}
-          </a>
-        </dd>
-        <dt className="text-neutral-500">Phone</dt>
-        <dd>
-          {enquiry.phone ? (
-            <a href={`tel:${enquiry.phone}`} className="text-indigo-600 underline">
-              {enquiry.phone}
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        back={{ href: "/admin/enquiries", label: "All enquiries" }}
+        title={enquiry.subject || `Enquiry from ${enquiry.name}`}
+        meta={<StatusBadge status={enquiry.status} kind="enquiry" />}
+        description={`Received ${received.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}`}
+        actions={
+          <>
+            <a href={`mailto:${enquiry.email}`} className={buttonClasses({ variant: "primary" })}>
+              <MailIcon />
+              Reply by email
             </a>
-          ) : (
-            "—"
+            {enquiry.phone && (
+              <a href={`tel:${enquiry.phone}`} className={buttonClasses({ variant: "secondary" })}>
+                <PhoneIcon />
+                Call
+              </a>
+            )}
+          </>
+        }
+      />
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <Card>
+            <CardHeader icon={InboxIcon} title="Message" />
+            <p className="whitespace-pre-wrap px-5 pb-6 pt-4 text-[15px] leading-7 text-slate-700">{enquiry.message}</p>
+          </Card>
+
+          {(enquiry.department || enquiry.doctor || preferred) && (
+            <Card>
+              <CardHeader icon={StethoscopeIcon} title="Appointment request" description="Details the patient chose on the Contact page" />
+              <dl className="mt-5 grid gap-px overflow-hidden rounded-b-2xl border-t border-line bg-line sm:grid-cols-3">
+                <Detail label="Service" value={enquiry.department} />
+                <Detail label="Preferred doctor" value={enquiry.doctor} />
+                <Detail label="Preferred date" value={preferred} />
+              </dl>
+            </Card>
           )}
-        </dd>
-        {enquiry.department && (
-          <>
-            <dt className="text-neutral-500">Department</dt>
-            <dd className="text-neutral-900">{enquiry.department}</dd>
-          </>
-        )}
-        {enquiry.doctor && (
-          <>
-            <dt className="text-neutral-500">Doctor</dt>
-            <dd className="text-neutral-900">{enquiry.doctor}</dd>
-          </>
-        )}
-        {enquiry.preferredDate && (
-          <>
-            <dt className="text-neutral-500">Preferred date</dt>
-            <dd className="text-neutral-900">{enquiry.preferredDate}</dd>
-          </>
-        )}
-        <dt className="text-neutral-500">Status</dt>
-        <dd className="text-neutral-900">{enquiry.status.replace("_", " ")}</dd>
-        <dt className="text-neutral-500">Received</dt>
-        <dd className="text-neutral-900">{new Date(enquiry.createdAt).toLocaleString()}</dd>
-        <dt className="text-neutral-500">Message</dt>
-        <dd className="whitespace-pre-wrap text-neutral-900">{enquiry.message}</dd>
-      </dl>
-
-      {canUpdate && (
-        <div className="flex flex-wrap gap-2">
-          {ENQUIRY_STATUSES.filter((status) => status !== enquiry.status).map((status) => (
-            <form key={status} action={setEnquiryStatusAction.bind(null, id, status)}>
-              <button
-                type="submit"
-                className="rounded border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-50"
-              >
-                {STATUS_LABELS[status]}
-              </button>
-            </form>
-          ))}
         </div>
-      )}
 
-      {canDelete && (
-        <form action={deleteEnquiryAction.bind(null, id)}>
-          <button type="submit" className="text-sm text-red-600 underline">
-            Delete Enquiry
-          </button>
-        </form>
-      )}
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader icon={UserIcon} title="Patient" />
+            <dl className="flex flex-col gap-4 px-5 pb-5 pt-4 text-sm">
+              <ContactRow label="Name" value={enquiry.name} />
+              <ContactRow
+                label="Email"
+                value={
+                  <a href={`mailto:${enquiry.email}`} className="break-all font-medium text-primary-700 hover:underline">
+                    {enquiry.email}
+                  </a>
+                }
+              />
+              <ContactRow
+                label="Phone"
+                value={
+                  enquiry.phone ? (
+                    <a href={`tel:${enquiry.phone}`} className="font-medium text-primary-700 hover:underline">
+                      {enquiry.phone}
+                    </a>
+                  ) : (
+                    <span className="text-slate-400">Not provided</span>
+                  )
+                }
+              />
+              <ContactRow
+                label="Received"
+                value={received.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+              />
+            </dl>
+          </Card>
+
+          {canUpdate && (
+            <Card>
+              <CardHeader icon={ClockIcon} title="Update status" description="Track where this enquiry stands" />
+              <div className="flex flex-col gap-1.5 p-5">
+                {ENQUIRY_STATUSES.map((status) => {
+                  const current = status === enquiry.status;
+                  return current ? (
+                    <div
+                      key={status}
+                      className="flex h-10 items-center justify-between rounded-xl border border-primary-200 bg-primary-50 px-3.5 text-sm font-medium text-primary-700"
+                    >
+                      {statusLabel(status, "enquiry")}
+                      <CheckIcon className="size-4" />
+                    </div>
+                  ) : (
+                    <form key={status} action={setEnquiryStatusAction.bind(null, id, status)}>
+                      <ActionButton variant="secondary" size="md" pendingLabel="Updating…" className="w-full justify-start!">
+                        Mark as {statusLabel(status, "enquiry").toLowerCase()}
+                      </ActionButton>
+                    </form>
+                  );
+                })}
+              </div>
+              {canDelete && (
+                <div className="border-t border-line px-5 py-4">
+                  <ConfirmAction
+                    action={deleteEnquiryAction.bind(null, id)}
+                    title="Delete this enquiry?"
+                    description={`The enquiry from ${enquiry.name} will be permanently removed. This can’t be undone.`}
+                    confirmLabel="Delete enquiry"
+                    trigger={
+                      <>
+                        <TrashIcon />
+                        Delete enquiry
+                      </>
+                    }
+                  />
+                </div>
+              )}
+            </Card>
+          )}
+
+          {!canUpdate && canDelete && (
+            <ConfirmAction
+              action={deleteEnquiryAction.bind(null, id)}
+              title="Delete this enquiry?"
+              description={`The enquiry from ${enquiry.name} will be permanently removed. This can’t be undone.`}
+              confirmLabel="Delete enquiry"
+              trigger={
+                <>
+                  <TrashIcon />
+                  Delete enquiry
+                </>
+              }
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Detail({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div className="bg-white px-5 py-4">
+      <dt className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+        {label === "Preferred date" ? <CalendarIcon className="size-3.5" /> : null}
+        {label}
+      </dt>
+      <dd className="mt-1 text-sm font-medium text-navy-900">{value || <span className="text-slate-400">—</span>}</dd>
+    </div>
+  );
+}
+
+function ContactRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-xs font-medium text-slate-500">{label}</dt>
+      <dd className="text-slate-800">{value}</dd>
     </div>
   );
 }

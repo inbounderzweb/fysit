@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHeader } from "@/components/admin/ui/page-header";
 import { TestimonialForm } from "../testimonial-form";
 import { createTestimonialAction } from "../actions";
 
@@ -7,8 +8,12 @@ export const metadata: Metadata = { title: "Add Testimonial" };
 export default function NewTestimonialPage() {
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold text-neutral-900">Add Testimonial</h1>
-      <TestimonialForm action={createTestimonialAction} submitLabel="Create Testimonial" />
+      <PageHeader
+        back={{ href: "/admin/testimonials", label: "All testimonials" }}
+        title="Add testimonial"
+        description="Share a patient’s experience on the website."
+      />
+      <TestimonialForm action={createTestimonialAction} submitLabel="Create testimonial" />
     </div>
   );
 }

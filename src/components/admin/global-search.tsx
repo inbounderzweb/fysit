@@ -52,7 +52,7 @@ export function GlobalSearch() {
 
   return (
     <div className="relative w-full max-w-md">
-      <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+      <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
       <input
         ref={inputRef}
         type="text"
@@ -63,28 +63,36 @@ export function GlobalSearch() {
         }}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-        placeholder="Search anything…"
-        className="w-full rounded-lg border border-neutral-200 bg-neutral-50 py-2 pl-9 pr-14 text-sm focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+        placeholder="Search enquiries, posts, testimonials…"
+        aria-label="Search the admin"
+        role="combobox"
+        aria-expanded={isOpen && query.trim().length >= 2}
+        aria-controls="admin-search-results"
+        className="h-10 w-full rounded-xl border border-transparent bg-slate-100/80 pl-10 pr-14 text-sm text-slate-900 placeholder:text-slate-400 transition-colors hover:bg-slate-100 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary-500/15 focus-visible:outline-none"
       />
-      <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-neutral-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-neutral-400">
+      <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-line bg-white px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
         ⌘K
       </kbd>
 
       {isOpen && query.trim().length >= 2 && (
-        <div className="absolute left-0 right-0 top-full z-40 mt-2 max-h-80 overflow-y-auto rounded-lg border border-neutral-200 bg-white shadow-lg">
+        <div
+          id="admin-search-results"
+          className="absolute left-0 right-0 top-full z-40 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-line bg-white p-1.5 shadow-pop"
+        >
           {results.length === 0 ? (
-            <p className="p-3 text-sm text-neutral-500">No results.</p>
+            <p className="px-3 py-6 text-center text-sm text-slate-500">No results for “{query.trim()}”.</p>
           ) : (
-            <ul className="divide-y divide-neutral-100">
+            <ul role="listbox">
               {results.map((result) => (
-                <li key={`${result.type}-${result.href}`}>
+                <li key={`${result.type}-${result.href}`} role="option" aria-selected={false}>
                   <button
                     type="button"
                     onMouseDown={() => goTo(result.href)}
-                    className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-neutral-50"
+                    onKeyDown={(event) => event.key === "Enter" && goTo(result.href)}
+                    className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-slate-50 focus:bg-slate-50"
                   >
-                    <span className="truncate text-neutral-900">{result.label}</span>
-                    <span className="shrink-0 text-xs text-neutral-400">
+                    <span className="truncate font-medium text-slate-800">{result.label}</span>
+                    <span className="shrink-0 rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] text-slate-500">
                       {result.type}
                       {result.sublabel ? ` · ${result.sublabel}` : ""}
                     </span>

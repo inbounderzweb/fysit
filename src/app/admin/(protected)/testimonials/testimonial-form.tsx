@@ -3,6 +3,11 @@
 import { useActionState } from "react";
 import { CONTENT_STATUSES } from "@/lib/constants";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { Card } from "@/components/admin/ui/card";
+import { Field, FormFooter, FormSection, Input, Select, Textarea } from "@/components/admin/ui/form";
+import { Alert } from "@/components/admin/ui/feedback";
+import { ButtonLink, buttonClasses } from "@/components/admin/ui/button";
+import { statusLabel } from "@/components/admin/ui/badge";
 import type { MediaItem } from "@/types/media";
 import type { TestimonialFormState } from "./actions";
 
@@ -31,116 +36,86 @@ export function TestimonialForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const errors = state?.errors;
 
   return (
-    <form action={formAction} className="flex max-w-2xl flex-col gap-5" noValidate>
-      <Field
-        label="Name"
-        name="authorName"
-        error={state?.errors?.authorName}
-        defaultValue={defaultValues?.authorName}
-        required
-      />
-      <Field label="Designation" name="authorRole" defaultValue={defaultValues?.authorRole} />
-      <Field label="Company" name="company" defaultValue={defaultValues?.company} />
+    <Card className="max-w-5xl">
+      <form action={formAction} noValidate>
+        <FormSection title="Patient" description="Who the feedback is from, as it should appear on the website.">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Name" htmlFor="authorName" error={errors?.authorName} required className="sm:col-span-2">
+              <Input
+                id="authorName"
+                name="authorName"
+                defaultValue={defaultValues?.authorName}
+                required
+                invalid={!!errors?.authorName}
+              />
+            </Field>
+            <Field label="Designation" htmlFor="authorRole" hint="For example: Marathon runner, Patient">
+              <Input id="authorRole" name="authorRole" defaultValue={defaultValues?.authorRole} />
+            </Field>
+            <Field label="Company" htmlFor="company">
+              <Input id="company" name="company" defaultValue={defaultValues?.company} />
+            </Field>
+          </div>
+          <div className="max-w-sm">
+            <MediaPicker name="image" label="Photo" folder="testimonials" initial={defaultValues?.image ?? null} />
+          </div>
+        </FormSection>
 
-      <MediaPicker name="image" label="Photo" folder="testimonials" initial={defaultValues?.image ?? null} />
+        <FormSection title="Feedback" description="Shown on the Home and About pages.">
+          <Field
+            label="Testimonial"
+            htmlFor="quote"
+            error={errors?.quote}
+            hint="Cards fit about 50 words; longer text is cut off with “…”."
+            required
+          >
+            <Textarea
+              id="quote"
+              name="quote"
+              rows={5}
+              required
+              defaultValue={defaultValues?.quote}
+              invalid={!!errors?.quote}
+            />
+          </Field>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Rating" htmlFor="rating" error={errors?.rating} hint="1–5, half stars allowed. Optional.">
+              <Input
+                id="rating"
+                name="rating"
+                type="number"
+                min={1}
+                max={5}
+                step={0.5}
+                defaultValue={defaultValues?.rating}
+                invalid={!!errors?.rating}
+              />
+            </Field>
+            <Field label="Status" htmlFor="status" hint="Only active testimonials appear on the website.">
+              <Select id="status" name="status" defaultValue={defaultValues?.status ?? "DRAFT"}>
+                {CONTENT_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {statusLabel(status, "testimonial")}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          </div>
+        </FormSection>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="quote" className="text-sm font-medium">
-          Testimonial
-        </label>
-        <textarea
-          id="quote"
-          name="quote"
-          rows={4}
-          required
-          defaultValue={defaultValues?.quote}
-          className="rounded border border-neutral-300 px-3 py-2 text-sm"
-        />
-        <p className="text-xs text-neutral-500">
-          Shown on the Home and About pages. Cards fit about 50 words; longer text is cut off with “…”.
-        </p>
-        {state?.errors?.quote && <p className="text-sm text-red-600">{state.errors.quote[0]}</p>}
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="rating" className="text-sm font-medium">
-          Rating (1–5, half stars allowed, optional)
-        </label>
-        <input
-          id="rating"
-          name="rating"
-          type="number"
-          min={1}
-          max={5}
-          step={0.5}
-          defaultValue={defaultValues?.rating}
-          className="w-24 rounded border border-neutral-300 px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="status" className="text-sm font-medium">
-          Status
-        </label>
-        <select
-          id="status"
-          name="status"
-          defaultValue={defaultValues?.status ?? "DRAFT"}
-          className="rounded border border-neutral-300 px-3 py-2"
-        >
-          {CONTENT_STATUSES.map((status) => (
-            <option key={status} value={status}>
-              {status === "PUBLISHED" ? "ACTIVE" : status === "ARCHIVED" ? "ARCHIVED" : "INACTIVE"}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {state?.message && (
-        <p role="alert" className="text-sm text-red-600">
-          {state.message}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-fit rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-60"
-      >
-        {pending ? "Saving…" : submitLabel}
-      </button>
-    </form>
-  );
-}
-
-function Field({
-  label,
-  name,
-  defaultValue,
-  error,
-  required,
-}: {
-  label: string;
-  name: string;
-  defaultValue?: string;
-  error?: string[];
-  required?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-sm font-medium">
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        defaultValue={defaultValue}
-        required={required}
-        className="rounded border border-neutral-300 px-3 py-2"
-      />
-      {error && <p className="text-sm text-red-600">{error[0]}</p>}
-    </div>
+        <FormFooter>
+          {state?.message && <Alert tone="error" className="sm:mr-auto">{state.message}</Alert>}
+          <ButtonLink href="/admin/testimonials" variant="secondary">
+            Cancel
+          </ButtonLink>
+          <button type="submit" disabled={pending} className={buttonClasses()}>
+            {pending ? "Saving…" : submitLabel}
+          </button>
+        </FormFooter>
+      </form>
+    </Card>
   );
 }
