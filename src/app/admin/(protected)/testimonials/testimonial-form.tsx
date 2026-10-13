@@ -58,12 +58,15 @@ export function TestimonialForm({
           defaultValue={defaultValues?.quote}
           className="rounded border border-neutral-300 px-3 py-2 text-sm"
         />
+        <p className="text-xs text-neutral-500">
+          Shown on the Home and About pages. Cards fit about 50 words; longer text is cut off with “…”.
+        </p>
         {state?.errors?.quote && <p className="text-sm text-red-600">{state.errors.quote[0]}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
         <label htmlFor="rating" className="text-sm font-medium">
-          Rating (1–5, optional)
+          Rating (1–5, half stars allowed, optional)
         </label>
         <input
           id="rating"
@@ -71,6 +74,7 @@ export function TestimonialForm({
           type="number"
           min={1}
           max={5}
+          step={0.5}
           defaultValue={defaultValues?.rating}
           className="w-24 rounded border border-neutral-300 px-3 py-2 text-sm"
         />

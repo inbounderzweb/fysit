@@ -24,9 +24,14 @@ const word: Variants = {
 
 type WordRevealHeadingProps = {
   lead: string;
-  /** Set in Playfair italic, teal — the `heading-accent` clause. */
-  accent: string;
+  /** Set in Playfair italic, teal — the `heading-accent` clause. Optional. */
+  accent?: string;
   tone?: "navy" | "white";
+  /**
+   * `section` is the 36/46px phone size the reference uses for section
+   * headings; `page` is the 42/52px one its Contact page heading uses.
+   */
+  size?: "section" | "page";
   className?: string;
 };
 
@@ -39,12 +44,13 @@ export function WordRevealHeading({
   lead,
   accent,
   tone = "navy",
+  size = "section",
   className,
 }: WordRevealHeadingProps) {
   const reduceMotion = useReducedMotion();
   const words = [
     ...lead.split(" ").map((text) => ({ text, accent: false })),
-    ...accent.split(" ").map((text) => ({ text, accent: true })),
+    ...(accent ? accent.split(" ").map((text) => ({ text, accent: true })) : []),
   ];
 
   return (
@@ -54,7 +60,9 @@ export function WordRevealHeading({
       viewport={{ once: true, margin: "-80px" }}
       className={cn(
         "font-normal tracking-[-0.05em]",
-        "text-[36px] leading-[46px] md:text-[60px] md:leading-[70px]",
+        size === "page"
+          ? "text-[42px] leading-[52px] md:text-[60px] md:leading-[70px]"
+          : "text-[36px] leading-[46px] md:text-[60px] md:leading-[70px]",
         tone === "white" ? "text-white" : "text-navy",
         className,
       )}

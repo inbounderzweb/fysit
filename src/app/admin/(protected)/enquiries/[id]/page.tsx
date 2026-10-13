@@ -50,6 +50,24 @@ export default async function EnquiryDetailPage({ params }: { params: Promise<{ 
             "—"
           )}
         </dd>
+        {enquiry.department && (
+          <>
+            <dt className="text-neutral-500">Department</dt>
+            <dd className="text-neutral-900">{enquiry.department}</dd>
+          </>
+        )}
+        {enquiry.doctor && (
+          <>
+            <dt className="text-neutral-500">Doctor</dt>
+            <dd className="text-neutral-900">{enquiry.doctor}</dd>
+          </>
+        )}
+        {enquiry.preferredDate && (
+          <>
+            <dt className="text-neutral-500">Preferred date</dt>
+            <dd className="text-neutral-900">{enquiry.preferredDate}</dd>
+          </>
+        )}
         <dt className="text-neutral-500">Status</dt>
         <dd className="text-neutral-900">{enquiry.status.replace("_", " ")}</dd>
         <dt className="text-neutral-500">Received</dt>

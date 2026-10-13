@@ -7,6 +7,10 @@ const contactEnquirySchema = new Schema(
     email: { type: String, required: true, trim: true, lowercase: true },
     phone: { type: String, trim: true },
     subject: { type: String, trim: true },
+    department: { type: String, trim: true },
+    doctor: { type: String, trim: true },
+    // Kept as the visitor's YYYY-MM-DD so it never shifts across time zones.
+    preferredDate: { type: String, trim: true },
     message: { type: String, required: true },
     status: { type: String, enum: ENQUIRY_STATUSES, required: true, default: "NEW" },
     ipAddress: { type: String },

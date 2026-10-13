@@ -35,6 +35,7 @@ export async function updateSettingsAction(_prev: SettingsFormState, formData: F
   await logAction({ userId: user.id, action: "SETTINGS_UPDATE", entity: "SiteSettings" });
   revalidatePath("/admin/settings");
   revalidatePath("/");
+  revalidatePath("/contact");
 
   return { success: true };
 }

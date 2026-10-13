@@ -19,6 +19,9 @@ export async function submitEnquiryAction(_prev: ContactFormState, formData: For
     email: formData.get("email"),
     phone: formData.get("phone") || undefined,
     subject: formData.get("subject") || undefined,
+    department: formData.get("department") || undefined,
+    doctor: formData.get("doctor") || undefined,
+    preferredDate: formData.get("preferredDate") || undefined,
     message: formData.get("message"),
     company: formData.get("company") || undefined,
   });
@@ -38,7 +41,12 @@ export async function submitEnquiryAction(_prev: ContactFormState, formData: For
     return { message: "Too many submissions. Please try again later." };
   }
 
-  await createEnquiry(validated.data, ip);
+  try {
+    await createEnquiry(validated.data, ip);
+  } catch (error) {
+    console.error("Contact form: failed to save enquiry", error);
+    return { message: "We couldn’t send your message just now. Please try again or call us." };
+  }
 
   return { success: true };
 }

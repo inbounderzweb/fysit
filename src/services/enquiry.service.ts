@@ -11,7 +11,14 @@ export async function createEnquiry(input: Omit<EnquiryInput, "company">, ipAddr
     name: input.name,
     email: input.email,
     phone: input.phone || undefined,
-    subject: input.subject || undefined,
+    // The Contact page form has no subject field; an appointment request
+    // is labelled by its department so it reads clearly in the admin list.
+    subject:
+      input.subject ||
+      (input.department ? `Appointment request: ${input.department}` : undefined),
+    department: input.department || undefined,
+    doctor: input.doctor || undefined,
+    preferredDate: input.preferredDate || undefined,
     message: input.message,
     ipAddress,
   });
