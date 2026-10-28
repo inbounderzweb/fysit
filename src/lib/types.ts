@@ -10,10 +10,7 @@ export type HeroBanner = {
   video: string;
   heading: string;
   cta: { label: string; href: string };
-  /** The oversized word set across the banner's middle. */
-  word: string;
   stats: { value: number; suffix: string; label: string }[];
-  body: string;
 };
 
 export type HeroSlide = {

@@ -46,17 +46,22 @@ type HeroStat = (typeof HERO_BANNER)["stats"][number];
 
 export function Hero() {
   return (
-    /* The banner sits as an inset card: a 20px frame on every side, as in the
-       reference layout, with the header still laid over its top. */
-    <div className="p-5">
+    /* The banner sits as an inset card: a 10px frame on phones and 20px from md up,
+       as in the reference layout, with the header laid over its top. */
+    <div className="p-2.5 md:p-5">
       <section
         aria-label="Welcome"
         /* No clipping: the guide rail is meant to run past the banner's edges. */
-        className="relative isolate w-full rounded-[30px] bg-[#07001a]"
+        className={cn(
+          "relative isolate flex w-full flex-col justify-end rounded-[20px] bg-[#07001a] md:rounded-[30px]",
+          /* Card plus its frame fills one screen; a minimum, so the content
+             can still grow on very short screens. */
+          "min-h-[calc(100svh-20px)] md:min-h-[calc(100svh-40px)]",
+        )}
       >
         {/* The media is clipped in its own layer so the section itself stays
           unclipped for the guide rail. */}
-        <div className="absolute inset-0 overflow-hidden rounded-[30px]">
+        <div className="absolute inset-0 overflow-hidden rounded-[20px] md:rounded-[30px]">
           <video
             className="absolute inset-0 size-full object-cover"
             src={HERO_BANNER.video}
@@ -94,16 +99,12 @@ export function Hero() {
 
         <div className={cn("relative z-[2]", COLUMN)}>
           {/*
-          The reference's 250px head and 100px foot are fixed, which pushes the
-          banner past the fold on a short laptop screen (a 956px-tall MacBook
-          Air cut off the counters). These hold the reference's values on any
-          viewport taller than ~1090px and give ground proportionally below it,
-          so the whole banner still lands inside the first screen. The head is
-          20px short of those values to give back the frame above the card.
+          Minimal content — heading, CTA and the two counters, with a fixed gap
+          between the CTA and the counters. The group sits at the card's foot.
         */}
           <Reveal
             y={50}
-            className="pb-[min(100px,9svh)] pt-[140px] md:pt-[min(230px,calc(23svh-20px))]"
+            className="flex flex-col pb-[min(80px,8svh)] pt-[150px] md:pt-[min(230px,calc(23svh-20px))]"
           >
             <h1
               className={cn(
@@ -117,7 +118,7 @@ export function Hero() {
 
             <Link
               href={HERO_BANNER.cta.href}
-              className="group mt-[30px] inline-flex h-[53px] flex-row-reverse items-center gap-3 overflow-hidden rounded-[8px] bg-white pl-5 pr-1 text-navy"
+              className="group mt-[30px] inline-flex h-[53px] self-start flex-row-reverse items-center gap-3 overflow-hidden rounded-[8px] bg-white pl-5 pr-1 text-navy"
             >
               {/* Two arrows: the resting one slides out to the right while its
                 twin follows in from the left. */}
@@ -144,34 +145,10 @@ export function Hero() {
               </span>
             </Link>
 
-            {/*
-            The reference steps its word through 60/120/180/220px so it fills
-            roughly 91% of the column. Stepping leaves a hole at the widths
-            between two steps — a 1470px screen sat on the 176px step with
-            233px of dead space beside it — so this tracks the column width
-            continuously instead: the column is `100vw` less its gutters, and
-            0.149 of that lands this word at the reference's proportion. The
-            197px cap is where the column stops growing at 1320px.
-          */}
-            <div
-              className={cn(
-                "my-[min(50px,5svh)] font-medium leading-none text-white lg:text-right",
-                "text-[calc(14.9vw-12px)] md:text-[calc(14.9vw-21px)]",
-                "lg:text-[min(197px,calc(14.9vw-15px))]",
-              )}
-            >
-              {HERO_BANNER.word}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-y-10 lg:flex-nowrap">
-              <div className="flex w-full gap-10 md:gap-[80px] lg:w-7/12">
-                {HERO_BANNER.stats.map((stat) => (
-                  <Counter key={stat.label} {...stat} />
-                ))}
-              </div>
-              <p className="w-full text-[16px] leading-[25.6px] text-white lg:ml-auto lg:w-5/12 lg:max-w-[456px]">
-                {HERO_BANNER.body}
-              </p>
+            <div className="mt-[50px] flex gap-10 md:mt-[70px] md:gap-[80px]">
+              {HERO_BANNER.stats.map((stat) => (
+                <Counter key={stat.label} {...stat} />
+              ))}
             </div>
           </Reveal>
         </div>
