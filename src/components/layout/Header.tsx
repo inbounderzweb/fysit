@@ -53,8 +53,8 @@ export function Header() {
             ? "fixed inset-x-0 top-0 h-[84px] border-b border-black/[0.06] bg-white/70 shadow-[0_10px_35px_rgba(15,30,76,0.1)] backdrop-blur-xl"
             : "absolute h-[94.25px]",
           /* The home hero is an inset card (components/sections/Hero), so the
-             overlay steps in by the same 20px frame to sit inside it. */
-          !stuck && (pathname === "/" ? "inset-x-5 top-5" : "inset-x-0 top-0"),
+             overlay steps in by the same frame (10px, 20px from md) to sit inside it. */
+          !stuck && (pathname === "/" ? "inset-x-2.5 top-2.5 md:inset-x-5 md:top-5" : "inset-x-0 top-0"),
         )}
       >
         <div className="mx-auto flex h-full items-center pl-5 pr-5 lg:pl-[47px] lg:pr-[70px]">

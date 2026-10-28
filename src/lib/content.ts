@@ -46,12 +46,10 @@ export const HERO_BANNER: HeroBanner = {
   video: "/videos/hero-banner.webm",
   heading: "Your Trusted Partner Health and Wellness",
   cta: { label: "Schedule a Checkup", href: "#appointment" },
-  word: "Physiotherapy",
   stats: [
     { value: 20, suffix: "+", label: "Years of Excellence" },
     { value: 15000, suffix: "+", label: "Successful Treatments" },
   ],
-  body: "Hands-on physiotherapy and rehabilitation from clinicians who listen — a plan built around your body, your pace and your goals.",
 };
 
 const HERO_CARD_BODY =
@@ -87,7 +85,7 @@ export const HERO_SLIDES: HeroSlide[] = [
 export const ABOUT = {
   eyebrow: "About TheFysit",
   heading: { lead: "Caring for You Like", accent: "Family Health" },
-  image: "/images/about-team.jpg",
+  image: "/images/about-us2.jpg",
   imageAlt: "Team of five doctors and nurses standing together",
   statValue: "25+",
   statImage: "/images/stat-fill.jpg",
