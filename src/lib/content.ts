@@ -13,20 +13,21 @@ import type {
 } from "./types";
 
 /**
- * Every string here is transcribed from the Figma frame "1920w light".
- * The logo artwork reads "The Fysit", while the body copy refers to
- * "TheFysit" — both are preserved exactly as the design has them.
+ * Layout follows the Figma frame "1920w light"; the copy is carried over from
+ * the clinic's previous site (thefysit.com) wherever it has an equivalent.
+ * The logo artwork reads "The Fysit", while some body copy refers to
+ * "TheFysit" — both are preserved as written.
  */
 export const SITE = {
   name: "The Fysit",
-  tagline: "Your Trusted Partner Health and Wellness",
+  tagline: "Your Partner in Wellness",
   description:
-    "We’re committed to offering compassionate and comprehensive healthcare tailored to your needs. At TheFysit, your health is our priority every step of the way.",
+    "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to offering cutting-edge treatments designed to improve your health, mobility, and overall well-being.",
   url: "https://thefysit.com",
-  phone: "(888) 4567890",
-  phoneLabel: "Emergency Call:",
-  email: "info@example.com",
-  enquiryPhone: "+4800 45 678 900",
+  phone: "+91 7892 604 549",
+  phoneLabel: "Call Us:",
+  email: "thefysit@gmail.com",
+  enquiryPhone: "+91 7892 604 549",
 } as const;
 
 export const NAV_ITEMS: NavItem[] = [
@@ -44,16 +45,16 @@ export const NAV_ITEMS: NavItem[] = [
 ------------------------------------------------------------------------- */
 export const HERO_BANNER: HeroBanner = {
   video: "/videos/hero-banner.webm",
-  heading: "Your Trusted Partner Health and Wellness",
-  cta: { label: "Schedule a Checkup", href: "#appointment" },
+  heading: "Professional Physiotherapy at Your Doorstep",
+  cta: { label: "Book an Appointment", href: "#appointment" },
   stats: [
-    { value: 20, suffix: "+", label: "Years of Excellence" },
-    { value: 15000, suffix: "+", label: "Successful Treatments" },
+    { value: 68, suffix: "+", label: "Google Reviews" },
+    { value: 3, suffix: "", label: "Locations in Bangalore" },
   ],
 };
 
 const HERO_CARD_BODY =
-  "Our experienced medical team combines the latest technology with personalized attention to provide you with exceptional healthcare tailored to your unique needs.";
+  "Our team of experienced physiotherapists delivers personalized care, including convenient home physiotherapy and comprehensive corporate ergonomics programs.";
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
@@ -63,7 +64,7 @@ export const HERO_SLIDES: HeroSlide[] = [
       "Smiling doctor in a white coat holding a tablet in a bright clinic",
     eyebrowBadge: "TheFysit",
     eyebrowText: "Trusted Specialists",
-    headingLines: ["Your Trusted", "Partner Health", "and Wellness"],
+    headingLines: ["Professional", "Physiotherapy", "at Your Doorstep"],
     cardBody: HERO_CARD_BODY,
     cta: { label: "Meet Our Team", href: "#team" },
   },
@@ -73,9 +74,9 @@ export const HERO_SLIDES: HeroSlide[] = [
     imageAlt: "Medical team consulting together in a modern clinic",
     eyebrowBadge: "TheFysit",
     eyebrowText: "Trusted Specialists",
-    headingLines: ["Your Trusted", "Partner Health", "and Wellness"],
+    headingLines: ["Comprehensive", "Clinical", "Physiotherapy"],
     cardBody: HERO_CARD_BODY,
-    cta: { label: "Schedule a Checkup", href: "#appointment" },
+    cta: { label: "Book an Appointment", href: "#appointment" },
   },
 ];
 
@@ -84,13 +85,13 @@ export const HERO_SLIDES: HeroSlide[] = [
 ------------------------------------------------------------------------- */
 export const ABOUT = {
   eyebrow: "About TheFysit",
-  heading: { lead: "Caring for You Like", accent: "Family Health" },
+  heading: { lead: "Meet The Fysit", accent: "Your Partner in Wellness" },
   image: "/images/about-us2.jpg",
   imageAlt: "Team of five doctors and nurses standing together",
   statValue: "25+",
   statImage: "/images/stat-fill.jpg",
-  statHeading: "Trusted Experts in Medical Health and Wellness",
-  body: "We’re committed to offering compassionate and comprehensive healthcare tailored to your needs. At TheFysit, your health is our priority every step of the way.",
+  statHeading: "Leading the Way in Physiotherapy",
+  body: "At The Fysit, we are committed to helping you achieve optimal physical and mental well-being. We prioritize a holistic approach to ensure lasting improvements in your overall health and quality of life.",
   cta: { label: "Discover More", href: "#services" },
 } as const;
 
@@ -102,14 +103,14 @@ export const ABOUT = {
 export const ABOUT_PAGE = {
   banner: { title: "About Us", image: "/images/banner-about.jpg" },
   mission:
-    "Our mission is simple: to serve with care, act with integrity, and always put your needs first.",
+    "Beyond simply addressing symptoms, we focus on your overall well-being through expert physiotherapy care and innovative wellness solutions.",
   intro: {
     label: "Who are we?",
     years: Number.parseInt(ABOUT.statValue, 10),
-    yearsLabel: "Years of Medical Health Care",
+    yearsLabel: "Years of Physiotherapy Care",
     avatars: ["/images/doctor-01.jpg", "/images/doctor-04.jpg", "/images/doctor-06.jpg"],
     trusted: ABOUT.statHeading,
-    body: `${ABOUT.body} ${HERO_CARD_BODY}`,
+    body: "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to offering cutting-edge treatments designed to improve your health, mobility, and overall well-being. With a focus on personalised care, our expertise lies in individual health needs and workplace wellness, creating a balanced path to better health.",
     link: { label: "Let’s create something extraordinary!", href: "/contact" },
     image: ABOUT.image,
     imageAlt: ABOUT.imageAlt,
@@ -133,25 +134,25 @@ export const ABOUT_PAGE = {
 export const OPENING_HOURS_TITLE = "Opening Hours:";
 
 export const OPENING_HOURS: OpeningHour[] = [
-  { label: "Mon - Fri", value: "9:00 - 18:00" },
-  { label: "Sat - Sun", value: "8:00 - 16:00" },
-  { label: "Emergency", value: "24/7 Hours" },
+  { label: "Mon - Fri", value: "9:00am - 9:00pm" },
+  { label: "Saturday", value: "10:00am - 1:00pm" },
+  { label: "Sunday", value: "Closed" },
 ];
 
 /* -------------------------------------------------------------------------
    Marquees — Figma 1:139 (200px uppercase) and 1:252
 ------------------------------------------------------------------------- */
 const DEPARTMENTS = [
-  "Cardiology",
-  "Dental Care",
-  "Psychiatry",
-  "Ophthalmology",
-  "Physical Therapy",
-  "Oncology",
-  "Pediatrics",
-  "Orthopedics",
-  "Dermatology",
-  "General Surgery",
+  "Clinical Physiotherapy",
+  "Doorstep Physiotherapy",
+  "Corporate Wellness",
+  "Orthopaedic",
+  "Neuro Physiotherapy",
+  "Sports Physiotherapy",
+  "Paediatric",
+  "Ergonomics Training",
+  "Group Fitness",
+  "Mental Wellness",
 ];
 
 /** Words alternate solid navy / teal→navy gradient (Figma 1:140 vs 1:143). */
@@ -161,10 +162,10 @@ export const MARQUEE_PRIMARY: MarqueeWord[] = DEPARTMENTS.map((text, i) => ({
 }));
 
 export const MARQUEE_EMERGENCY: MarqueeWord[] = [
-  "24/7 Emergency Services",
-  "Experienced Doctors On Call",
-  "Pharmacy Open 24/7",
-  "Ambulance Available Anytime",
+  "Doorstep Physiotherapy",
+  "Corporate Wellness Programs",
+  "Home Office Ergonomics",
+  "Virtual Fitness Classes",
 ].map((text, i) => ({ text, variant: i % 2 === 0 ? "solid" : "gradient" }));
 
 /* -------------------------------------------------------------------------
@@ -172,7 +173,7 @@ export const MARQUEE_EMERGENCY: MarqueeWord[] = [
 ------------------------------------------------------------------------- */
 export const SERVICES_HEADING = {
   eyebrow: "Our Department",
-  lead: "Comprehensive Medical Services for",
+  lead: "Comprehensive Physiotherapy Services for",
   accent: "Your Health",
 } as const;
 
@@ -187,46 +188,46 @@ export const SERVICES: Service[] = [
     href: "#services",
   },
   {
-    id: "diagnostics",
-    title: "Diagnostics",
+    id: "clinical-physiotherapy",
+    title: "Clinical Physiotherapy",
     description:
-      "Accurate testing and screening services to detect, monitor, and manage a wide range of health conditions.",
+      "With advanced equipment and a team of highly skilled physiotherapists, our clinical physiotherapy services provide expert care for a wide range of conditions.",
     icon: "/icons/service-diagnostics.svg",
     hoverImage: "/images/service-bg-04.jpg",
     href: "#services",
   },
   {
-    id: "diabetes-care",
-    title: "Diabetes Care",
+    id: "doorstep-physiotherapy",
+    title: "Doorstep Physiotherapy",
     description:
-      "Comprehensive management of diabetes through medication, lifestyle changes, and regular monitoring to prevent complications.",
+      "Whether you’re recovering from an injury or managing a chronic condition, we bring personalised physiotherapy treatments right to your doorstep.",
     icon: "/icons/service-diabetes.svg",
     hoverImage: "/images/service-bg-05.jpg",
     href: "#services",
   },
   {
-    id: "family-medicine",
-    title: "Family Medicine",
+    id: "corporate-wellness",
+    title: "Corporate Wellness",
     description:
-      "One of the defining features of family medicine is the continuity of care—physicians often build long-term relationships with patients and their families.",
+      "Specialised wellness programs designed to help organisations promote employee well-being, with services that support both physical and mental health.",
     icon: "/icons/service-family.svg",
     hoverImage: "/images/service-bg-06.jpg",
     href: "#services",
   },
   {
-    id: "neurology",
-    title: "Neurology",
+    id: "home-office-ergonomics",
+    title: "Home Office Ergonomics",
     description:
-      "Neurology is the branch of medicine that focuses on the diagnosis, treatment, and management of disorders related to the nervous system.",
+      "Tailored assessments that guide you in adjusting your furniture, screen setup, and posture to ensure comfort and prevent work-related injuries.",
     icon: "/icons/service-neurology.svg",
     hoverImage: "/images/service-bg-08.jpg",
     href: "#services",
   },
   {
-    id: "holistic-care",
-    title: "Holistic Care",
+    id: "virtual-fitness",
+    title: "Virtual Fitness Classes",
     description:
-      "It recognizes that health is influenced by a combination of physical, emotional, mental, social, and spiritual factors.",
+      "Our live and recorded fitness sessions, and wellness webinars, provide you with the resources you need to stay active and informed.",
     icon: "/icons/service-holistic.svg",
     hoverImage: "/images/service-bg-09.jpg",
     href: "#services",
@@ -240,7 +241,7 @@ export const SERVICES: Service[] = [
    teal — sampled directly from the reference render.
 ------------------------------------------------------------------------- */
 export const PHYSIO_SERVICES_HEADING = {
-  eyebrow: "Physiotherapy Services",
+  eyebrow: "Conditions We Treat",
   lead: "Effective, Hands-On Treatment",
   accent: "Physiotherapy Solutions",
 } as const;
@@ -248,36 +249,36 @@ export const PHYSIO_SERVICES_HEADING = {
 export const PHYSIO_SERVICES: PhysioService[] = [
   {
     id: "manual-therapy",
-    title: "Manual Therapy",
+    title: "Orthopaedic Physiotherapy",
     description:
-      "Hands-on techniques to relieve tension, improve joint mobility, and reduce pain.",
+      "Treats and cares for your musculoskeletal system, including muscles, bones, joints, ligaments, and spinal discs.",
     image: "/images/service-slide-manual-therapy.jpg",
     icon: "/icons/physio-departments/manual-therapy.svg",
     href: "#services",
   },
   {
     id: "exercise-therapy",
-    title: "Exercise Therapy",
+    title: "Neuro Physiotherapy",
     description:
-      "Customized strengthening and mobility programs for long-term recovery and improved function.",
+      "Focused treatments for neurological conditions that affect the brain, spinal cord, and nerves.",
     image: "/images/service-slide-exercise-therapy.jpg",
     icon: "/icons/physio-departments/exercise-therapy.svg",
     href: "#services",
   },
   {
     id: "sports-injury-rehab",
-    title: "Sports Injury Rehab",
+    title: "Sports Physiotherapy",
     description:
-      "Treatment for sprains, strains, tendonitis, and other athletic injuries.",
+      "Prevention and management of injuries resulting from sports and exercise activities.",
     image: "/images/service-slide-sports-injury.jpg",
     icon: "/icons/physio-departments/sports-injury.svg",
     href: "#services",
   },
   {
     id: "knee-pain-arthritis",
-    title: "Knee Pain & Arthritis",
+    title: "Paediatric Physiotherapy",
     description:
-      "Treatment for chronic knee pain, osteoarthritis, patellofemoral syndrome, and joint stiffness.",
+      "Specialised treatments to help children with developmental challenges improve their motor skills and overall development.",
     image: "/images/service-slide-knee-pain.jpg",
     icon: "/icons/physio-departments/knee-pain.svg",
     href: "#services",
@@ -306,30 +307,31 @@ export const PHYSIO_SERVICES: PhysioService[] = [
    Dark benefits banner — Figma 1:306
 ------------------------------------------------------------------------- */
 export const BANNER = {
-  eyebrow: "Our Benefits",
-  heading: { lead: "Reliable Care with", accent: "TheFysit Healthcare" },
-  body: "Our expert team combines state-of-the-art technology with personalized care to provide treatments designed around your unique health needs.",
+  eyebrow: "Why Choose Us",
+  heading: { lead: "Leading the Way in", accent: "Physiotherapy" },
+  body: "At Fysit, we go beyond traditional physiotherapy and step up our care by offering personalised solutions that meet your specific & diverse needs.",
   cta: { label: "Discover More", href: "#services" },
   image: "/images/banner-care.jpg",
   imageAlt: "Clinician reviewing diagnostics on a tablet",
   benefits: [
     {
-      id: "health-treatments",
-      title: "Health Treatments",
-      description: "Tailored treatment plans focused on your recovery.",
+      id: "comprehensive-care",
+      title: "Comprehensive Care",
+      description:
+        "From chronic pain treatments to integrated workplace wellness strategies, we address all aspects of health and mobility.",
       icon: "/icons/benefit-treatments.svg",
     },
     {
-      id: "advanced-facilities",
-      title: "Advanced Facilities",
+      id: "affordable-excellence",
+      title: "Affordable Excellence",
       description:
-        "Equipped with the latest technology for accurate diagnoses.",
+        "World-class care and innovative solutions that are both budget-friendly and trustworthy.",
       icon: "/icons/benefit-facilities.svg",
     },
     {
-      id: "expert-physicians",
-      title: "Expert Physicians",
-      description: "Highly trained specialists providing personalized care.",
+      id: "compassion",
+      title: "Compassion",
+      description: "We prioritise the well-being of every patient and employee.",
       icon: "/icons/benefit-physicians.svg",
     },
   ],
@@ -343,15 +345,15 @@ export const BANNER = {
 
 /** Teal strip — Figma 1:233 */
 export const DEPARTMENT_STRIP = [
-  "Cardiology",
-  "Dental Care",
-  "Physical Therapy",
-  "Psychiatry",
-  "Oncology",
-  "Pediatrics",
-  "Ophthalmology",
-  "Orthopedics",
-  "General Surgery",
+  "Clinical Physiotherapy",
+  "Doorstep Physiotherapy",
+  "Corporate Wellness",
+  "Orthopaedic",
+  "Neuro Physiotherapy",
+  "Sports Physiotherapy",
+  "Paediatric",
+  "Ergonomics Training",
+  "Virtual Fitness",
 ];
 
 /* -------------------------------------------------------------------------
@@ -381,9 +383,9 @@ export const APPOINTMENT = {
   map: "/images/map2.jpg",
   mapAlt: "Map showing the clinic location",
   intro:
-    "Take the first step toward better health by scheduling your appointment today. Whether you’re a new patient or returning, our quick and secure booking makes it easy.",
+    "Take the first step towards better health. Fill in your details and we will get back to you the same day.",
   support:
-    "If you have general questions about our services, doctors, or clinic policies, feel free to reach out via email and Call us directly.",
+    "Call us, write to us, or simply walk in. Whichever is easiest for you – our team will help you figure out the right next step for your pain or recovery.",
   contacts: [
     {
       id: "assistance",
@@ -406,7 +408,12 @@ export const APPOINTMENT = {
     name: "Your Name",
     email: "Email Address",
     phone: "Phone",
-    departments: ["Select Department", "Cardiology", "Dental Care", "Neurology"],
+    departments: [
+      "Select a Service",
+      "Clinical Physiotherapy",
+      "Doorstep Physiotherapy",
+      "Corporate Wellness Program",
+    ],
     doctors: ["Select Doctor", ...DOCTORS.map((d) => d.name)],
     messagePlaceholder: "Type Your Message",
   },
@@ -469,6 +476,8 @@ export const FEATURE_BAND = {
 
 /* -------------------------------------------------------------------------
    Testimonials — Figma 1:444 … 1:580. Two rows scrolling opposite ways.
+   Fallback only (the admin's published testimonials win): the two real
+   patient reviews from the previous site.
 ------------------------------------------------------------------------- */
 export const TESTIMONIALS_HEADING = {
   lead: "Feedback from",
@@ -477,54 +486,22 @@ export const TESTIMONIALS_HEADING = {
 
 export const TESTIMONIALS: Testimonial[] = [
   {
-    id: "arietta-preston",
-    name: "Arietta Preston",
-    role: "Cardiology",
+    id: "akshata-terdal",
+    name: "Akshata Terdal",
+    role: "Neck Pain",
     avatar: "/images/doctor-01.jpg",
-    rating: 4.5,
+    rating: 5,
     quote:
-      "From the moment I walked in, I felt genuinely cared for. The doctors took the time to explain everything and answered all my questions.",
+      "I visited Fysit for neck pain treatment. Dr. Veena had been very friendly and caring throughout the treatment process. She helped me recover from my neck pain and it’s been close to 6 months I haven’t faced any issues so far.",
   },
   {
-    id: "woulfe-nick",
-    name: "Woulfe Nick",
-    role: "Oncology",
+    id: "google-review",
+    name: "Google Review",
+    role: "Pain Relief",
     avatar: "/images/doctor-07.jpg",
     rating: 5,
     quote:
-      "Everyone from the reception to the doctors was friendly and professional. The clinic is clean, modern, and welcoming. They treat you like a person.",
-  },
-  {
-    id: "sapphire-rose",
-    name: "Sapphire Rose",
-    role: "Dental",
-    avatar: "/images/doctor-03.jpg",
-    rating: 4.5,
-    quote: "The medical team is incredibly knowledgeable and thorough. I felt confident in their care every step of the way. I'm so thankful for their expertise.",
-  },
-  {
-    id: "melissa-jewel",
-    name: "Melissa Jewel",
-    role: "Therapy",
-    avatar: "/images/doctor-02.jpg",
-    rating: 5,
-    quote: "The medical team is incredibly knowledgeable and thorough. I felt confident in their care every step of the way. I'm so thankful for their expertise.",
-  },
-  {
-    id: "xeinna-chris",
-    name: "Xeinna Chris",
-    role: "Psychology",
-    avatar: "/images/doctor-05.jpg",
-    rating: 4,
-    quote: "The medical team is incredibly knowledgeable and thorough. I felt confident in their care every step of the way. I'm so thankful for their expertise.",
-  },
-  {
-    id: "cathy-divine",
-    name: "Cathy Divine",
-    role: "Pediatrics",
-    avatar: "/images/doctor-06.jpg",
-    rating: 4,
-    quote: "The medical team is incredibly knowledgeable and thorough. I felt confident in their care every step of the way. I'm so thankful for their expertise.",
+      "Dr Veena was good in diagnosing the pain and ideal therapy was given. The commitment and professionalism was extremely appreciative. The facilities and equipment’s are in place. Great place to relieve your pain problems.",
   },
 ];
 
@@ -532,35 +509,35 @@ export const TESTIMONIALS: Testimonial[] = [
    Blog — Figma 1:581 … 1:631
 ------------------------------------------------------------------------- */
 export const BLOG_HEADING = {
-  eyebrow: "Latest News & Updates",
+  eyebrow: "From Our Experts",
   lead: "Latest Health Insights",
   accent: "Your Wellness Journey",
 } as const;
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    id: "doctor-approved",
-    title: "Doctor-Approved Ways to Stay Healthy",
-    date: "September 12, 2025",
-    category: "Health & Wellness",
-    image: "/images/blog-01.jpg",
-    href: "#blog",
+    id: "orthopedic-doctor-guide",
+    title: "What Does an Orthopedic Doctor Treat? A Complete Guide to Bone, Joint, and Muscle Health",
+    date: "October 15, 2026",
+    category: "Blogs",
+    image: "/images/blog-orthopedic.jpg",
+    href: "/blog",
   },
   {
-    id: "first-visit",
-    title: "What to Expect During Your First Visit to Our Clinic",
-    date: "September 12, 2025",
-    category: "Health & Wellness",
-    image: "/images/blog-02.jpg",
-    href: "#blog",
+    id: "physiotherapy-in-2026",
+    title: "Why Physiotherapy Is Essential in 2026: Benefits, Treatments & Recovery Solutions",
+    date: "May 20, 2026",
+    category: "Blogs",
+    image: "/images/blog-physio-2026.jpg",
+    href: "/blog",
   },
   {
-    id: "telemedicine",
-    title: "Telemedicine or In-Person Care: What’s Best?",
-    date: "September 12, 2025",
-    category: "Health & Wellness",
-    image: "/images/blog-03.jpg",
-    href: "#blog",
+    id: "neck-pain",
+    title: "Why Your Neck Pain Isn’t Going Away (And How Physiotherapy Fixes It)",
+    date: "April 17, 2026",
+    category: "Blogs",
+    image: "/images/blog-neck-pain.jpg",
+    href: "/blog",
   },
 ];
 
@@ -574,11 +551,11 @@ export const BLOG_AUTHOR = "admin";
 export const CONTACT_PAGE = {
   banner: { title: "Contact", image: "/images/banner-about.jpg" },
   emergency: {
-    title: "In Case of Emergency",
+    title: "Contact Info",
     // Rendered with the number in bold, as the reference sets it.
-    lead: "If you are experiencing a medical emergency, please call",
-    number: "911",
-    tail: "immediately or go to your nearest emergency room.",
+    lead: "Call us, write to us, or simply walk in. Reach our team on",
+    number: SITE.phone,
+    tail: "and we’ll help you figure out the right next step for your pain or recovery.",
   },
   contacts: {
     clinic: { label: "Visit Our Clinic", icon: "/icons/contact/clinic.svg" },
@@ -586,7 +563,7 @@ export const CONTACT_PAGE = {
     phone: { label: "Appointment Scheduling", icon: "/icons/contact/phone.svg" },
   },
   defaults: {
-    address: "5th Street, 21st Floor, New York, USA",
+    address: "171, 4th Main Road, Sadanandanagar, Bangalore",
     email: SITE.email,
     phone: SITE.phone,
   },
@@ -600,11 +577,11 @@ export const CONTACT_PAGE = {
   form: {
     eyebrow: "Contact Us",
     title: "Book an Appointment",
-    body: "We’re here to help you with your healthcare needs. Whether you have questions, need to schedule an appointment.",
+    body: "Fill in your details and we will get back to you the same day.",
     name: "Your Name",
     email: "Email Address",
     phone: "Phone",
-    department: "Select Department",
+    department: "I’m looking for",
     doctor: "Select Doctor",
     date: "Preferred Date",
     message: "Type Your Message",
@@ -618,7 +595,7 @@ export const CONTACT_PAGE = {
 ------------------------------------------------------------------------- */
 export const FOOTER = {
   blurb:
-    "We dedicated to providing flexible & accessible healthcare services.",
+    "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to improving your health, mobility, and overall well-being.",
   columns: [
     {
       title: "Quick Links",
@@ -630,12 +607,12 @@ export const FOOTER = {
       ],
     },
     {
-      title: "Department",
+      title: "Our Services",
       links: [
-        { label: "Eye Care", href: "#services" },
-        { label: "Cardiology", href: "#services" },
-        { label: "Dentist", href: "#services" },
-        { label: "Pregnancy", href: "#services" },
+        { label: "Clinical Physiotherapy", href: "#services" },
+        { label: "Doorstep Physiotherapy", href: "#services" },
+        { label: "Corporate Wellness", href: "#services" },
+        { label: "Virtual Fitness Class", href: "#services" },
       ],
     },
   ],
@@ -648,7 +625,7 @@ export const FOOTER = {
     {
       id: "clinic",
       label: "Visit Our Clinic",
-      value: "5th Street, 21st Floor, New York, USA",
+      value: "171, 4th Main Road, Sadanandanagar, Bangalore",
       icon: "/icons/footer-location.svg",
     },
     {
@@ -660,7 +637,7 @@ export const FOOTER = {
     },
     {
       id: "emergency",
-      label: "Emergency Cases",
+      label: "Call Us",
       value: SITE.phone,
       href: `tel:${SITE.phone.replace(/[^\d+]/g, "")}`,
       icon: "/icons/footer-phone.svg",

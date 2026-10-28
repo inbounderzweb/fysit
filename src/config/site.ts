@@ -7,9 +7,9 @@ import { SITE } from "@/lib/content";
 // build-time fallback for metadata and structured data.
 export const siteConfig = {
   name: "The Fysit",
-  tagline: "Your Trusted Partner Health and Wellness",
+  tagline: "Your Partner in Wellness",
   description:
-    "We’re committed to offering compassionate and comprehensive healthcare tailored to your needs. At TheFysit, your health is our priority every step of the way.",
+    "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to offering cutting-edge treatments designed to improve your health, mobility, and overall well-being.",
   // `metadataBase` (src/app/layout.tsx) resolves every relative OG/Twitter
   // image path against this value, so a missing NEXT_PUBLIC_SITE_URL used to
   // fall back to "http://localhost:3000" — a URL no external crawler
