@@ -30,8 +30,10 @@ type WordRevealHeadingProps = {
   /**
    * `section` is the 36/46px phone size the reference uses for section
    * headings; `page` is the 42/52px one its Contact page heading uses.
+   * `display` is the oversized editorial setting, up to 104px at xl.
    */
-  size?: "section" | "page";
+  size?: "section" | "page" | "display";
+  id?: string;
   className?: string;
 };
 
@@ -45,6 +47,7 @@ export function WordRevealHeading({
   accent,
   tone = "navy",
   size = "section",
+  id,
   className,
 }: WordRevealHeadingProps) {
   const reduceMotion = useReducedMotion();
@@ -55,14 +58,17 @@ export function WordRevealHeading({
 
   return (
     <motion.h2
+      id={id}
       initial={reduceMotion ? false : "hidden"}
       whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}
       className={cn(
         "font-normal tracking-[-0.05em]",
-        size === "page"
-          ? "text-[42px] leading-[52px] md:text-[60px] md:leading-[70px]"
-          : "text-[36px] leading-[46px] md:text-[60px] md:leading-[70px]",
+        size === "display"
+          ? "text-[44px] leading-[48px] md:text-[72px] md:leading-[76px] xl:text-[104px] xl:leading-[104px]"
+          : size === "page"
+            ? "text-[42px] leading-[52px] md:text-[60px] md:leading-[70px]"
+            : "text-[36px] leading-[46px] md:text-[60px] md:leading-[70px]",
         tone === "white" ? "text-white" : "text-navy",
         className,
       )}

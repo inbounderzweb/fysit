@@ -304,38 +304,39 @@ export const PHYSIO_SERVICES: PhysioService[] = [
 ];
 
 /* -------------------------------------------------------------------------
-   Dark benefits banner — Figma 1:306
+   Why Choose Us — the dark editorial band (components/sections/DarkBanner).
+   Benefits render as numbered rows, so they carry no icons.
 ------------------------------------------------------------------------- */
 export const BANNER = {
   eyebrow: "Why Choose Us",
   heading: { lead: "Leading the Way in", accent: "Physiotherapy" },
   body: "At Fysit, we go beyond traditional physiotherapy and step up our care by offering personalised solutions that meet your specific & diverse needs.",
   cta: { label: "Discover More", href: "#services" },
-  image: "/images/banner-care.jpg",
-  imageAlt: "Clinician reviewing diagnostics on a tablet",
+  image: "/images/case-physio.jpg",
+  imageAlt: "Physiotherapist stretching a patient’s leg on a treatment table",
+  /** The floating label on the photo — the clinic's Google rating. */
+  rating: { value: "4.9", label: "68 Google reviews" },
+  /** Set around the rotating badge on the photo. */
+  ring: "The Fysit • Physiotherapy • Bangalore • ",
   benefits: [
     {
       id: "comprehensive-care",
       title: "Comprehensive Care",
       description:
         "From chronic pain treatments to integrated workplace wellness strategies, we address all aspects of health and mobility.",
-      icon: "/icons/benefit-treatments.svg",
     },
     {
       id: "affordable-excellence",
       title: "Affordable Excellence",
       description:
         "World-class care and innovative solutions that are both budget-friendly and trustworthy.",
-      icon: "/icons/benefit-facilities.svg",
     },
     {
       id: "compassion",
       title: "Compassion",
       description: "We prioritise the well-being of every patient and employee.",
-      icon: "/icons/benefit-physicians.svg",
     },
   ],
-  /** Bar widths in Figma: 219, 197 and 261 of a 267px track. */
   stats: [
     { id: "expert-doctor", label: "Expert Doctor", value: 82 },
     { id: "patient-satisfaction", label: "Patient Satisfaction", value: 74 },
