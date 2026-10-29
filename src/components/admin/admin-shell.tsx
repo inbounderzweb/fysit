@@ -13,6 +13,7 @@ import {
   HomeIcon,
   DocumentIcon,
   ChatIcon,
+  StethoscopeIcon,
   InboxIcon,
   ImageIcon,
   GearIcon,
@@ -27,6 +28,7 @@ type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 const NAV_ICONS: Record<string, IconType> = {
   blog: DocumentIcon,
   testimonials: ChatIcon,
+  team: StethoscopeIcon,
   enquiries: InboxIcon,
   media: ImageIcon,
   settings: GearIcon,

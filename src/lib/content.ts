@@ -415,7 +415,8 @@ export const APPOINTMENT = {
       "Doorstep Physiotherapy",
       "Corporate Wellness Program",
     ],
-    doctors: ["Select Doctor", ...DOCTORS.map((d) => d.name)],
+    /** Placeholder only — the options come from Admin → Doctors (lib/doctors.ts). */
+    doctors: ["Select Doctor"],
     messagePlaceholder: "Type Your Message",
   },
 } as const;

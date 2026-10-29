@@ -10,6 +10,7 @@ import { siteConfig } from "@/config/site";
 import { CONTACT_PAGE } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/services/settings.service";
+import { getDoctorNames } from "@/lib/doctors";
 import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = buildMetadata(
@@ -43,7 +44,7 @@ async function getContactInfo(): Promise<ContactInfo> {
  * then the map.
  */
 export default async function ContactPage() {
-  const info = await getContactInfo();
+  const [info, doctorNames] = await Promise.all([getContactInfo(), getDoctorNames()]);
   const { form } = CONTACT_PAGE;
 
   return (
@@ -69,7 +70,7 @@ export default async function ContactPage() {
               <p className="mt-[20px] text-[16px] leading-[25.6px] text-body">{form.body}</p>
             </Reveal>
             <Reveal delay={0.1} className="mt-[20px]">
-              <ContactForm />
+              <ContactForm doctorNames={doctorNames} />
             </Reveal>
           </div>
         </div>

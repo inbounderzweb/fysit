@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Reveal } from "@/components/animations/Reveal";
 import { Container } from "@/components/ui/Container";
 import { APPOINTMENT } from "@/lib/content";
+import { getDoctorNames } from "@/lib/doctors";
 
 const FIELD =
   "h-[50px] w-full rounded-[5px] border border-line bg-white px-[21px] text-[16px] text-navy placeholder:text-body/70 focus:border-teal focus:outline-none";
@@ -11,8 +12,9 @@ const FIELD =
  * Figma 1:254 … 1:298 — a photo on the left, a faint world map bleeding off
  * the right edge, and the booking card floating over the seam between them.
  */
-export function Appointment() {
+export async function Appointment() {
   const { form } = APPOINTMENT;
+  const doctorNames = await getDoctorNames();
 
   return (
     <section
@@ -141,7 +143,7 @@ export function Appointment() {
                       <option value="" disabled>
                         {form.doctors[0]}
                       </option>
-                      {form.doctors.slice(1).map((option) => (
+                      {doctorNames.map((option) => (
                         <option key={option}>{option}</option>
                       ))}
                     </select>

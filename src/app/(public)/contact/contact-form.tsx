@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useRef } from "react";
 
-import { CONTACT_PAGE, DOCTORS, PHYSIO_SERVICES } from "@/lib/content";
+import { CONTACT_PAGE, PHYSIO_SERVICES } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { submitEnquiryAction, type ContactFormState } from "./actions";
 
@@ -25,9 +25,8 @@ const SELECT_ARROW = {
 } as const;
 
 const DEPARTMENTS = PHYSIO_SERVICES.map((service) => service.title);
-const DOCTOR_NAMES = DOCTORS.map((doctor) => doctor.name);
-
-export function ContactForm() {
+/** `doctorNames` comes from the page, which reads Admin → Doctors on the server. */
+export function ContactForm({ doctorNames }: { doctorNames: string[] }) {
   const { form } = CONTACT_PAGE;
   const [state, formAction, pending] = useActionState(submitEnquiryAction, initialState);
   const formRef = useRef<HTMLFormElement>(null);
@@ -112,7 +111,7 @@ export function ContactForm() {
             style={SELECT_ARROW}
           >
             <option value="">{form.doctor}</option>
-            {DOCTOR_NAMES.map((option) => (
+            {doctorNames.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>

@@ -8,6 +8,7 @@ import { ArrowButton } from "@/components/ui/ArrowButton";
 import { EdgeNotch } from "@/components/ui/EdgeNotch";
 import { EyebrowPill } from "@/components/ui/EyebrowPill";
 import { ABOUT_PAGE, DOCTORS } from "@/lib/content";
+import { getWebsiteDoctors } from "@/lib/doctors";
 import type { Doctor } from "@/lib/types";
 
 /**
@@ -18,10 +19,13 @@ import type { Doctor } from "@/lib/types";
 const rubik = Rubik({ subsets: ["latin"], weight: "600", display: "swap" });
 
 const SOCIALS = [
-  { label: "Facebook", icon: "/icons/social-facebook.svg" },
-  { label: "X", icon: "/icons/social-twitter.svg" },
-  { label: "WhatsApp", icon: "/icons/social-whatsapp.svg" },
-];
+  { key: "facebook", label: "Facebook", icon: "/icons/social-facebook.svg" },
+  { key: "x", label: "X", icon: "/icons/social-twitter.svg" },
+  { key: "whatsapp", label: "WhatsApp", icon: "/icons/social-whatsapp.svg" },
+] as const;
+
+/** Built-in doctors fill the reference's 2 × 2 grid; admin doctors all show. */
+const FALLBACK_COUNT = 4;
 
 const SHARE_MASK = {
   maskImage: "url(/icons/share-nodes.svg)",
@@ -43,6 +47,14 @@ const SHARE_MASK = {
 function DoctorCard({ doctor }: { doctor: Doctor }) {
   // Doctor hrefs are anchors on the home page.
   const href = doctor.href.startsWith("#") ? `/${doctor.href}` : doctor.href;
+  // Admin doctors list only the links they have; built-in ones keep the
+  // reference's placeholder set.
+  const socials = doctor.socialLinks
+    ? SOCIALS.flatMap((social) => {
+        const url = doctor.socialLinks?.[social.key];
+        return url ? [{ ...social, href: url }] : [];
+      })
+    : SOCIALS.map((social) => ({ ...social, href: "#" }));
 
   return (
     <article className="group">
@@ -55,22 +67,25 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
 
-        <ul
-          aria-label={`${doctor.name} on social media`}
-          className="pointer-events-none absolute bottom-[50px] right-[57.5px] flex w-[51px] list-none flex-col gap-[10px] rounded-full bg-teal px-[8px] py-[10px] opacity-0 transition-all duration-500 group-focus-within:pointer-events-auto group-focus-within:-translate-y-[30px] group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:-translate-y-[30px] group-hover:opacity-100"
-        >
-          {SOCIALS.map((social) => (
-            <li key={social.label}>
-              <Link
-                href="#"
-                aria-label={`${doctor.name} on ${social.label}`}
-                className="grid size-[35px] place-items-center rounded-full bg-white transition-transform hover:scale-110"
-              >
-                <Image src={social.icon} alt="" width={16} height={16} unoptimized />
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {socials.length > 0 && (
+          <ul
+            aria-label={`${doctor.name} on social media`}
+            className="pointer-events-none absolute bottom-[50px] right-[57.5px] flex w-[51px] list-none flex-col gap-[10px] rounded-full bg-teal px-[8px] py-[10px] opacity-0 transition-all duration-500 group-focus-within:pointer-events-auto group-focus-within:-translate-y-[30px] group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:-translate-y-[30px] group-hover:opacity-100"
+          >
+            {socials.map((social) => (
+              <li key={social.label}>
+                <Link
+                  href={social.href}
+                  {...(social.href !== "#" && { target: "_blank", rel: "noopener noreferrer" })}
+                  aria-label={`${doctor.name} on ${social.label}`}
+                  className="grid size-[35px] place-items-center rounded-full bg-white transition-transform hover:scale-110"
+                >
+                  <Image src={social.icon} alt="" width={16} height={16} unoptimized />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <span className="absolute -bottom-px right-[50px] h-[59px] w-[66px] rounded-t-[50px] bg-white px-[10px] pt-[14px]">
           <EdgeNotch corner="tl" radius={12} className="absolute -left-[12px] bottom-0" />
@@ -88,6 +103,9 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
           </Link>
         </h4>
         <p className="mt-[5px] text-[16px] font-medium leading-[26px] text-body">{doctor.role}</p>
+        {doctor.qualifications && (
+          <p className="text-[14px] leading-[22px] text-body/80">{doctor.qualifications}</p>
+        )}
       </div>
     </article>
   );
@@ -95,10 +113,12 @@ function DoctorCard({ doctor }: { doctor: Doctor }) {
 
 /**
  * The reference About page's team block: the heading, an outlined "250+" and
- * a dark button on the left, four doctors in a 2 × 2 grid on the right.
+ * a dark button on the left, the doctors in a two-column grid on the right —
+ * the active ones from Admin → Doctors, or four built-in ones until then.
  */
-export function AboutTeam() {
+export async function AboutTeam() {
   const { team } = ABOUT_PAGE;
+  const doctors = (await getWebsiteDoctors()) ?? DOCTORS.slice(0, FALLBACK_COUNT);
 
   return (
     <section id="team" className="bg-white pb-[30px] pt-[100px] md:pt-[130px]">
@@ -118,7 +138,7 @@ export function AboutTeam() {
         </Reveal>
 
         <StaggerGroup as="ul" className="grid list-none grid-cols-1 gap-[30px] lg:grid-cols-2">
-          {DOCTORS.slice(0, 4).map((doctor) => (
+          {doctors.map((doctor) => (
             <StaggerItem as="li" key={doctor.id}>
               <DoctorCard doctor={doctor} />
             </StaggerItem>

@@ -39,7 +39,8 @@ export function Badge({
 
 /**
  * Every record status in the admin, in one place. Content statuses keep the
- * labels each screen already used: testimonials call PUBLISHED "Active".
+ * labels each screen already used: testimonials and doctors call PUBLISHED
+ * "Active".
  */
 const STATUS: Record<string, { label: string; tone: BadgeTone }> = {
   // Content
@@ -53,10 +54,12 @@ const STATUS: Record<string, { label: string; tone: BadgeTone }> = {
   RESOLVED: { label: "Resolved", tone: "green" },
 };
 
-const TESTIMONIAL_LABELS: Record<string, string> = { PUBLISHED: "Active", DRAFT: "Inactive", ARCHIVED: "Archived" };
+const ACTIVE_LABELS: Record<string, string> = { PUBLISHED: "Active", DRAFT: "Inactive", ARCHIVED: "Archived" };
 
-export function statusLabel(status: string, kind: "content" | "testimonial" | "enquiry" = "content") {
-  if (kind === "testimonial") return TESTIMONIAL_LABELS[status] ?? status;
+export type StatusKind = "content" | "testimonial" | "doctor" | "enquiry";
+
+export function statusLabel(status: string, kind: StatusKind = "content") {
+  if (kind === "testimonial" || kind === "doctor") return ACTIVE_LABELS[status] ?? status;
   return STATUS[status]?.label ?? status.replace(/_/g, " ").toLowerCase();
 }
 
@@ -65,7 +68,7 @@ export function StatusBadge({
   kind = "content",
 }: {
   status: string;
-  kind?: "content" | "testimonial" | "enquiry";
+  kind?: StatusKind;
 }) {
   return <Badge tone={STATUS[status]?.tone ?? "slate"}>{statusLabel(status, kind)}</Badge>;
 }
