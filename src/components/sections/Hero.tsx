@@ -48,7 +48,7 @@ export function Hero() {
   return (
     /* The banner sits as an inset card: a 10px frame on phones and 20px from md up,
        as in the reference layout, with the header laid over its top. */
-    <div className="p-2.5 md:p-5">
+    <div className="p-2.5 md:p-3">
       <section
         aria-label="Welcome"
         /* No clipping: the guide rail is meant to run past the banner's edges. */
