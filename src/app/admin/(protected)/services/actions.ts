@@ -66,7 +66,11 @@ function fieldErrors(issues: { path: PropertyKey[]; message: string }[]): Servic
   return errors;
 }
 
+// The listing, each service page, and the carousels on the home page
+// ("Conditions We Treat") and About page ("Our Department") all show services.
 function revalidateServicePages(...slugs: (string | undefined)[]) {
+  revalidatePath("/");
+  revalidatePath("/about");
   revalidatePath("/services");
   revalidatePath("/sitemap.xml");
   for (const slug of new Set(slugs)) {

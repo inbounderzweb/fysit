@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/animations/Reveal";
-import { DepartmentCard } from "@/components/sections/AboutDepartments";
+import { DepartmentCard } from "@/components/sections/AboutDepartmentsCarousel";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { EyebrowPill } from "@/components/ui/EyebrowPill";
 import { PageBanner } from "@/components/ui/PageBanner";

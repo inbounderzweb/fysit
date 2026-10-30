@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/animations/Reveal";
 import { WordRevealHeading } from "@/components/animations/WordRevealHeading";
 import { Appointment } from "@/components/sections/Appointment";
-import { DepartmentCard } from "@/components/sections/AboutDepartments";
+import { DepartmentCard } from "@/components/sections/AboutDepartmentsCarousel";
 import { MarqueeBand } from "@/components/sections/MarqueeBand";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { EyebrowPill } from "@/components/ui/EyebrowPill";
