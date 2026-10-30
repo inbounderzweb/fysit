@@ -33,7 +33,7 @@ export const SITE = {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/", hasDropdown: false },
   { label: "About", href: "/about", hasDropdown: false },
-  { label: "Services", href: "#services", hasDropdown: false },
+  { label: "Services", href: "/services", hasDropdown: false },
   { label: "Case Studies", href: "#case-studies", hasDropdown: false },
   { label: "Blogs", href: "/blog", hasDropdown: false },
   { label: "Contact", href: "/contact" },
@@ -128,6 +128,39 @@ export const ABOUT_PAGE = {
     stat: "250+",
     statLabel: "Doctor of Healthcare",
     cta: { label: "Explore More", href: "/#team" },
+  },
+} as const;
+
+/* -------------------------------------------------------------------------
+   Services pages (/services, /services/[slug]) — the services themselves
+   come from Admin → Services; this is the fixed copy around them.
+------------------------------------------------------------------------- */
+export const SERVICES_PAGE = {
+  banner: { title: "Our Services", image: "/images/banner-care.jpg" },
+  intro: {
+    eyebrow: "What We Offer",
+    lead: "Comprehensive Physiotherapy Services for",
+    accent: "Your Health",
+    body: "From in-clinic treatment to physiotherapy at your doorstep and wellness programmes for your workplace, every plan is built around your body, your pace and your goals.",
+  },
+  empty: {
+    title: "Our services are on their way",
+    body: "We’re putting the finishing touches to this page. In the meantime, call us or book an appointment and we’ll find the right care for you.",
+  },
+  detail: {
+    benefitsEyebrow: "Why It Helps",
+    benefitsTitle: { lead: "Key", accent: "Benefits" },
+    processEyebrow: "How It Works",
+    processTitle: { lead: "Your Treatment", accent: "Journey" },
+    faqEyebrow: "Questions",
+    faqTitle: { lead: "Frequently Asked", accent: "Questions" },
+    sidebarTitle: "All Services",
+    help: {
+      title: "Not sure which service you need?",
+      body: "Talk to our physiotherapists — we’ll help you find the right next step for your pain or recovery.",
+      cta: { label: "Book an Appointment", href: "/contact" },
+    },
+    related: { eyebrow: "Explore More", lead: "Other Services", accent: "We Offer" },
   },
 } as const;
 
@@ -611,10 +644,10 @@ export const FOOTER = {
     {
       title: "Our Services",
       links: [
-        { label: "Clinical Physiotherapy", href: "#services" },
-        { label: "Doorstep Physiotherapy", href: "#services" },
-        { label: "Corporate Wellness", href: "#services" },
-        { label: "Virtual Fitness Class", href: "#services" },
+        { label: "Clinical Physiotherapy", href: "/services" },
+        { label: "Doorstep Physiotherapy", href: "/services" },
+        { label: "Corporate Wellness", href: "/services" },
+        { label: "Virtual Fitness Class", href: "/services" },
       ],
     },
   ],

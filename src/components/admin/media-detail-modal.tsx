@@ -15,6 +15,7 @@ const USAGE_LABELS: Record<MediaUsage["type"], string> = {
   blog: "Blog",
   testimonial: "Testimonial",
   doctor: "Doctor",
+  service: "Service",
 };
 
 export function MediaDetailModal({
