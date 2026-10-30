@@ -56,6 +56,9 @@ export type Doctor = {
   role: string;
   image: string;
   href: string;
+  /** Set from the admin panel; the built-in doctors have none. */
+  qualifications?: string;
+  socialLinks?: { facebook?: string; x?: string; whatsapp?: string };
 };
 
 export type CaseStudy = {

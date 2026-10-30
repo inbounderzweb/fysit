@@ -63,7 +63,7 @@ export function GlobalSearch() {
         }}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-        placeholder="Search enquiries, posts, testimonials…"
+        placeholder="Search enquiries, posts, doctors…"
         aria-label="Search the admin"
         role="combobox"
         aria-expanded={isOpen && query.trim().length >= 2}

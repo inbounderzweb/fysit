@@ -11,6 +11,12 @@ import { CheckIcon, TrashIcon } from "@/components/admin/icons";
 import type { MediaItem } from "@/types/media";
 import type { MediaUsage } from "@/services/media.service";
 
+const USAGE_LABELS: Record<MediaUsage["type"], string> = {
+  blog: "Blog",
+  testimonial: "Testimonial",
+  doctor: "Doctor",
+};
+
 export function MediaDetailModal({
   media,
   onClose,
@@ -155,7 +161,7 @@ export function MediaDetailModal({
                     className="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700"
                   >
                     <span className="rounded-md bg-white px-1.5 py-0.5 text-[11px] font-medium text-slate-500 shadow-card">
-                      {entry.type === "blog" ? "Blog" : "Testimonial"}
+                      {USAGE_LABELS[entry.type]}
                     </span>
                     <span className="truncate">{entry.title}</span>
                   </li>

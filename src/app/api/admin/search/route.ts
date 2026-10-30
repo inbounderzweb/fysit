@@ -5,6 +5,7 @@ import { can } from "@/lib/permissions";
 import { listPagesAdmin } from "@/services/page.service";
 import { listBlogPostsAdmin } from "@/services/blog.service";
 import { listTestimonialsAdmin } from "@/services/testimonial.service";
+import { listDoctorsAdmin } from "@/services/doctor.service";
 import { listEnquiriesAdmin } from "@/services/enquiry.service";
 
 export type SearchResult = { type: string; label: string; sublabel?: string; href: string };
@@ -53,6 +54,19 @@ export async function GET(request: NextRequest) {
           label: item.authorName,
           sublabel: item.status === "PUBLISHED" ? "ACTIVE" : "INACTIVE",
           href: `/admin/testimonials/${item._id}/edit`,
+        }))
+      )
+    );
+  }
+
+  if (can(user.role, "read", "team")) {
+    searches.push(
+      listDoctorsAdmin({ search: query, limit: 5 }).then((res) =>
+        res.items.map((item) => ({
+          type: "Doctor",
+          label: item.name,
+          sublabel: item.status === "PUBLISHED" ? "ACTIVE" : "INACTIVE",
+          href: `/admin/doctors/${item._id}/edit`,
         }))
       )
     );
