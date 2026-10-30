@@ -31,7 +31,7 @@ function maskStyle(url: string) {
  * shadow deepens, the photo eases in to 110% and the icon flips on its
  * vertical axis.
  */
-function DepartmentCard({ service }: { service: PhysioService }) {
+export function DepartmentCard({ service }: { service: PhysioService }) {
   // Service hrefs are anchors on the home page.
   const href = service.href.startsWith("#") ? `/${service.href}` : service.href;
 

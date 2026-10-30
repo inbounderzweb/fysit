@@ -17,6 +17,7 @@ export const adminNavigation: AdminNavItem[] = [
   { label: "Enquiries", href: "/admin/enquiries", resource: "enquiries", group: "Patient care" },
   { label: "Testimonials", href: "/admin/testimonials", resource: "testimonials", group: "Patient care" },
   { label: "Doctors", href: "/admin/doctors", resource: "team", group: "Website content" },
+  { label: "Services", href: "/admin/services", resource: "services", group: "Website content" },
   { label: "Blog", href: "/admin/blog", resource: "blog", group: "Website content" },
   { label: "Media Library", href: "/admin/media", resource: "media", group: "Website content" },
   { label: "Settings", href: "/admin/settings", resource: "settings", group: "System" },

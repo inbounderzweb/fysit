@@ -6,6 +6,7 @@ import { listPagesAdmin } from "@/services/page.service";
 import { listBlogPostsAdmin } from "@/services/blog.service";
 import { listTestimonialsAdmin } from "@/services/testimonial.service";
 import { listDoctorsAdmin } from "@/services/doctor.service";
+import { listServicesAdmin } from "@/services/service.service";
 import { listEnquiriesAdmin } from "@/services/enquiry.service";
 
 export type SearchResult = { type: string; label: string; sublabel?: string; href: string };
@@ -54,6 +55,19 @@ export async function GET(request: NextRequest) {
           label: item.authorName,
           sublabel: item.status === "PUBLISHED" ? "ACTIVE" : "INACTIVE",
           href: `/admin/testimonials/${item._id}/edit`,
+        }))
+      )
+    );
+  }
+
+  if (can(user.role, "read", "services")) {
+    searches.push(
+      listServicesAdmin({ search: query, limit: 5 }).then((res) =>
+        res.items.map((item) => ({
+          type: "Service",
+          label: item.name,
+          sublabel: item.status,
+          href: `/admin/services/${item._id}/edit`,
         }))
       )
     );
