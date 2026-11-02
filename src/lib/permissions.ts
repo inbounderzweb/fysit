@@ -10,6 +10,7 @@ export const RESOURCES = [
   "faqs",
   "testimonials",
   "team",
+  "locations",
   "media",
   "enquiries",
   "users",
@@ -31,6 +32,7 @@ const CONTENT_RESOURCES: Resource[] = [
   "faqs",
   "testimonials",
   "team",
+  "locations",
 ];
 
 // SUPER_ADMIN implicitly has every permission (short-circuited in `can()`).

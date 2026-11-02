@@ -3,6 +3,8 @@ export type NavItem = {
   href: string;
   /** Figma renders a caret on every item except "Contact" (nodes 1:743–1:761). */
   hasDropdown?: boolean;
+  /** Sub-links shown in a dropdown (desktop) or an expandable list (mobile). */
+  children?: { label: string; href: string; note?: string }[];
 };
 
 /** The video banner at the top of the home page. */

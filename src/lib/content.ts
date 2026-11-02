@@ -34,7 +34,16 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/", hasDropdown: false },
   { label: "About", href: "/about", hasDropdown: false },
   { label: "Services", href: "/services", hasDropdown: false },
-  { label: "Case Studies", href: "#case-studies", hasDropdown: false },
+  {
+    label: "Locations",
+    href: "/physiotherapy-center-in-sadanandanagar",
+    hasDropdown: true,
+    // Fallback list — the live dropdown is built from Admin → Locations (lib/locations-public.ts).
+    children: [
+      { label: "Sadanandanagar", href: "/physiotherapy-center-in-sadanandanagar", note: "171, 4th Main Road" },
+      { label: "Kasturi Nagar", href: "/physiotherapy-center-in-kasturi-nagar", note: "No. 143, 4th Cross, near SBI Bank" },
+    ],
+  },
   { label: "Blogs", href: "/blog", hasDropdown: false },
   { label: "Contact", href: "/contact" },
 ];
@@ -163,6 +172,341 @@ export const SERVICES_PAGE = {
     related: { eyebrow: "Explore More", lead: "Other Services", accent: "We Offer" },
   },
 } as const;
+
+/* -------------------------------------------------------------------------
+   Locations — the two clinic pages, at the same addresses they had on the
+   previous site (thefysit.com) so existing links and rankings carry over.
+   Copy is carried over from those pages. These are the built-in fallback;
+   the live pages come from Admin → Locations once any are published.
+------------------------------------------------------------------------- */
+const LOCATION_SERVICES: LocationService[] = [
+  {
+    title: "Clinical Physiotherapy",
+    description: "Hands-on, in-clinic sessions using advanced equipment. Built around your condition, not a generic routine.",
+    href: "/services/clinical-physiotherapy",
+  },
+  {
+    title: "Doorstep Physiotherapy",
+    description: "Our physiotherapists come to your home. Ideal for post-surgery patients, older adults, and anyone with limited mobility.",
+    href: "/services/doorstep-physiotherapy",
+  },
+  {
+    title: "Orthopedic Physiotherapy",
+    description: "Focused care for back pain, knee pain, shoulder pain, joint injuries, and post-fracture recovery.",
+  },
+  {
+    title: "Neurophysiotherapy",
+    description: "Rehabilitation for stroke recovery, Parkinson’s disease, spinal cord injury, and traumatic brain injury.",
+  },
+  {
+    title: "Sports Physiotherapy",
+    description: "From ligament sprains and muscle tears to overuse injuries and performance rehab — for athletes and active people at every level.",
+  },
+  {
+    title: "Pediatric Physiotherapy",
+    description: "Specialised treatment for children with motor skill delays, developmental challenges, and musculoskeletal conditions.",
+  },
+  {
+    title: "Dry Needling",
+    description: "Targeted muscle therapy to relieve pain, reduce tension, and improve mobility.",
+  },
+  {
+    title: "Dry Cupping",
+    description: "Suction therapy that boosts blood flow, eases muscle tension, and supports recovery.",
+  },
+  {
+    title: "Kinesio Tapping",
+    description: "A flexible taping technique that supports muscles, reduces pain, and improves movement.",
+  },
+];
+
+/** The old pages listed some conditions twice under different names; each appears once here. */
+const LOCATION_CONDITIONS = [
+  "Back pain",
+  "Neck pain",
+  "Knee pain",
+  "Shoulder pain",
+  "Frozen shoulder",
+  "Sciatica",
+  "Spondylitis",
+  "Arthritis",
+  "Disc bulge",
+  "Joint pain",
+  "Foot pain",
+  "Muscle stiffness",
+  "Tennis elbow",
+  "ACL injuries",
+  "Sports injuries",
+  "Post-surgery rehabilitation",
+  "Posture correction",
+  "Stroke recovery",
+  "Parkinson’s disease",
+  "Spinal cord injury",
+  "Multiple sclerosis",
+  "Bell’s palsy",
+  "Cerebral palsy",
+  "Head injury",
+  "Strength & conditioning",
+  "Cranio-sacral release",
+  "Long wave diathermy",
+];
+
+const LOCATION_STATS = [
+  { value: "4.9", label: "Google rating" },
+  { value: "500+", label: "Happy patients" },
+  { value: "10+", label: "Years of experience" },
+];
+
+export const LOCATIONS_COPY = {
+  servicesEyebrow: "What We Offer",
+  conditionsEyebrow: "Conditions We Treat",
+  conditionsTreatment:
+    "Every condition is different, and your treatment will be too — drawing on manual therapy, electrotherapy, TENS, therapeutic ultrasound, dry needling and personalised exercise therapy, depending on what your body needs.",
+  conditionsCta: "Not sure if physiotherapy is right for your condition? Call us — we’ll give you an honest answer.",
+  whyEyebrow: "Why Choose Us",
+  corporateEyebrow: "Corporate Wellness",
+  faqEyebrow: "Questions",
+  visitTitle: "Visit Our Clinic",
+  homeVisits: {
+    title: "Home physiotherapy available",
+    body: "Can’t visit the clinic? We bring expert care to your doorstep.",
+  },
+  directions: "Get directions",
+  cta: {
+    title: { lead: "Ready to Start Your", accent: "Recovery Journey?" },
+    body: "Don’t let pain hold you back any longer. Book your appointment today and take the first step towards a pain-free life.",
+    button: { label: "Book Your Appointment", href: "/contact" },
+  },
+} as const;
+
+export type LocationService = { title: string; description: string; href?: string };
+
+/**
+ * A clinic page. The built-in LOCATIONS below are the fallback; once any are
+ * published under Admin → Locations, those are used instead (lib/locations-public.ts).
+ */
+export type Location = {
+  id?: string;
+  slug: string;
+  /** Short name for breadcrumbs and the other-clinic link. */
+  name: string;
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  eyebrow: string;
+  heading: { lead: string; accent: string };
+  intro: string;
+  address: { street: string; area: string; city: string; full: string };
+  phone: string;
+  approach: { title: { lead: string; accent: string }; paragraphs: string[]; image: string };
+  services: { lead: string; accent: string; intro: string };
+  conditionsTitle: { lead: string; accent: string };
+  why: { title: { lead: string; accent: string }; points: { title: string; body: string }[] };
+  corporate: { title: string; paragraphs: string[] };
+  faqTitle: { lead: string; accent: string };
+  faqs: { question: string; answer: string }[];
+  stats: { value: string; label: string }[];
+  serviceItems: LocationService[];
+  conditions: string[];
+  /** Optional photo overrides; the page has defaults for each. */
+  images?: { banner?: string; team?: string; corporate?: string };
+};
+
+export const LOCATIONS: Location[] = [
+  {
+    slug: "physiotherapy-center-in-sadanandanagar",
+    name: "Sadanandanagar",
+    title: "Physiotherapy Center in Sadanandanagar",
+    metaTitle: "Physiotherapy Center in Sadanandanagar, Bangalore",
+    metaDescription:
+      "Physiotherapy at 171, 4th Main Road, Sadanandanagar, Bangalore: clinic and home visits for back, knee and neck pain, sports injuries and stroke recovery.",
+    eyebrow: "Expert Physiotherapy in Sadanandanagar",
+    heading: { lead: "Physiotherapy Center in", accent: "Sadanandanagar, Bangalore" },
+    intro:
+      "Pain has a way of sneaking up on you. One day it’s a little stiffness in the morning; the next, you’re adjusting how you sit, how you sleep, and what you can do without wincing. At The Fysit’s physiotherapy center in Sadanandanagar, we help you stop adjusting and start recovering.",
+    address: {
+      street: "171, 4th Main Road",
+      area: "Sadanandanagar",
+      city: "Bangalore",
+      full: "171, 4th Main Road, Sadanandanagar, Bangalore",
+    },
+    phone: SITE.phone,
+    approach: {
+      title: { lead: "Stop Managing the Pain.", accent: "Start Treating It." },
+      paragraphs: [
+        "Most people wait too long. They stretch, rest, take a painkiller, and hope it goes away. Sometimes it does. Often it does not.",
+        "At The Fysit Sadanandanagar, our physiotherapists look at the full picture — not just where it hurts, but why. Your posture, your daily routine, your medical history: all of it matters. From there, your treatment plan is built around your specific situation. Nobody else’s.",
+        "We also offer doorstep physiotherapy in Sadanandanagar for patients who cannot make it to the clinic. You get the same quality of care at home.",
+      ],
+      image: "/images/case-physio.jpg",
+    },
+    services: {
+      lead: "Physiotherapy Services at Our",
+      accent: "Sadanandanagar Clinic",
+      intro:
+        "We treat a wide range of conditions at our Sadanandanagar clinic, from injuries that happened last week to pain you have carried for years.",
+    },
+    conditionsTitle: { lead: "Conditions We Treat in", accent: "Sadanandanagar" },
+    why: {
+      title: { lead: "Why Patients in Sadanandanagar", accent: "Choose The Fysit" },
+      points: [
+        {
+          title: "Treatment built around you",
+          body: "Every patient gets a plan built from scratch. We look at your condition, your lifestyle, and what you actually want to get back to doing.",
+        },
+        {
+          title: "Experienced, certified physiotherapists",
+          body: "Our Sadanandanagar team has treated orthopedic, neurological, sports and pediatric patients — and they take the time to show it.",
+        },
+        {
+          title: "Clinic visits and home visits",
+          body: "Come in to our 4th Main Road clinic or book a home visit. Either way, the standard of care stays the same.",
+        },
+        {
+          title: "Affordable care, no surprises",
+          body: "You’ll know what to expect before treatment starts. No hidden costs, no vague timelines, no sessions you don’t need.",
+        },
+      ],
+    },
+    corporate: {
+      title: "Corporate Wellness for Sadanandanagar’s Working Professionals",
+      paragraphs: [
+        "Desk jobs are taking a toll. Tight hips, stiff necks, lower back pain that starts at 2 PM and doesn’t quit — we see it constantly at our Sadanandanagar clinic.",
+        "We work on-site with your team, covering ergonomics assessments, workstation corrections, group fitness sessions and mental wellness support. The result: fewer sick days, less discomfort, and a team that feels better at work.",
+      ],
+    },
+    stats: LOCATION_STATS,
+    serviceItems: LOCATION_SERVICES,
+    conditions: LOCATION_CONDITIONS,
+    faqTitle: { lead: "Frequently Asked", accent: "Questions" },
+    faqs: [
+      {
+        question: "Can physiotherapy fix back pain without surgery?",
+        answer:
+          "Yes, in most cases. Physiotherapy for back pain works by finding and treating the root cause, whether that is a muscle imbalance, poor posture, a slipped disc, or sciatica. Through manual therapy, dry needling, TENS, and targeted exercise therapy, most patients see significant improvement without needing surgery. At The Fysit, we assess your back properly on the first visit and build a plan from there.",
+      },
+      {
+        question: "How many physiotherapy sessions does it take to see results?",
+        answer:
+          "Most patients feel a real difference within 4 to 8 sessions. Acute injuries often respond faster. Conditions like chronic back pain, spondylitis, or post-surgery rehabilitation may take longer, depending on severity and how long the problem has been present. After your first session at our Sadanandanagar center, your physiotherapist will give you a clear, honest timeline.",
+      },
+      {
+        question: "Is physiotherapy effective for knee pain?",
+        answer:
+          "Yes. Physiotherapy for knee pain targets the muscles, tendons, and movement patterns that put stress on the knee joint. It is effective for osteoarthritis, ligament injuries, runner’s knee, post-surgery recovery, and general knee stiffness. Most patients avoid surgery entirely with the right physiotherapy plan started early enough.",
+      },
+      {
+        question: "What is the difference between a physiotherapist and an orthopedic doctor?",
+        answer:
+          "An orthopedic doctor diagnoses conditions and may recommend surgery or medication. A physiotherapist focuses on restoring movement, reducing pain, and rebuilding strength through physical treatment — no surgery, no drugs. They often work together. If your orthopedic doctor has referred you to physiotherapy, The Fysit in Sadanandanagar can pick up from there and take you through your full recovery.",
+      },
+      {
+        question: "What is corporate physiotherapy, and how does it help office workers?",
+        answer:
+          "Most office workers are not dealing with one big injury. They are dealing with months of slow, building pain in the neck, lower back, and shoulders. Corporate physiotherapy fixes this at the source through ergonomics assessments, workstation corrections, group fitness sessions, and mental wellness support. Get in touch, and we will put something together for your team.",
+      },
+    ],
+  },
+  {
+    slug: "physiotherapy-center-in-kasturi-nagar",
+    name: "Kasturi Nagar",
+    title: "Physiotherapy Center in Kasturi Nagar",
+    metaTitle: "Physiotherapy Center in Kasturi Nagar, Bangalore",
+    metaDescription:
+      "Physiotherapy at No. 143, 4th Cross, near SBI Bank, Kasturi Nagar, Bangalore: clinic and home visits for back and knee pain, sports injuries and stroke rehab.",
+    eyebrow: "Expert Physiotherapy in Kasturi Nagar",
+    heading: { lead: "Physiotherapy Center in", accent: "Kasturi Nagar, Bangalore" },
+    intro:
+      "Have back pain that just won’t quit? Recovering from surgery and unsure where to start? Or simply tired of managing chronic pain on your own? Our physiotherapy center in Kasturi Nagar offers the expert care you deserve — so you can move better, feel stronger, and get back to the life you had before the pain started.",
+    address: {
+      street: "No. 143, 4th Cross, near SBI Bank",
+      area: "Kasturi Nagar",
+      city: "Bangalore",
+      full: "No. 143, 4th Cross, near SBI Bank, Kasturi Nagar, Bangalore",
+    },
+    phone: SITE.phone,
+    approach: {
+      title: { lead: "Expert Physiotherapy Care,", accent: "Built Around You" },
+      paragraphs: [
+        "At The Fysit Kasturi Nagar, we believe in treating the root cause of your pain. Your physiotherapist will sit with you, understand your condition, your daily routine, and what recovery actually looks like for you. Only then do we begin treatment.",
+        "From orthopedic injuries to neurological conditions to chronic back pain, we have the tools, the experience, and physiotherapists in Kasturi Nagar who are genuinely invested in helping you get better.",
+        "We also offer doorstep physiotherapy for patients who prefer treatment at home. The same physiotherapist, the same standard of care — just at your door.",
+      ],
+      image: "/images/case-therapy-facility.jpg",
+    },
+    services: {
+      lead: "Physiotherapy Services at Our",
+      accent: "Kasturi Nagar Clinic",
+      intro:
+        "At our Kasturi Nagar clinic, we treat everything from sudden injuries to conditions you have been managing for years.",
+    },
+    conditionsTitle: { lead: "Conditions We Treat in", accent: "Kasturi Nagar" },
+    why: {
+      title: { lead: "Why Choose The Fysit in", accent: "Kasturi Nagar?" },
+      points: [
+        {
+          title: "Personalised treatment plans",
+          body: "Every patient gets a plan built around their condition and recovery goals. No generic routines, no one-size-fits-all approach.",
+        },
+        {
+          title: "Certified, experienced physiotherapists",
+          body: "Our Kasturi Nagar team brings clinical expertise across orthopedic, neurological, sports and pediatric physiotherapy — backed by advanced in-clinic equipment.",
+        },
+        {
+          title: "Clinic and home visits",
+          body: "Visit us at the clinic or choose home physiotherapy — we make expert care accessible to everyone in Kasturi Nagar.",
+        },
+        {
+          title: "Honest, affordable care",
+          body: "A transparent, pressure-free approach. You get the care you need — nothing more, nothing unnecessary.",
+        },
+      ],
+    },
+    corporate: {
+      title: "Corporate Wellness for Kasturi Nagar’s Working Professionals",
+      paragraphs: [
+        "Kasturi Nagar is home to a growing number of businesses and working professionals — and with that comes the very real problem of workplace pain. Posture problems, repetitive strain, and desk-induced back and neck pain are things we see every day.",
+        "Our corporate wellness programs include ergonomics assessments, workstation corrections, group fitness workshops and mental wellness support, all shaped around what your team actually needs. Because a healthier team is a happier, more productive one.",
+      ],
+    },
+    stats: LOCATION_STATS,
+    serviceItems: LOCATION_SERVICES,
+    conditions: LOCATION_CONDITIONS,
+    faqTitle: { lead: "Frequently Asked", accent: "Questions" },
+    faqs: [
+      {
+        question: "Where can I find a physiotherapist near Kasturi Nagar?",
+        answer:
+          "The Fysit is a physiotherapy center in Kasturi Nagar located at No. 143, 4th Cross, near SBI Bank, Bangalore. You can visit us at the clinic or book a doorstep physiotherapy session if you prefer treatment at home. Call us on +91 7892 604 549 to book your appointment.",
+      },
+      {
+        question: "Is home physiotherapy available in Kasturi Nagar?",
+        answer:
+          "Yes, we offer doorstep physiotherapy in Kasturi Nagar. Our physiotherapists visit your home and deliver the same standard of clinical care as an in-clinic session. This is especially helpful for patients recovering from surgery, older adults, or anyone who finds travelling to the clinic difficult.",
+      },
+      {
+        question: "How many physiotherapy sessions are needed for back pain or knee pain?",
+        answer:
+          "The number of sessions depends on the condition, its severity, and how long it has been present. Most patients see noticeable improvement within 4 to 8 sessions. After your first assessment at our Kasturi Nagar center, your physiotherapist will give you a clear, realistic timeline — no vague estimates, no unnecessary sessions.",
+      },
+      {
+        question: "What conditions does a physiotherapist treat?",
+        answer:
+          "A physiotherapist treats a wide range of musculoskeletal and neurological conditions. At The Fysit Kasturi Nagar, we treat back pain, neck pain, knee pain, shoulder pain, sciatica, frozen shoulder, spondylitis, arthritis, sports injuries, post-surgery rehabilitation, stroke recovery, and Parkinson’s disease, among others.",
+      },
+      {
+        question: "How do I book a physiotherapy appointment in Kasturi Nagar?",
+        answer:
+          "Call us on +91 7892 604 549 to book. Walk-ins are welcome, subject to availability. Our clinic is open Monday to Friday, 9:00am to 9:00pm, and Saturday, 10:00am to 1:00pm.",
+      },
+      {
+        question: "What is corporate physiotherapy and how does it help office workers?",
+        answer:
+          "Corporate physiotherapy brings professional pain management and wellness support into the workplace, helping office workers deal with the physical toll of long desk hours, poor posture, and repetitive strain. The Fysit offers corporate wellness programs in Bangalore covering ergonomics assessments, workstation corrections, group fitness, and mental wellness.",
+      },
+    ],
+  },
+];
 
 export const OPENING_HOURS_TITLE = "Opening Hours:";
 

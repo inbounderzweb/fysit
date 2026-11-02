@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { getWebsiteLocations } from "@/lib/locations-public";
 import { listPublishedPages } from "@/services/page.service";
 import { listPublishedBlogSlugs } from "@/services/blog.service";
 import { listPublishedServiceSlugs } from "@/services/service.service";
@@ -8,6 +9,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteConfig.url, lastModified: new Date() },
     { url: `${siteConfig.url}/services`, lastModified: new Date() },
+    // Published clinics, or the built-in pair (getWebsiteLocations never throws).
+    ...(await getWebsiteLocations()).map((location) => ({
+      url: `${siteConfig.url}/${location.slug}`,
+      lastModified: new Date(),
+    })),
     { url: `${siteConfig.url}/blog`, lastModified: new Date() },
     { url: `${siteConfig.url}/contact`, lastModified: new Date() },
   ];
