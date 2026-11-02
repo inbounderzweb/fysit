@@ -7,6 +7,7 @@ import { listBlogPostsAdmin } from "@/services/blog.service";
 import { listTestimonialsAdmin } from "@/services/testimonial.service";
 import { listDoctorsAdmin } from "@/services/doctor.service";
 import { listServicesAdmin } from "@/services/service.service";
+import { listLocationsAdmin } from "@/services/location.service";
 import { listEnquiriesAdmin } from "@/services/enquiry.service";
 
 export type SearchResult = { type: string; label: string; sublabel?: string; href: string };
@@ -68,6 +69,19 @@ export async function GET(request: NextRequest) {
           label: item.name,
           sublabel: item.status,
           href: `/admin/services/${item._id}/edit`,
+        }))
+      )
+    );
+  }
+
+  if (can(user.role, "read", "locations")) {
+    searches.push(
+      listLocationsAdmin({ search: query }).then((items) =>
+        items.slice(0, 5).map((item) => ({
+          type: "Location",
+          label: item.name,
+          sublabel: item.status,
+          href: `/admin/locations/${item._id}/edit`,
         }))
       )
     );

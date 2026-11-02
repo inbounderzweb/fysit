@@ -13,7 +13,7 @@ import { buttonClasses } from "@/components/admin/ui/button";
 import { statusLabel } from "@/components/admin/ui/badge";
 import { CheckCircleIcon, ChatIcon, DocumentIcon, GlobeIcon, ImageIcon, LayersIcon } from "@/components/admin/icons";
 import type { MediaItem } from "@/types/media";
-import { ListEditor } from "./list-editor";
+import { ListEditor } from "@/components/admin/list-editor";
 import type { ServiceFormState } from "./actions";
 
 export type ServiceFormAction = (state: ServiceFormState, formData: FormData) => Promise<ServiceFormState>;

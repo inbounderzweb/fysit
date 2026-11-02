@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { LocationPage, locationMetadata } from "@/components/locations/LocationPage";
+import { getWebsiteLocations } from "@/lib/locations-public";
 import { getPublishedPageBySlug } from "@/services/page.service";
 import { buildMetadata } from "@/lib/seo";
 import { siteConfig } from "@/config/site";
+
+// Clinic pages (Admin → Locations) live at the root, as they did on the old
+// site — /physiotherapy-center-in-sadanandanagar — so they're matched first;
+// any other slug is a CMS page.
 
 export async function generateMetadata({
   params,
@@ -10,6 +16,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+
+  const location = (await getWebsiteLocations()).find((item) => item.slug === slug);
+  if (location) return locationMetadata(location);
+
   const page = await getPublishedPageBySlug(slug);
   if (!page) return {};
 
@@ -21,6 +31,11 @@ export async function generateMetadata({
 
 export default async function CmsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+
+  const locations = await getWebsiteLocations();
+  const location = locations.find((item) => item.slug === slug);
+  if (location) return <LocationPage location={location} others={locations} />;
+
   const page = await getPublishedPageBySlug(slug);
 
   if (!page) {

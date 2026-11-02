@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { MobileNav } from "@/components/layout/MobileNav";
-import { NAV_ITEMS, SITE } from "@/lib/content";
+import { SITE } from "@/lib/content";
+import type { NavItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -39,7 +40,7 @@ function useStuck(threshold = 200) {
  * glass panel (white, blurred, translucent) — so every element that was
  * white-on-dark for the overlay state flips to navy-on-glass here.
  */
-export function Header() {
+export function Header({ navItems }: { navItems: NavItem[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const stuck = useStuck();
   const pathname = usePathname();
@@ -80,7 +81,11 @@ export function Header() {
                 : "border-white/[0.06] bg-white/[0.05]",
             )}
           >
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
+              if (item.children?.length) {
+                return <NavDropdown key={item.label} item={item} stuck={stuck} pathname={pathname} />;
+              }
+
               // Hash links (#services, #contact, …) point at sections on
               // the home page and never match a route of their own; only an
               // absolute path (/, /blog, /about) can be "current".
@@ -209,7 +214,134 @@ export function Header() {
         </div>
       </header>
 
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav navItems={navItems} open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </>
+  );
+}
+
+/**
+ * A nav item with sub-links (Locations). Opens on hover, or on click and the
+ * keyboard; Escape or moving focus away closes it. The panel is a white card
+ * hung under the nav pill, each link carrying a one-line note.
+ */
+function NavDropdown({ item, stuck, pathname }: { item: NavItem; stuck: boolean; pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const children = item.children ?? [];
+  const isActive = children.some((child) => pathname === child.href);
+  const isDark = isActive || stuck;
+
+  // A short grace period lets the pointer cross the gap into the panel.
+  const openNow = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const closeSoon = () => {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  // Escape and clicks outside close the panel wherever focus is — Safari
+  // doesn't focus a button on click, so a key handler on the wrapper alone
+  // would miss it.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      rootRef.current?.querySelector("button")?.focus();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open]);
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onMouseEnter={openNow}
+      onMouseLeave={closeSoon}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen((value) => !value)}
+        className={cn(
+          "inline-flex h-[38.25px] items-center gap-1 rounded-[5px] px-[15px]",
+          "text-[14px] font-medium uppercase leading-[14px] transition-colors duration-200",
+          isActive
+            ? "bg-white text-navy"
+            : stuck
+              ? "text-navy hover:bg-black/5"
+              : "text-white hover:bg-white/10",
+        )}
+      >
+        {item.label}
+        <Image
+          src={isDark ? "/icons/chevron-down-active.svg" : "/icons/chevron-down.svg"}
+          alt=""
+          width={14}
+          height={14}
+          /* Figma renders this glyph flipped (node 1:743); open turns it back. */
+          className={cn("shrink-0 transition-transform duration-300", open ? "scale-y-100" : "-scale-y-100")}
+          unoptimized
+        />
+      </button>
+
+      <div
+        className={cn(
+          "absolute left-1/2 top-full z-10 w-[320px] -translate-x-1/2 pt-[14px] transition-all duration-300",
+          open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0",
+        )}
+      >
+        <ul className="list-none rounded-[14px] border border-black/[0.06] bg-white p-[8px] shadow-[0_20px_50px_-12px_rgba(15,30,76,0.25)]">
+          {children.map((child) => {
+            const current = pathname === child.href;
+            return (
+              <li key={child.href}>
+                <Link
+                  href={child.href}
+                  // Client-side navigation keeps the header mounted, so close here.
+                  onClick={() => setOpen(false)}
+                  aria-current={current ? "page" : undefined}
+                  className={cn(
+                    "group flex items-start gap-[12px] rounded-[10px] px-[14px] py-[12px] transition-colors duration-200",
+                    current ? "bg-mint" : "hover:bg-surface",
+                  )}
+                >
+                  <span
+                    aria-hidden
+                    className="mt-[2px] grid size-[32px] shrink-0 place-items-center rounded-full bg-teal/10 text-teal-dark transition-colors duration-200 group-hover:bg-teal group-hover:text-white"
+                  >
+                    <svg viewBox="0 0 16 16" className="size-[15px] fill-current">
+                      <path d="M8 1a5 5 0 0 0-5 5c0 3.6 4.3 8.3 4.5 8.5a.7.7 0 0 0 1 0C8.7 14.3 13 9.6 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
+                    </svg>
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[15px] font-medium leading-[22px] text-navy">{child.label}</span>
+                    {child.note && (
+                      <span className="block text-[13px] leading-[19px] text-body/80">{child.note}</span>
+                    )}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
   );
 }

@@ -58,7 +58,7 @@ export default function HomePage() {
       <AboutTeam/>
       <MarqueeBand words={MARQUEE_EMERGENCY} speed={68} />
       <Appointment />
-      <CaseStudies />
+      {/* <CaseStudies /> */}
       <FeatureBand />
       <Testimonials />
       <Blog />

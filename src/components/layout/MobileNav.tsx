@@ -3,11 +3,13 @@
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useId, useState } from "react";
 
-import { NAV_ITEMS, SITE } from "@/lib/content";
+import { SITE } from "@/lib/content";
+import type { NavItem } from "@/lib/types";
 
 type MobileNavProps = {
+  navItems: NavItem[];
   open: boolean;
   onClose: () => void;
 };
@@ -17,7 +19,7 @@ type MobileNavProps = {
  * design's own language: the hero's ink ground, the glass borders from the
  * nav pill, and the same uppercase 14px items.
  */
-export function MobileNav({ open, onClose }: MobileNavProps) {
+export function MobileNav({ navItems, open, onClose }: MobileNavProps) {
   useEffect(() => {
     if (!open) return;
 
@@ -82,7 +84,10 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
 
             <nav aria-label="Mobile">
               <ul className="flex flex-col">
-                {NAV_ITEMS.map((item) => (
+                {navItems.map((item) =>
+                  item.children?.length ? (
+                    <MobileSubmenu key={item.label} item={item} onNavigate={onClose} />
+                  ) : (
                   <li key={item.label}>
                     <Link
                       href={item.href}
@@ -102,7 +107,8 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                       ) : null}
                     </Link>
                   </li>
-                ))}
+                  ),
+                )}
               </ul>
             </nav>
 
@@ -151,5 +157,58 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
         </motion.div>
       ) : null}
     </AnimatePresence>
+  );
+}
+
+/** A nav item with sub-links (Locations), expanding in place inside the drawer. */
+function MobileSubmenu({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+  const panelId = useId();
+
+  return (
+    <li className="border-b border-white/10">
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        onClick={() => setExpanded((value) => !value)}
+        className="flex w-full items-center justify-between py-4 text-[14px] font-medium uppercase text-white transition-colors hover:text-teal"
+      >
+        {item.label}
+        <Image
+          src="/icons/chevron-down.svg"
+          alt=""
+          width={14}
+          height={14}
+          className={expanded ? "transition-transform duration-300" : "-scale-y-100 transition-transform duration-300"}
+          unoptimized
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.ul
+            id={panelId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            {item.children?.map((child) => (
+              <li key={child.href}>
+                <Link
+                  href={child.href}
+                  onClick={onNavigate}
+                  className="mb-2 block rounded-[8px] bg-white/[0.04] px-4 py-3 transition-colors hover:bg-white/10"
+                >
+                  <span className="block text-[15px] font-medium text-white">{child.label}</span>
+                  {child.note && <span className="block text-[13px] leading-[19px] text-white/60">{child.note}</span>}
+                </Link>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </li>
   );
 }

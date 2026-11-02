@@ -17,7 +17,8 @@ type Row = { id: number; values: Record<string, string> };
 let nextRowId = 0;
 
 /**
- * Edits a repeatable section of a service — benefits, treatment steps or FAQs —
+ * Edits a repeatable section of a form — a service’s benefits, steps or FAQs,
+ * a clinic’s stats, reasons or FAQs —
  * as a list of rows that can be added, removed and reordered. The whole list
  * is posted as JSON through one hidden input named `name`; empty rows are
  * dropped. With `asStrings`, a single-field list posts plain strings.

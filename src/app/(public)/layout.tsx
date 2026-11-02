@@ -4,6 +4,7 @@ import { Mona_Sans, Playfair_Display } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SITE } from "@/lib/content";
+import { getNavItems } from "@/lib/locations-public";
 
 import "./globals.css";
 
@@ -85,11 +86,14 @@ export const viewport: Viewport = {
 // routes), and the marketing header/footer live here instead of the shared
 // root layout, so admin pages never inherit this site's fonts, tokens, or
 // chrome. See src/app/layout.tsx for why the split works.
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // The Locations dropdown lists the clinics from Admin → Locations.
+  const navItems = await getNavItems();
+
   return (
     <div className={`${monaSans.variable} ${playfair.variable} font-sans antialiased`}>
       <a
@@ -98,7 +102,7 @@ export default function PublicLayout({
       >
         Skip to content
       </a>
-      <Header />
+      <Header navItems={navItems} />
       <main id="main">{children}</main>
       <Footer />
     </div>
