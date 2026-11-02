@@ -19,17 +19,17 @@ export function Footer() {
       {/* Figma 1:635 / 1:636 — corner glows */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[288px] -top-[288px] size-[576px] rounded-full bg-teal/25 blur-[120px]"
+        className="pointer-events-none absolute -left-[288px] -top-[288px] size-[576px] rounded-full bg-[#6F70B1]/30 blur-[120px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[288px] top-[475px] size-[576px] rounded-full bg-[#e0583f]/25 blur-[120px]"
+        className="pointer-events-none absolute -right-[288px] top-[475px] size-[576px] rounded-full bg-[#43C2D2]/25 blur-[120px]"
       />
 
       <div className="relative mx-auto w-full max-w-[1300px] px-5 pt-[70px] sm:px-8 lg:pt-[120px]">
         <div className="grid gap-[50px] lg:grid-cols-[361fr_207fr_207fr_414fr]">
           {/* Clinic card */}
-          <div className="rounded-[10px] bg-white p-[30px] backdrop-blur-sm">
+          <div className="rounded-[10px] border border-white/10 bg-white/[0.06] p-[30px] backdrop-blur-sm">
             <Image
               src="/icons/logo.svg"
               alt={`${SITE.name} — Wellness Simplified`}
@@ -37,7 +37,7 @@ export function Footer() {
               height={66}
               className="h-[52px] w-auto"
             />
-            <p className="mt-[21px] text-[16px] leading-[24px] text-black">
+            <p className="mt-[21px] text-[16px] leading-[24px] text-white/70">
               {FOOTER.blurb}
             </p>
             <dl className="mt-[22px] text-[16px]">
@@ -46,12 +46,12 @@ export function Footer() {
                   key={hour.label}
                   className={`flex items-center justify-between py-[8px] ${
                     index < OPENING_HOURS.length - 1
-                      ? "border-b border-black/30"
+                      ? "border-b border-white/15"
                       : ""
                   }`}
                 >
-                  <dt className="leading-[26px] text-black">{hour.label}</dt>
-                  <dd className="font-medium leading-[26px] text-black">{hour.value}</dd>
+                  <dt className="leading-[26px] text-white/70">{hour.label}</dt>
+                  <dd className="font-medium leading-[26px] text-white">{hour.value}</dd>
                 </div>
               ))}
             </dl>
