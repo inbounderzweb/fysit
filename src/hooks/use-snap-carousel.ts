@@ -19,8 +19,9 @@ type SnapCarouselOptions = {
 /**
  * Drives the scroll-snap carousels (physiotherapy services, case studies):
  * a dot rail that tracks whichever card is snapped at the leading edge, and
- * autoplay that pauses on hover, on focus, off screen, and under reduced
- * motion. The track is a plain `overflow-x-auto` list, so dragging, wheeling
+ * autoplay that pauses on keyboard focus, off screen, and under reduced
+ * motion. It deliberately does not pause on hover: on desktop the cursor
+ * rests over the row while a visitor reads, which froze the slide. The track is a plain `overflow-x-auto` list, so dragging, wheeling
  * and keyboard scrolling keep working without any of this running.
  *
  * The track renders its slides twice and, once scrolling settles past the
@@ -156,8 +157,6 @@ export function useSnapCarousel({ count, autoplayMs = 3500 }: SnapCarouselOption
   }, [advance, autoplayMs, isPaused, isOnScreen, reduceMotion]);
 
   const pauseHandlers = {
-    onMouseEnter: () => setIsPaused(true),
-    onMouseLeave: () => setIsPaused(false),
     onFocusCapture: () => setIsPaused(true),
     onBlurCapture: () => setIsPaused(false),
   };
