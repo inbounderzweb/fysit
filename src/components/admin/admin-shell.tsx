@@ -127,7 +127,7 @@ export function AdminShell({
             {/* The full lockup, or only its mark (the left 58 of 172 units) when collapsed. */}
             <span className={cn("block overflow-hidden", isCollapsed ? "w-[132px] lg:w-[45px]" : "w-[132px]")}>
               {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}
-              <img src="/icons/logo.svg" alt="" width={132} height={40} className="h-10 w-[132px] max-w-none" />
+              <img src="/icons/logo.svg" alt="" width={120} height={40} className="h-10 w-[120px] max-w-none" />
             </span>
           </Link>
           <button
@@ -217,7 +217,7 @@ export function AdminShell({
           </button>
           <Link href="/admin/dashboard" className="shrink-0 sm:hidden" aria-label="Dashboard">
             {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}
-            <img src="/icons/logo.svg" alt="" width={106} height={32} className="h-8 w-[106px]" />
+            <img src="/icons/logo.svg" alt="" width={96} height={32} className="h-8 w-[96px]" />
           </Link>
 
           <div className="hidden min-w-0 flex-1 sm:block">

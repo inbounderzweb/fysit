@@ -33,7 +33,7 @@ export function Footer() {
             <Image
               src="/icons/logo.svg"
               alt={`${SITE.name} — Wellness Simplified`}
-              width={220}
+              width={198}
               height={66}
               className="h-[52px] w-auto"
             />

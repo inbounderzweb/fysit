@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
           <div className="rounded-3xl border border-line bg-white p-6 shadow-pop sm:p-10">
             <div className="flex flex-col gap-6">
               {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}
-              <img src="/icons/logo.svg" alt="The Fysit — Wellness Simplified" width={159} height={48} className="h-12 w-[159px]" />
+              <img src="/icons/logo.svg" alt="The Fysit — Wellness Simplified" width={144} height={48} className="h-12 w-[144px]" />
               <div className="flex flex-col gap-1">
                 <h1 className="text-2xl font-semibold tracking-[-0.01em] text-navy-900">Welcome back</h1>
                 <p className="text-sm text-slate-500">Sign in to the clinic admin to continue.</p>
