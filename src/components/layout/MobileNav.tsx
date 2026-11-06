@@ -68,7 +68,7 @@ export function MobileNav({ navItems, open, onClose }: MobileNavProps) {
               <Image
                 src="/icons/logo.svg"
                 alt={`${SITE.name} — Wellness Simplified`}
-                width={172}
+                width={156}
                 height={52}
                 className="h-[42px] w-auto"
               />

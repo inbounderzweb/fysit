@@ -63,7 +63,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             <Image
               src="/icons/logo.svg"
               alt={`${SITE.name} — Wellness Simplified`}
-              width={172}
+              width={156}
               height={52}
               priority
               className="h-[42px] w-auto lg:h-[52px]"

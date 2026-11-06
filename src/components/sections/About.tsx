@@ -36,7 +36,10 @@ export function About() {
           <SectionHeading
             lead={ABOUT.heading.lead}
             accent={ABOUT.heading.accent}
-            className="mt-[10px] max-w-[491px]"
+            // The hours card rises beside the heading from the photo's top-right
+            // (300px wide), so the heading yields whatever width the photo column
+            // gives up — the column is 818/1250 of the row at lg.
+            className="mt-[10px] max-w-[491px] sm:max-w-[max(240px,min(491px,calc(100%_-_320px)))] lg:max-w-[max(240px,min(491px,calc((100%_-_50px)_*_0.6544_-_320px)))]"
           />
         </Reveal>
 
