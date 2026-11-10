@@ -36,9 +36,9 @@ function useStuck(threshold = 200) {
  * 202px, so the two spacers below carry those numbers as flex-grow ratios.
  * That holds the exact composition at 1920 and scales it proportionally.
  *
- * Once stuck, the header switches from the hero's dark overlay to a frosted
- * glass panel (white, blurred, translucent) — so every element that was
- * white-on-dark for the overlay state flips to navy-on-glass here.
+ * Once stuck, the header switches from the hero's dark overlay to a solid
+ * white panel (so the logo stays fully visible) — every element that was
+ * white-on-dark for the overlay state flips to navy-on-white here.
  */
 export function Header({ navItems }: { navItems: NavItem[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -51,7 +51,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
         className={cn(
           "z-50 transition-[height,background-color,box-shadow] duration-300",
           stuck
-            ? "fixed inset-x-0 top-0 h-[84px] border-b border-black/[0.06] bg-white/70 shadow-[0_10px_35px_rgba(15,30,76,0.1)] backdrop-blur-xl"
+            ? "fixed inset-x-0 top-0 h-[84px] border-b border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(15,30,76,0.1)]"
             : "absolute h-[94.25px]",
           /* The home hero is an inset card (components/sections/Hero), so the
              overlay steps in by the same frame (10px, 20px from md) to sit inside it. */
