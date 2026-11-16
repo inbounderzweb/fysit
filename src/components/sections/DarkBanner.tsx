@@ -33,7 +33,7 @@ export function DarkBanner() {
   return (
     <section
       aria-labelledby="why-choose-us-heading"
-      className="relative isolate overflow-hidden bg-banner text-white"
+      className="relative isolate overflow-hidden bg-[#353068] text-white"
     >
       <GuideLines />
 
@@ -178,7 +178,7 @@ function ArchedPhoto() {
           />
         </motion.div>
         {/* Darkens the foot so the floating label always has contrast. */}
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-banner/60 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#353068]/60 to-transparent" />
       </motion.div>
 
       <WordRing />
@@ -209,7 +209,7 @@ function WordRing() {
   return (
     <div
       aria-hidden
-      className="absolute -left-2 top-[6%] hidden size-[118px] place-items-center rounded-full bg-banner sm:grid lg:-left-6"
+      className="absolute -left-2 top-[6%] hidden size-[118px] place-items-center rounded-full bg-[#353068] sm:grid lg:-left-6"
     >
       <svg viewBox="0 0 120 120" className="absolute inset-0 size-full animate-heading-spin">
         <defs>
