@@ -6,10 +6,11 @@ import { Testimonial } from "@/models/Testimonial";
 import { Doctor } from "@/models/Doctor";
 import { Service } from "@/models/Service";
 import { Location } from "@/models/Location";
-import { uploadToCloudinary, deleteFromCloudinary } from "@/lib/cloudinary";
+import { SiteSettings } from "@/models/SiteSettings";
+import { uploadToCloudinary, deleteFromCloudinary, getCloudinaryVideo, VIDEO_UPLOAD } from "@/lib/cloudinary";
 import { getPagination, totalPages, startOfMonth } from "@/lib/utils";
 
-export type MediaUsage = { type: "blog" | "testimonial" | "doctor" | "service" | "location"; id: string; title: string };
+export type MediaUsage = { type: "blog" | "testimonial" | "doctor" | "service" | "location" | "homepage"; id: string; title: string };
 
 export class MediaInUseError extends Error {
   usage: MediaUsage[];
@@ -20,18 +21,24 @@ export class MediaInUseError extends Error {
   }
 }
 
-export async function listMediaAdmin(params: { search?: string; page?: string | number; limit?: string | number }) {
+export async function listMediaAdmin(params: {
+  search?: string;
+  page?: string | number;
+  limit?: string | number;
+  type?: "image" | "video";
+}) {
   await connectToDatabase();
   const { page, limit, skip } = getPagination(params);
-  const filter = params.search
-    ? {
-        $or: [
-          { filename: { $regex: params.search, $options: "i" } },
-          { publicId: { $regex: params.search, $options: "i" } },
-          { altText: { $regex: params.search, $options: "i" } },
-        ],
-      }
-    : {};
+  const filter = {
+    ...(params.search && {
+      $or: [
+        { filename: { $regex: params.search, $options: "i" } },
+        { publicId: { $regex: params.search, $options: "i" } },
+        { altText: { $regex: params.search, $options: "i" } },
+      ],
+    }),
+    ...(params.type && { resourceType: params.type }),
+  };
 
   const [items, count] = await Promise.all([
     Media.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
@@ -69,6 +76,38 @@ export async function uploadMedia(
   });
 }
 
+export class VideoRegistrationError extends Error {}
+
+/**
+ * Records a video the browser has already uploaded straight to Cloudinary.
+ * Everything stored is read back from Cloudinary, not taken from the request;
+ * a video outside the upload folder is refused and an oversized one removed.
+ */
+export async function registerUploadedVideo(publicId: string, filename: string, userId: string) {
+  if (!publicId.startsWith(`${VIDEO_UPLOAD.folder}/`)) {
+    throw new VideoRegistrationError("That video wasn’t uploaded through the admin.");
+  }
+
+  const video = await getCloudinaryVideo(publicId);
+  if (!video) throw new VideoRegistrationError("The uploaded video couldn’t be found on Cloudinary.");
+
+  if (video.bytes > VIDEO_UPLOAD.maxBytes) {
+    await deleteFromCloudinary(publicId, "video");
+    throw new VideoRegistrationError("Video size must not exceed 50 MB.");
+  }
+
+  await connectToDatabase();
+  const existing = await Media.findOne({ publicId }).lean();
+  if (existing) return existing;
+
+  return Media.create({
+    ...video,
+    filename,
+    folder: "videos",
+    uploadedBy: userId,
+  });
+}
+
 export async function updateMediaMetadata(id: string, updates: { altText?: string; caption?: string }) {
   await connectToDatabase();
   return Media.findByIdAndUpdate(id, updates, { new: true }).lean();
@@ -76,7 +115,7 @@ export async function updateMediaMetadata(id: string, updates: { altText?: strin
 
 export async function findMediaUsage(id: string): Promise<MediaUsage[]> {
   await connectToDatabase();
-  const [blogPosts, testimonials, doctors, services, locations] = await Promise.all([
+  const [blogPosts, testimonials, doctors, services, locations, homepage] = await Promise.all([
     BlogPost.find({ featuredImage: id }).select("title").lean(),
     Testimonial.find({ image: id }).select("authorName").lean(),
     Doctor.find({ photo: id }).select("name").lean(),
@@ -86,6 +125,9 @@ export async function findMediaUsage(id: string): Promise<MediaUsage[]> {
     })
       .select("name")
       .lean(),
+    SiteSettings.exists({
+      $or: [{ "heroBanner.desktopImage": id }, { "heroBanner.mobileImage": id }, { "heroBanner.video": id }],
+    }),
   ]);
 
   return [
@@ -94,6 +136,7 @@ export async function findMediaUsage(id: string): Promise<MediaUsage[]> {
     ...doctors.map((d) => ({ type: "doctor" as const, id: d._id.toString(), title: d.name })),
     ...services.map((s) => ({ type: "service" as const, id: s._id.toString(), title: s.name })),
     ...locations.map((l) => ({ type: "location" as const, id: l._id.toString(), title: l.name })),
+    ...(homepage ? [{ type: "homepage" as const, id: homepage._id.toString(), title: "Homepage banner" }] : []),
   ];
 }
 
@@ -107,7 +150,7 @@ export async function deleteMedia(id: string): Promise<void> {
   const media = await Media.findById(id);
   if (!media) return;
 
-  await deleteFromCloudinary(media.publicId);
+  await deleteFromCloudinary(media.publicId, media.resourceType);
   await Media.findByIdAndDelete(id);
 }
 

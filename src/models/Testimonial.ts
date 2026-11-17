@@ -9,6 +9,12 @@ const testimonialSchema = new Schema(
     quote: { type: String, required: true },
     image: { type: Schema.Types.ObjectId, ref: "Media" },
     rating: { type: Number, min: 1, max: 5 },
+    // Where the review was written. "google" puts a "Google review" label on
+    // the card, so it is only for reviews actually posted on the clinic's
+    // Google profile.
+    source: { type: String, enum: ["google", "other"], default: "other" },
+    reviewDate: { type: Date },
+    reviewUrl: { type: String, trim: true },
     displayOrder: { type: Number, default: 0 },
     status: { type: String, enum: CONTENT_STATUSES, required: true, default: "DRAFT" },
   },

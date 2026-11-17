@@ -16,6 +16,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = ["Patient care", "Website conte
 export const adminNavigation: AdminNavItem[] = [
   { label: "Enquiries", href: "/admin/enquiries", resource: "enquiries", group: "Patient care" },
   { label: "Testimonials", href: "/admin/testimonials", resource: "testimonials", group: "Patient care" },
+  { label: "Homepage banner", href: "/admin/homepage-banner", resource: "settings", group: "Website content" },
   { label: "Doctors", href: "/admin/doctors", resource: "team", group: "Website content" },
   { label: "Services", href: "/admin/services", resource: "services", group: "Website content" },
   { label: "Locations", href: "/admin/locations", resource: "locations", group: "Website content" },

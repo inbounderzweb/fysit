@@ -10,5 +10,14 @@ export function cloudinaryThumbnail(secureUrl: string, width = 300): string {
   if (index === -1) return secureUrl;
 
   const insertAt = index + marker.length;
-  return `${secureUrl.slice(0, insertAt)}f_auto,q_auto,w_${width}/${secureUrl.slice(insertAt)}`;
+  // A video has no still to resize until Cloudinary is asked for one: the
+  // same URL with an image extension returns a poster frame.
+  const rest = isCloudinaryVideo(secureUrl)
+    ? secureUrl.slice(insertAt).replace(/\.[a-z0-9]+$/i, ".jpg")
+    : secureUrl.slice(insertAt);
+  return `${secureUrl.slice(0, insertAt)}f_auto,q_auto,w_${width}/${rest}`;
+}
+
+export function isCloudinaryVideo(secureUrl: string): boolean {
+  return secureUrl.includes("/video/upload/");
 }

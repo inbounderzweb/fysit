@@ -692,7 +692,7 @@ export const BANNER = {
   image: "/images/case-physio.jpg",
   imageAlt: "Physiotherapist stretching a patient’s leg on a treatment table",
   /** The floating label on the photo — the clinic's Google rating. */
-  rating: { value: "4.9", label: "68 Google reviews" },
+  rating: { value: "4.9", label: "200+ Google reviews" },
   /** Set around the rotating badge on the photo. */
   ring: "The Fysit • Physiotherapy • Bangalore • ",
   benefits: [
@@ -715,9 +715,9 @@ export const BANNER = {
     },
   ],
   stats: [
-    { id: "expert-doctor", label: "Expert Doctor", value: 82 },
-    { id: "patient-satisfaction", label: "Patient Satisfaction", value: 74 },
-    { id: "success-case", label: "Success Case", value: 98 },
+    { id: "expert-doctor", label: "Expert Doctor", value: 100 },
+    { id: "patient-satisfaction", label: "Patient Satisfaction", value: 99 },
+    { id: "success-case", label: "Success Case", value: 99 },
   ],
 } as const;
 
@@ -756,7 +756,7 @@ export const DOCTORS: Doctor[] = [
    Appointment — Figma 1:254 … 1:298
 ------------------------------------------------------------------------- */
 export const APPOINTMENT = {
-  image: "/images/appointment.jpg",
+  image: "/images/appointment1.jpeg",
   imageAlt: "Doctor greeting a patient at the clinic reception",
   map: "/images/map2.jpg",
   mapAlt: "Map showing the clinic location",
@@ -865,19 +865,19 @@ export const TESTIMONIALS_HEADING = {
 
 export const TESTIMONIALS: Testimonial[] = [
   {
+    // No photo: the stock images in /images are the clinic's own doctors.
     id: "akshata-terdal",
     name: "Akshata Terdal",
     role: "Neck Pain",
-    avatar: "/images/doctor-01.jpg",
     rating: 5,
     quote:
       "I visited Fysit for neck pain treatment. Dr. Veena had been very friendly and caring throughout the treatment process. She helped me recover from my neck pain and it’s been close to 6 months I haven’t faced any issues so far.",
   },
   {
-    id: "google-review",
-    name: "Google Review",
+    // The reviewer's name wasn't kept with this one.
+    id: "pain-relief-patient",
+    name: "Fysit patient",
     role: "Pain Relief",
-    avatar: "/images/doctor-07.jpg",
     rating: 5,
     quote:
       "Dr Veena was good in diagnosing the pain and ideal therapy was given. The commitment and professionalism was extremely appreciative. The facilities and equipment’s are in place. Great place to relieve your pain problems.",

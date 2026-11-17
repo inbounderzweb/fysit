@@ -22,6 +22,9 @@ function buildInputFromFormData(formData: FormData) {
     quote: formData.get("quote"),
     image: formData.get("image") || undefined,
     rating: formData.get("rating") || undefined,
+    source: formData.get("source") || undefined,
+    reviewDate: formData.get("reviewDate") || undefined,
+    reviewUrl: formData.get("reviewUrl") || undefined,
     status: formData.get("status"),
   };
 }

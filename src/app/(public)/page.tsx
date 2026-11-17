@@ -16,6 +16,7 @@ import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY } from "@/lib/content";
+import { getHeroMedia } from "@/lib/hero-public";
 import { AboutTeam } from "@/components/sections/AboutTeam";
 
 export const metadata: Metadata = buildMetadata(
@@ -40,12 +41,14 @@ const jsonLd = [
 ];
 
 /** Section order follows the Figma frame "1920w light" top to bottom. */
-export default function HomePage() {
+export default async function HomePage() {
+  const heroMedia = await getHeroMedia();
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Hero />
+      <Hero media={heroMedia} />
       {/* <PhysioHighlights /> */}
       <About />
       <MarqueeBand words={MARQUEE_PRIMARY} />

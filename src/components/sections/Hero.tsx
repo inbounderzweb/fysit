@@ -1,15 +1,16 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 
 import { Reveal } from "@/components/animations/Reveal";
 import { useCountUp } from "@/hooks/use-count-up";
 import { HERO_BANNER } from "@/lib/content";
+import type { HeroMedia } from "@/lib/hero-public";
 import { cn } from "@/lib/utils";
 
 /**
- * Three tints stacked over the video, measured off the reference render: a
+ * Three tints stacked over the banner media, measured off the reference render: a
  * near-horizontal wash anchoring the left edge, a faint lift from the foot,
  * and a broad darkening across the bottom half so the counters stay legible
  * over whatever frame is playing.
@@ -44,7 +45,31 @@ function Counter({ value, suffix, label }: HeroStat) {
 
 type HeroStat = (typeof HERO_BANNER)["stats"][number];
 
-export function Hero() {
+/**
+ * The banner photograph: the mobile crop below md, the desktop crop above.
+ * Only the matching source downloads, so neither can be eagerly preloaded;
+ * a high fetch priority speeds whichever one wins instead.
+ */
+function BannerImage({ desktop, mobile }: Extract<HeroMedia, { type: "image" }>) {
+  const common = { alt: desktop.alt, sizes: "100vw" };
+  const {
+    props: { srcSet: desktopSrcSet },
+  } = getImageProps({ ...common, src: desktop.src, width: desktop.width, height: desktop.height });
+  const {
+    props: { srcSet: mobileSrcSet, ...rest },
+  } = getImageProps({ ...common, src: mobile.src, width: mobile.width, height: mobile.height });
+
+  return (
+    <picture>
+      <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
+      <source srcSet={mobileSrcSet} />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- art-directed via getImageProps; alt is in `rest` */}
+      <img {...rest} fetchPriority="high" className="absolute inset-0 size-full object-cover" />
+    </picture>
+  );
+}
+
+export function Hero({ media }: { media: HeroMedia }) {
   return (
     /* The banner sits as an inset card: a 10px frame on phones and 20px from md up,
        as in the reference layout, with the header laid over its top. */
@@ -62,15 +87,20 @@ export function Hero() {
         {/* The media is clipped in its own layer so the section itself stays
           unclipped for the guide rail. */}
         <div className="absolute inset-0 overflow-hidden rounded-[20px] md:rounded-[30px]">
-          <video
-            className="absolute inset-0 size-full object-cover"
-            src={HERO_BANNER.video}
-            autoPlay
-            muted
-            loop
-            playsInline
-            role="presentation"
-          />
+          {media.type === "image" ? (
+            <BannerImage {...media} />
+          ) : (
+            <video
+              key={media.src}
+              className="absolute inset-0 size-full object-cover"
+              src={media.src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              role="presentation"
+            />
+          )}
           <div
             className="absolute inset-0"
             style={{ backgroundImage: BANNER_OVERLAY }}

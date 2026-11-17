@@ -18,6 +18,9 @@ export default async function SettingsPage() {
           contactEmail: settings.contactEmail ?? undefined,
           contactPhone: settings.contactPhone ?? undefined,
           address: settings.address ?? undefined,
+          googleRating: settings.googleReviews?.rating ?? undefined,
+          googleReviewCount: settings.googleReviews?.count ?? undefined,
+          googleReviewsUrl: settings.googleReviews?.url ?? undefined,
         }}
       />
     </div>
