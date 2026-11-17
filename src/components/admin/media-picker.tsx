@@ -103,7 +103,7 @@ export function MediaPickerModal({
     const timeout = setTimeout(() => {
       setIsLoading(true);
       setLoadError(false);
-      const params = new URLSearchParams({ limit: "24" });
+      const params = new URLSearchParams({ limit: "24", type: "image" });
       if (search) params.set("search", search);
 
       fetch(`/api/media?${params.toString()}`, { signal: controller.signal })

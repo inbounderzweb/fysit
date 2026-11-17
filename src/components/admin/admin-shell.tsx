@@ -36,6 +36,8 @@ const NAV_ICONS: Record<string, IconType> = {
   enquiries: InboxIcon,
   media: ImageIcon,
   settings: GearIcon,
+  // Keyed by path where one resource backs two pages.
+  "/admin/homepage-banner": HomeIcon,
 };
 
 const COLLAPSE_KEY = "fysit-admin-sidebar-collapsed";
@@ -161,7 +163,7 @@ export function AdminShell({
                   <NavLink
                     key={item.href}
                     href={item.href}
-                    icon={NAV_ICONS[item.resource] ?? DocumentIcon}
+                    icon={NAV_ICONS[item.href] ?? NAV_ICONS[item.resource] ?? DocumentIcon}
                     label={item.label}
                     badge={badges[item.href]}
                     collapsed={isCollapsed}

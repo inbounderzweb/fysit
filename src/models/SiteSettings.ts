@@ -14,6 +14,14 @@ const siteSettingsSchema = new Schema(
       of: String,
       default: undefined,
     },
+    // The homepage banner behind the hero heading. "video" keeps the built-in
+    // clip until one is uploaded; "image" shows the desktop/mobile pair.
+    heroBanner: {
+      mediaType: { type: String, enum: ["image", "video"], default: "video" },
+      desktopImage: { type: Schema.Types.ObjectId, ref: "Media" },
+      mobileImage: { type: Schema.Types.ObjectId, ref: "Media" },
+      video: { type: Schema.Types.ObjectId, ref: "Media" },
+    },
     updatedBy: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

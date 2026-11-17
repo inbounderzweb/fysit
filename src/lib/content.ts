@@ -692,7 +692,7 @@ export const BANNER = {
   image: "/images/case-physio.jpg",
   imageAlt: "Physiotherapist stretching a patient’s leg on a treatment table",
   /** The floating label on the photo — the clinic's Google rating. */
-  rating: { value: "4.9", label: "68 Google reviews" },
+  rating: { value: "4.9", label: "200+ Google reviews" },
   /** Set around the rotating badge on the photo. */
   ring: "The Fysit • Physiotherapy • Bangalore • ",
   benefits: [
@@ -715,9 +715,9 @@ export const BANNER = {
     },
   ],
   stats: [
-    { id: "expert-doctor", label: "Expert Doctor", value: 82 },
-    { id: "patient-satisfaction", label: "Patient Satisfaction", value: 74 },
-    { id: "success-case", label: "Success Case", value: 98 },
+    { id: "expert-doctor", label: "Expert Doctor", value: 100 },
+    { id: "patient-satisfaction", label: "Patient Satisfaction", value: 99 },
+    { id: "success-case", label: "Success Case", value: 99 },
   ],
 } as const;
 
@@ -756,7 +756,7 @@ export const DOCTORS: Doctor[] = [
    Appointment — Figma 1:254 … 1:298
 ------------------------------------------------------------------------- */
 export const APPOINTMENT = {
-  image: "/images/appointment.jpg",
+  image: "/images/appointment1.jpeg",
   imageAlt: "Doctor greeting a patient at the clinic reception",
   map: "/images/map2.jpg",
   mapAlt: "Map showing the clinic location",
