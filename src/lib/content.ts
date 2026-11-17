@@ -865,19 +865,19 @@ export const TESTIMONIALS_HEADING = {
 
 export const TESTIMONIALS: Testimonial[] = [
   {
+    // No photo: the stock images in /images are the clinic's own doctors.
     id: "akshata-terdal",
     name: "Akshata Terdal",
     role: "Neck Pain",
-    avatar: "/images/doctor-01.jpg",
     rating: 5,
     quote:
       "I visited Fysit for neck pain treatment. Dr. Veena had been very friendly and caring throughout the treatment process. She helped me recover from my neck pain and it’s been close to 6 months I haven’t faced any issues so far.",
   },
   {
-    id: "google-review",
-    name: "Google Review",
+    // The reviewer's name wasn't kept with this one.
+    id: "pain-relief-patient",
+    name: "Fysit patient",
     role: "Pain Relief",
-    avatar: "/images/doctor-07.jpg",
     rating: 5,
     quote:
       "Dr Veena was good in diagnosing the pain and ideal therapy was given. The commitment and professionalism was extremely appreciative. The facilities and equipment’s are in place. Great place to relieve your pain problems.",

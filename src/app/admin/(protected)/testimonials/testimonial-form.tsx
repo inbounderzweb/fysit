@@ -24,6 +24,10 @@ export type TestimonialFormDefaults = {
   image?: MediaItem | null;
   rating?: number;
   status?: string;
+  source?: "google" | "other";
+  /** yyyy-mm-dd */
+  reviewDate?: string;
+  reviewUrl?: string;
 };
 
 export function TestimonialForm({
@@ -104,6 +108,48 @@ export function TestimonialForm({
               </Select>
             </Field>
           </div>
+        </FormSection>
+
+        <FormSection
+          title="Where it’s from"
+          description="Shown on the review card so visitors know the review is real."
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field
+              label="Source"
+              htmlFor="source"
+              hint="Choose Google only if the patient posted this on the clinic’s Google profile."
+            >
+              <Select id="source" name="source" defaultValue={defaultValues?.source ?? "other"}>
+                <option value="other">Given to the clinic directly</option>
+                <option value="google">Posted on Google</option>
+              </Select>
+            </Field>
+            <Field label="Review date" htmlFor="reviewDate" error={errors?.reviewDate} hint="When the patient wrote it. Optional.">
+              <Input
+                id="reviewDate"
+                name="reviewDate"
+                type="date"
+                defaultValue={defaultValues?.reviewDate}
+                invalid={!!errors?.reviewDate}
+              />
+            </Field>
+          </div>
+          <Field
+            label="Link to the review"
+            htmlFor="reviewUrl"
+            error={errors?.reviewUrl}
+            hint="On Google, open the review, choose Share and paste the link. Optional."
+          >
+            <Input
+              id="reviewUrl"
+              name="reviewUrl"
+              type="url"
+              placeholder="https://"
+              defaultValue={defaultValues?.reviewUrl}
+              invalid={!!errors?.reviewUrl}
+            />
+          </Field>
         </FormSection>
 
         <FormFooter>

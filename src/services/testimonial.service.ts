@@ -46,13 +46,25 @@ export async function createTestimonial(input: TestimonialInput) {
   return Testimonial.create({
     ...input,
     image: input.image || undefined,
+    reviewDate: input.reviewDate ?? undefined,
+    reviewUrl: input.reviewUrl || undefined,
     displayOrder: count,
   });
 }
 
 export async function updateTestimonial(id: string, input: TestimonialInput) {
   await connectToDatabase();
-  return Testimonial.findByIdAndUpdate(id, { ...input, image: input.image || undefined }, { new: true });
+  // null, not undefined, so clearing a date or link in the form clears it here.
+  return Testimonial.findByIdAndUpdate(
+    id,
+    {
+      ...input,
+      image: input.image || undefined,
+      reviewDate: input.reviewDate ?? null,
+      reviewUrl: input.reviewUrl || null,
+    },
+    { new: true }
+  );
 }
 
 export async function setTestimonialStatus(id: string, status: ContentStatus) {

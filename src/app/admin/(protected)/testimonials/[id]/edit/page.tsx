@@ -28,6 +28,10 @@ export default async function EditTestimonialPage({ params }: { params: Promise<
     quote: testimonial.quote,
     image,
     rating: testimonial.rating ?? undefined,
+    source: testimonial.source === "google" ? "google" : "other",
+    // yyyy-mm-dd, the value a date input takes.
+    reviewDate: testimonial.reviewDate ? testimonial.reviewDate.toISOString().slice(0, 10) : undefined,
+    reviewUrl: testimonial.reviewUrl ?? undefined,
     status: testimonial.status,
   };
 

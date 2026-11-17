@@ -25,6 +25,9 @@ export async function updateSettingsAction(_prev: SettingsFormState, formData: F
     contactEmail: formData.get("contactEmail") || undefined,
     contactPhone: formData.get("contactPhone") || undefined,
     address: formData.get("address") || undefined,
+    googleRating: formData.get("googleRating") || undefined,
+    googleReviewCount: formData.get("googleReviewCount") || undefined,
+    googleReviewsUrl: formData.get("googleReviewsUrl") || undefined,
   });
 
   if (!validated.success) {
@@ -36,6 +39,7 @@ export async function updateSettingsAction(_prev: SettingsFormState, formData: F
   revalidatePath("/admin/settings");
   revalidatePath("/");
   revalidatePath("/contact");
+  revalidatePath("/about");
 
   return { success: true };
 }

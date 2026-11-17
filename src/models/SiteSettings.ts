@@ -14,6 +14,13 @@ const siteSettingsSchema = new Schema(
       of: String,
       default: undefined,
     },
+    // The clinic's Google Business profile, entered by hand from Google. The
+    // reviews section only shows a rating summary once rating and count are set.
+    googleReviews: {
+      rating: { type: Number, min: 1, max: 5 },
+      count: { type: Number, min: 0 },
+      url: { type: String, trim: true },
+    },
     // The homepage banner behind the hero heading. "video" keeps the built-in
     // clip until one is uploaded; "image" shows the desktop/mobile pair.
     heroBanner: {

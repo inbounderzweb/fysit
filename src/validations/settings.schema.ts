@@ -6,6 +6,9 @@ export const settingsInputSchema = z.object({
   contactEmail: z.string().trim().email("Enter a valid email address").optional().or(z.literal("")),
   contactPhone: z.string().trim().max(30).optional(),
   address: z.string().trim().max(300).optional(),
+  googleRating: z.coerce.number().min(1, "Between 1 and 5").max(5, "Between 1 and 5").optional(),
+  googleReviewCount: z.coerce.number().int("Whole number only").min(0).optional(),
+  googleReviewsUrl: z.string().trim().url("Enter a full link, starting with https://").max(500).optional(),
 });
 
 export type SettingsInput = z.infer<typeof settingsInputSchema>;

@@ -10,7 +10,16 @@ import { buttonClasses } from "@/components/admin/ui/button";
 export function SettingsForm({
   defaultValues,
 }: {
-  defaultValues: { siteName: string; tagline?: string; contactEmail?: string; contactPhone?: string; address?: string };
+  defaultValues: {
+    siteName: string;
+    tagline?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+    address?: string;
+    googleRating?: number;
+    googleReviewCount?: number;
+    googleReviewsUrl?: string;
+  };
 }) {
   const [state, formAction, pending] = useActionState<SettingsFormState, FormData>(updateSettingsAction, undefined);
   const errors = state?.errors;
@@ -55,6 +64,57 @@ export function SettingsForm({
           </div>
           <Field label="Clinic address" htmlFor="address" error={errors?.address}>
             <Textarea id="address" name="address" rows={3} defaultValue={defaultValues.address} />
+          </Field>
+        </FormSection>
+
+        <FormSection
+          title="Google reviews"
+          description="Copy these from the clinic’s Google Business profile. The reviews section shows the rating only when both numbers are filled in."
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Google rating" htmlFor="googleRating" error={errors?.googleRating} hint="For example 4.9">
+              <Input
+                id="googleRating"
+                name="googleRating"
+                type="number"
+                min={1}
+                max={5}
+                step={0.1}
+                defaultValue={defaultValues.googleRating}
+                invalid={!!errors?.googleRating}
+              />
+            </Field>
+            <Field
+              label="Number of Google reviews"
+              htmlFor="googleReviewCount"
+              error={errors?.googleReviewCount}
+              hint="The total shown on Google"
+            >
+              <Input
+                id="googleReviewCount"
+                name="googleReviewCount"
+                type="number"
+                min={0}
+                step={1}
+                defaultValue={defaultValues.googleReviewCount}
+                invalid={!!errors?.googleReviewCount}
+              />
+            </Field>
+          </div>
+          <Field
+            label="Link to Google reviews"
+            htmlFor="googleReviewsUrl"
+            error={errors?.googleReviewsUrl}
+            hint="Your Google Maps or Business profile link. Adds a “See all reviews on Google” button."
+          >
+            <Input
+              id="googleReviewsUrl"
+              name="googleReviewsUrl"
+              type="url"
+              placeholder="https://maps.app.goo.gl/…"
+              defaultValue={defaultValues.googleReviewsUrl}
+              invalid={!!errors?.googleReviewsUrl}
+            />
           </Field>
         </FormSection>
 

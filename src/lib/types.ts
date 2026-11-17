@@ -80,6 +80,12 @@ export type Testimonial = {
   avatar?: string;
   /** Optional for admin-managed testimonials; the card omits the stars. */
   rating?: number;
+  /** "google" only for reviews actually posted on the clinic's Google profile. */
+  source?: "google" | "other";
+  /** When it was written: a display label and the machine-readable date. */
+  date?: { label: string; iso: string };
+  /** Link to the original review. */
+  url?: string;
 };
 
 export type BlogPost = {

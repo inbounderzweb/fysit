@@ -5,7 +5,7 @@ const STAR_PATH =
  * Five amber stars with fractional fill — the live build shows 4, 4.5 and 5
  * star scores, so partial stars are clipped rather than rounded.
  */
-export function Rating({ value }: { value: number }) {
+export function Rating({ value, size = 16 }: { value: number; size?: number }) {
   const id = `star-clip-${String(value).replace(".", "-")}`;
 
   return (
@@ -20,8 +20,8 @@ export function Rating({ value }: { value: number }) {
         return (
           <svg
             key={index}
-            width="16"
-            height="16"
+            width={size}
+            height={size}
             viewBox="0 0 16 16"
             aria-hidden
             focusable="false"

@@ -19,14 +19,32 @@ export async function getSiteSettings() {
     contactEmail: "",
     contactPhone: "",
     address: "",
+    googleReviews: undefined,
   };
+}
+
+export type GoogleReviewsSummary = { rating: number; count: number; url?: string };
+
+/** The clinic's Google rating as entered in Settings, or null until both numbers are set. */
+export async function getGoogleReviewsSummary(): Promise<GoogleReviewsSummary | null> {
+  await connectToDatabase();
+  const settings = await SiteSettings.findOne().select("googleReviews").lean();
+  const reviews = settings?.googleReviews;
+  if (!reviews?.rating || reviews.count == null) return null;
+  return { rating: reviews.rating, count: reviews.count, url: reviews.url || undefined };
 }
 
 export async function updateSiteSettings(input: SettingsInput, userId: string) {
   await connectToDatabase();
+  const { googleRating, googleReviewCount, googleReviewsUrl, ...details } = input;
   return SiteSettings.findOneAndUpdate(
     {},
-    { ...input, updatedBy: userId },
+    {
+      ...details,
+      // A blank field clears the stored value, so the summary can be hidden again.
+      googleReviews: { rating: googleRating, count: googleReviewCount, url: googleReviewsUrl || undefined },
+      updatedBy: userId,
+    },
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 }
