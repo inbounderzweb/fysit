@@ -9,28 +9,28 @@ const highlights = [
   {
     title: "Pain Relief Therapy",
     description:
-      "Pain Relief Therapy is a targeted treatment designed to alleviate discomfort.",
+      "A targeted therapy designed to alleviate discomfort.",
     icon: "pain-relief",
     tone: "light",
   },
   {
     title: "Orthopedic Analysis",
     description:
-      "This analysis helps diagnose conditions such as arthritis, sports injuries, deformities.",
+      "Helps diagnose conditions such as arthritis, sports injuries, and deformities.",
     icon: "orthopedic",
     tone: "dark",
   },
   {
     title: "Injury Recovery",
     description:
-      "Chiropractic care helps reduce pain, stiffness, and inflammation after car-related injuries.",
+      "Helps reduce pain, stiffness, and inflammation with chiropractic care.",
     icon: "injury-recovery",
     tone: "light",
   },
   {
     title: "Chronic Pain",
     description:
-      "We address long-term pain conditions with gentle for sustainable relief.",
+      "Long-term pain conditions treated with gentle care for sustainable relief",
     icon: "chronic-pain",
     tone: "blue",
   },

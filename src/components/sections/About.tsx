@@ -106,7 +106,7 @@ export function About() {
               </p>
             </Reveal>
 
-            <Reveal delay={0.2} className="mt-5 flex items-center gap-[18px]">
+            {/* <Reveal delay={0.2} className="mt-5 flex items-center gap-[18px]">
               <div className="flex">
                 {ABOUT.statValue &&
                   [0, 1, 2].map((index) => (
@@ -123,7 +123,7 @@ export function About() {
               <p className="max-w-[210px] text-[16px] font-medium leading-[21.5px] text-navy">
                 {ABOUT.statHeading}
               </p>
-            </Reveal>
+            </Reveal> */}
 
             <Reveal delay={0.25}>
               <p className="mt-[30px] text-[16px] leading-[25.6px] text-body">

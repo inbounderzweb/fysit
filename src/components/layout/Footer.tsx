@@ -113,7 +113,7 @@ export function Footer() {
         </div>
 
         {/* Contact row — Figma 1:687 … 1:704 */}
-        <ul className="mt-[60px] grid list-none gap-[30px] sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-[60px] grid list-none gap-[30px] sm:grid-cols-2 lg:grid-cols-3 ">
           {FOOTER.contacts.map((contact) => (
             <li key={contact.id} className="flex items-center gap-[10px]">
               <span className="grid size-[50px] shrink-0 place-items-center rounded-full bg-teal text-white">

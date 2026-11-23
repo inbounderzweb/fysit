@@ -44,7 +44,7 @@ export function AboutIntro() {
               </div>
 
               <div className="ml-[20px] mt-[50px] flex items-center gap-[18px]">
-                <div className="flex shrink-0">
+                {/* <div className="flex shrink-0">
                   {intro.avatars.map((src, index) => (
                     <Image
                       key={src}
@@ -55,7 +55,7 @@ export function AboutIntro() {
                       className={`size-[55px] rounded-full border-4 border-white object-cover ${index > 0 ? "-ml-[15px]" : ""}`}
                     />
                   ))}
-                </div>
+                </div> */}
                 <h6 className={`${LABEL} max-w-[220px]`}>{intro.trusted}</h6>
               </div>
             </div>

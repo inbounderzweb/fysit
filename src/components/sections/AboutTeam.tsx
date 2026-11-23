@@ -128,9 +128,9 @@ export async function AboutTeam() {
           <WordRevealHeading lead={team.lead} accent={team.accent} />
 
           {/* Outlined numerals: white fill under a 1px stroke, as sampled. */}
-          <p className={`${rubik.className} mt-[60px] text-[80px] font-semibold leading-[60px] tracking-[-0.05em] text-white [-webkit-text-stroke:1px_#270000] md:text-[100px] md:leading-[80px]`}>
+          {/* <p className={`${rubik.className} mt-[60px] text-[80px] font-semibold leading-[60px] tracking-[-0.05em] text-white [-webkit-text-stroke:1px_#270000] md:text-[100px] md:leading-[80px]`}>
             {team.stat}
-          </p>
+          </p> */}
           <p className="mt-[10px] text-[20px] leading-[30px] tracking-[-0.48px] text-navy">
             {team.statLabel}
           </p>
