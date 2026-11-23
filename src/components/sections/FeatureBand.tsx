@@ -33,9 +33,9 @@ export function FeatureBand() {
             <p className="mt-[26px] text-[24px] leading-[34px] tracking-[-0.48px] text-white lg:text-[30px] lg:leading-[43px]">
               {FEATURE_BAND.headline}
             </p>
-            <p className="mt-[18px] text-[48px] font-medium leading-none tracking-[-2px] text-white lg:text-[64px]">
+            {/* <p className="mt-[18px] text-[48px] font-medium leading-none tracking-[-2px] text-white lg:text-[64px]">
               {FEATURE_BAND.stat}
-            </p>
+            </p> */}
           </div>
         </Reveal>
       </div>

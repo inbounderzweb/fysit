@@ -57,7 +57,7 @@ export const HERO_BANNER: HeroBanner = {
   heading: "Professional Physiotherapy at Your Doorstep",
   cta: { label: "Book an Appointment", href: "#appointment" },
   stats: [
-    { value: 68, suffix: "+", label: "Google Reviews" },
+    { value: 140, suffix: "+", label: "Google Reviews" },
     { value: 3, suffix: "", label: "Locations in Bangalore" },
   ],
 };
@@ -97,10 +97,10 @@ export const ABOUT = {
   heading: { lead: "Meet The Fysit", accent: "Your Partner in Wellness" },
   image: "/images/about-us2.jpg",
   imageAlt: "Team of five doctors and nurses standing together",
-  statValue: "25+",
+  statValue: "3+",
   statImage: "/images/stat-fill.jpg",
   statHeading: "Leading the Way in Physiotherapy",
-  body: "At The Fysit, we are committed to helping you achieve optimal physical and mental well-being. We prioritize a holistic approach to ensure lasting improvements in your overall health and quality of life.",
+  body: "At The Fysit, we are committed to helping you achieve optimal physical and mental well-being. We take a holistic approach to ensure lasting improvements in your overall health and quality of life.",
   cta: { label: "Discover More", href: "#services" },
 } as const;
 
@@ -132,10 +132,10 @@ export const ABOUT_PAGE = {
   },
   team: {
     eyebrow: "Doctor of Physiotherapy",
-    lead: "Medical Health Solutions Led by",
+    lead: "Health Solutions Led by",
     accent: "Experienced Doctor",
     stat: "250+",
-    statLabel: "Doctor of Healthcare",
+    statLabel: "Our Doctors",
     cta: { label: "Explore More", href: "/#team" },
   },
 } as const;
@@ -526,7 +526,7 @@ const DEPARTMENTS = [
   "Orthopaedic",
   "Neuro Physiotherapy",
   "Sports Physiotherapy",
-  "Paediatric",
+  "Paediatric Physiotherapy",
   "Ergonomics Training",
   "Group Fitness",
   "Mental Wellness",
@@ -692,7 +692,7 @@ export const BANNER = {
   image: "/images/case-physio.jpg",
   imageAlt: "Physiotherapist stretching a patient’s leg on a treatment table",
   /** The floating label on the photo — the clinic's Google rating. */
-  rating: { value: "4.9", label: "200+ Google reviews" },
+  rating: { value: "4.9", label: "140+ Google reviews" },
   /** Set around the rotating badge on the photo. */
   ring: "The Fysit • Physiotherapy • Bangalore • ",
   benefits: [
@@ -729,7 +729,7 @@ export const DEPARTMENT_STRIP = [
   "Orthopaedic",
   "Neuro Physiotherapy",
   "Sports Physiotherapy",
-  "Paediatric",
+  "Paediatric Physiotherapy",
   "Ergonomics Training",
   "Virtual Fitness",
 ];
