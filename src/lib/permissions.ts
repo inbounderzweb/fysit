@@ -17,6 +17,7 @@ export const RESOURCES = [
   "redirects",
   "settings",
   "auditLogs",
+  "emails",
 ] as const;
 export type Resource = (typeof RESOURCES)[number];
 
@@ -36,7 +37,8 @@ const CONTENT_RESOURCES: Resource[] = [
 ];
 
 // SUPER_ADMIN implicitly has every permission (short-circuited in `can()`).
-// ADMIN manages all content/media/enquiries/settings but not users or audit logs.
+// ADMIN manages all content/media/enquiries/settings and can send email, but not
+// manage users or audit logs.
 // EDITOR can create/edit/read drafts, but cannot publish or delete — matches
 // spec §11: "Submit content for publishing" rather than publishing directly.
 const MATRIX: Record<Exclude<Role, "SUPER_ADMIN">, Partial<Record<Resource, Action[]>>> = {
@@ -48,6 +50,7 @@ const MATRIX: Record<Exclude<Role, "SUPER_ADMIN">, Partial<Record<Resource, Acti
     enquiries: ["read", "update", "delete"],
     redirects: ["create", "read", "update", "delete"],
     settings: ["read", "update"],
+    emails: ["create"],
   },
   EDITOR: {
     ...Object.fromEntries(CONTENT_RESOURCES.map((resource) => [resource, ["create", "read", "update"]])),

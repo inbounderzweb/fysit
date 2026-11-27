@@ -20,6 +20,7 @@ import {
   ImageIcon,
   GearIcon,
   GlobeIcon,
+  MailIcon,
   MenuIcon,
   SidebarIcon,
   XIcon,
@@ -38,6 +39,7 @@ const NAV_ICONS: Record<string, IconType> = {
   settings: GearIcon,
   // Keyed by path where one resource backs two pages.
   "/admin/homepage-banner": HomeIcon,
+  "/admin/email-notifications": MailIcon,
 };
 
 const COLLAPSE_KEY = "fysit-admin-sidebar-collapsed";

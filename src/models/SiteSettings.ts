@@ -28,6 +28,8 @@ const siteSettingsSchema = new Schema(
       gaId: { type: String, trim: true },
       googleSiteVerification: { type: String, trim: true },
     },
+    // Notified of new enquiries in addition to DEFAULT_NOTIFICATION_EMAIL.
+    notificationEmails: { type: [String], default: undefined },
     // The homepage banner behind the hero heading. "video" keeps the built-in
     // clip until one is uploaded; "image" shows the desktop/mobile pair.
     heroBanner: {

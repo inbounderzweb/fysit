@@ -22,6 +22,7 @@ export const adminNavigation: AdminNavItem[] = [
   { label: "Locations", href: "/admin/locations", resource: "locations", group: "Website content" },
   { label: "Blog", href: "/admin/blog", resource: "blog", group: "Website content" },
   { label: "Media Library", href: "/admin/media", resource: "media", group: "Website content" },
+  { label: "Email notifications", href: "/admin/email-notifications", resource: "settings", group: "System" },
   { label: "Settings", href: "/admin/settings", resource: "settings", group: "System" },
 ];
 // export const adminNavigation: AdminNavItem[] = [

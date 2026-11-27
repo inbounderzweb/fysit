@@ -47,3 +47,23 @@ export const getCurrentUser = cache(async (): Promise<SafeUser> => {
     role: user.role as Role,
   };
 });
+
+/**
+ * Like getCurrentUser, but returns null instead of redirecting, for API
+ * routes that must answer an unauthenticated caller with a 401.
+ */
+export async function getApiUser(): Promise<SafeUser | null> {
+  const session = await decryptSession(await readSessionCookie());
+  if (!session?.userId) return null;
+  await connectToDatabase();
+
+  const user = await User.findById(session.userId).lean();
+  if (!user || !user.isActive) return null;
+
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    role: user.role as Role,
+  };
+}

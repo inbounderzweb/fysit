@@ -5,6 +5,7 @@ import { SiteSettings } from "@/models/SiteSettings";
 // Registers the Media model so the banner's media can be populated.
 import "@/models/Media";
 import { siteConfig } from "@/config/site";
+import { DEFAULT_NOTIFICATION_EMAIL } from "@/lib/constants";
 import type { HeroBannerInput, SettingsInput } from "@/validations/settings.schema";
 
 export async function getSiteSettings() {
@@ -111,5 +112,30 @@ export async function updateHeroBanner(input: HeroBannerInput, userId: string) {
       $setOnInsert: { siteName: siteConfig.name },
     },
     { new: true, upsert: true }
+  );
+}
+
+/** The extra addresses saved under Admin → Email notifications. */
+export async function getExtraNotificationEmails(): Promise<string[]> {
+  await connectToDatabase();
+  const settings = await SiteSettings.findOne().select("notificationEmails").lean();
+  return [...(settings?.notificationEmails ?? [])];
+}
+
+/** Everyone to notify of a new enquiry: the default address, then the extras. */
+export async function getNotificationRecipients(): Promise<string[]> {
+  return [DEFAULT_NOTIFICATION_EMAIL, ...(await getExtraNotificationEmails())];
+}
+
+export async function updateNotificationEmails(emails: string[], userId: string) {
+  await connectToDatabase();
+  return SiteSettings.findOneAndUpdate(
+    {},
+    {
+      $set: { notificationEmails: emails, updatedBy: userId },
+      // These may be saved before the clinic details ever are.
+      $setOnInsert: { siteName: siteConfig.name },
+    },
+    { returnDocument: "after", upsert: true }
   );
 }

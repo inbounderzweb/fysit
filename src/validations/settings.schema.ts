@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DEFAULT_NOTIFICATION_EMAIL, MAX_EXTRA_NOTIFICATION_EMAILS } from "@/lib/constants";
 
 export const settingsInputSchema = z.object({
   siteName: z.string().trim().min(1, "Site name is required").max(120),
@@ -31,6 +32,12 @@ export const settingsInputSchema = z.object({
 });
 
 export type SettingsInput = z.infer<typeof settingsInputSchema>;
+
+export const notificationEmailsSchema = z
+  .array(z.string().trim().toLowerCase().pipe(z.email("Enter a valid email address")))
+  .max(MAX_EXTRA_NOTIFICATION_EMAILS, `Add no more than ${MAX_EXTRA_NOTIFICATION_EMAILS} addresses`)
+  // Repeats, including the default address, would only send duplicates.
+  .transform((emails) => [...new Set(emails)].filter((email) => email !== DEFAULT_NOTIFICATION_EMAIL));
 
 const mediaId = z
   .string()

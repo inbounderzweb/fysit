@@ -27,3 +27,18 @@ export const enquiryInputSchema = z.object({
 });
 
 export type EnquiryInput = z.infer<typeof enquiryInputSchema>;
+
+/** The raw field values of either booking form, ready for `enquiryInputSchema`. */
+export function enquiryFromFormData(formData: FormData) {
+  return {
+    name: formData.get("name"),
+    email: formData.get("email"),
+    phone: formData.get("phone") || undefined,
+    subject: formData.get("subject") || undefined,
+    department: formData.get("department") || undefined,
+    doctor: formData.get("doctor") || undefined,
+    preferredDate: formData.get("preferredDate") || undefined,
+    message: formData.get("message"),
+    company: formData.get("company") || undefined,
+  };
+}

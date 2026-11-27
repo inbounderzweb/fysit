@@ -1,12 +1,10 @@
 import Image from "next/image";
 
 import { Reveal } from "@/components/animations/Reveal";
+import { AppointmentForm } from "@/components/sections/AppointmentForm";
 import { Container } from "@/components/ui/Container";
 import { APPOINTMENT } from "@/lib/content";
 import { getDoctorNames } from "@/lib/doctors";
-
-const FIELD =
-  "h-[50px] w-full rounded-[5px] border border-line bg-white px-[21px] text-[16px] text-navy placeholder:text-body/70 focus:border-teal focus:outline-none";
 
 /**
  * Figma 1:254 … 1:298 — a photo on the left, a faint world map bleeding off
@@ -93,83 +91,7 @@ export async function Appointment() {
                   {form.title}
                 </h2>
 
-                <form
-                  className="mt-[20px] grid grid-cols-1 gap-[16px] sm:grid-cols-2"
-                  action="#"
-                >
-                  <label className="block">
-                    <span className="sr-only">{form.name}</span>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder={form.name}
-                      className={FIELD}
-                      required
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="sr-only">{form.email}</span>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder={form.email}
-                      className={FIELD}
-                      required
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="sr-only">{form.phone}</span>
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder={form.phone}
-                      className={FIELD}
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="sr-only">Department</span>
-                    <select name="department" className={FIELD} defaultValue="">
-                      <option value="" disabled>
-                        {form.departments[0]}
-                      </option>
-                      {form.departments.slice(1).map((option) => (
-                        <option key={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="block">
-                    <span className="sr-only">Doctor</span>
-                    <select name="doctor" className={FIELD} defaultValue="">
-                      <option value="" disabled>
-                        {form.doctors[0]}
-                      </option>
-                      {doctorNames.map((option) => (
-                        <option key={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="block">
-                    <span className="sr-only">Preferred date</span>
-                    <input type="date" name="date" className={FIELD} />
-                  </label>
-
-                  <label className="block sm:col-span-2">
-                    <span className="sr-only">{form.messagePlaceholder}</span>
-                    <textarea
-                      name="message"
-                      rows={5}
-                      placeholder={form.messagePlaceholder}
-                      className={`${FIELD} h-[150px] resize-none py-[14px]`}
-                    />
-                  </label>
-
-                  <button
-                    type="submit"
-                    className="mt-[13px] h-[54px] w-full whitespace-nowrap rounded-[8px] bg-teal px-[30px] text-[16px] font-medium text-white transition-colors duration-300 hover:bg-teal-dark sm:w-auto sm:min-w-[204px]"
-                  >
-                    {form.submit}
-                  </button>
-                </form>
+                <AppointmentForm doctorNames={doctorNames} />
               </div>
             </Reveal>
           </div>

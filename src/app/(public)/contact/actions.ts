@@ -1,8 +1,10 @@
 "use server";
 
+import { after } from "next/server";
 import { headers } from "next/headers";
-import { enquiryInputSchema, type EnquiryInput } from "@/validations/enquiry.schema";
+import { enquiryFromFormData, enquiryInputSchema, type EnquiryInput } from "@/validations/enquiry.schema";
 import { createEnquiry } from "@/services/enquiry.service";
+import { notifyNewEnquiry } from "@/services/notification.service";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export type ContactFormState = {
@@ -14,17 +16,7 @@ export type ContactFormState = {
 const CONTACT_RATE_LIMIT = { limit: 5, windowMs: 10 * 60 * 1000 };
 
 export async function submitEnquiryAction(_prev: ContactFormState, formData: FormData): Promise<ContactFormState> {
-  const validated = enquiryInputSchema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    phone: formData.get("phone") || undefined,
-    subject: formData.get("subject") || undefined,
-    department: formData.get("department") || undefined,
-    doctor: formData.get("doctor") || undefined,
-    preferredDate: formData.get("preferredDate") || undefined,
-    message: formData.get("message"),
-    company: formData.get("company") || undefined,
-  });
+  const validated = enquiryInputSchema.safeParse(enquiryFromFormData(formData));
 
   if (!validated.success) {
     // A filled honeypot fails the "company" field's max(0) rule — reported
@@ -48,5 +40,6 @@ export async function submitEnquiryAction(_prev: ContactFormState, formData: For
     return { message: "We couldn’t send your message just now. Please try again or call us." };
   }
 
+  after(() => notifyNewEnquiry(validated.data));
   return { success: true };
 }

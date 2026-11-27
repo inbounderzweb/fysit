@@ -811,6 +811,7 @@ export const APPOINTMENT = {
     /** Placeholder only — the options come from Admin → Doctors (lib/doctors.ts). */
     doctors: ["Select Doctor"],
     messagePlaceholder: "Type Your Message",
+    success: "Thank you. Your appointment request has been sent — we’ll get back to you the same day.",
   },
 } as const;
 
