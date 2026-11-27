@@ -3,6 +3,8 @@ import { Mona_Sans, Playfair_Display } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { Analytics } from "@/components/layout/Analytics";
+import { siteConfig } from "@/config/site";
 import { SITE } from "@/lib/content";
 import { getNavItems } from "@/lib/locations-public";
 
@@ -35,18 +37,21 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   keywords: [
-    "healthcare",
-    "medical clinic",
-    "cardiology",
-    "dental care",
-    "family medicine",
-    "emergency care",
-    "health checkup",
+    "physiotherapy",
+    "physiotherapy clinic in Bangalore",
+    "physiotherapist in Bangalore",
+    "physiotherapy at home",
+    "sports injury rehabilitation",
+    "back pain treatment",
+    "corporate wellness",
   ],
   authors: [{ name: SITE.name }],
+  verification: siteConfig.googleSiteVerification
+    ? { google: siteConfig.googleSiteVerification }
+    : undefined,
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: siteConfig.locale,
     url: SITE.url,
     siteName: SITE.name,
     title: `${SITE.name} — ${SITE.tagline}`,
@@ -109,6 +114,7 @@ export default async function PublicLayout({
       <Header navItems={navItems} />
       <main id="main">{children}</main>
       <Footer />
+      <Analytics />
     </div>
   );
 }

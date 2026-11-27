@@ -119,10 +119,26 @@ export const ABOUT_PAGE = {
     yearsLabel: "Years of Physiotherapy Care",
     avatars: ["/images/doctor-01.jpg", "/images/doctor-04.jpg", "/images/doctor-06.jpg"],
     trusted: ABOUT.statHeading,
-    body: "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to offering cutting-edge treatments designed to improve your health, mobility, and overall well-being. With a focus on personalised care, our expertise lies in individual health needs and workplace wellness, creating a balanced path to better health.",
-    link: { label: "Let’s create something extraordinary!", href: "/contact" },
+    body: "The Fysit is a leading physiotherapy clinic in Bangalore, dedicated to offering cutting-edge treatments designed to improve health, mobility, and overall well-being. With a focus on personalised care, our expertise lies in individual and workplace wellness, creating a balanced path to vitality.",
+    link: { label: "Get Better Today!", href: "/contact" },
     image: ABOUT.image,
     imageAlt: ABOUT.imageAlt,
+  },
+  visionMission: {
+    eyebrow: "Our Purpose",
+    lead: "Driven by a Clear",
+    accent: "Vision & Mission",
+    body: "Everything we do at The Fysit is guided by one simple belief: movement is medicine, and everyone deserves to live without pain.",
+    vision: {
+      label: "Our Vision",
+      title: "To build a healthier, more active society where wellness is an integral part of everyday life.",
+      body: "We aspire to be a trusted name in physiotherapy and holistic wellness, setting higher standards in personalised healthcare, rehabilitation, and corporate wellness.",
+    },
+    mission: {
+      label: "Our Mission",
+      title: "To make quality physiotherapy and wellness care accessible through personalised, evidence-based solutions that help individuals recover, move better, and lead healthier lives.",
+      body: "We strive to create lasting improvements in well-being through compassionate care, preventive health practices, and workplace wellness initiatives.",
+    },
   },
   departments: {
     eyebrow: "Our Department",
@@ -135,7 +151,7 @@ export const ABOUT_PAGE = {
     lead: "Health Solutions Led by",
     accent: "Experienced Doctor",
     stat: "250+",
-    statLabel: "Our Doctors",
+    statLabel: "Our experienced healthcare professionals are dedicated to providing personalised care, expert guidance, and effective treatment to help you achieve a healthier, pain-free life.",
     cta: { label: "Explore More", href: "/#team" },
   },
 } as const;
@@ -948,10 +964,10 @@ export const CONTACT_PAGE = {
   },
   hoursTitle: "Opening Hours",
   socials: [
-    { label: "Facebook", href: "#", icon: "/icons/contact/facebook.svg" },
-    { label: "X", href: "#", icon: "/icons/contact/x.svg" },
-    { label: "LinkedIn", href: "#", icon: "/icons/contact/linkedin.svg" },
-    { label: "WhatsApp", href: "#", icon: "/icons/contact/whatsapp.svg" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/thefysit/", icon: "/icons/contact/linkedin.svg" },
+    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61552058424229", icon: "/icons/contact/facebook.svg" },
+    { label: "Instagram", href: "https://www.instagram.com/thefysit/", icon: "/icons/contact/instagram.svg" },
+    { label: "YouTube", href: "https://www.youtube.com/@thefysit", icon: "/icons/contact/youtube.svg" },
   ],
   form: {
     eyebrow: "Contact Us",

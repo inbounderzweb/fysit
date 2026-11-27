@@ -105,7 +105,9 @@ export function ContactDetails({ info }: { info: ContactInfo }) {
             <li key={social.label}>
               <a
                 href={social.href}
-                aria-label={social.label}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${social.label} (opens in a new tab)`}
                 className="group relative grid size-[40px] place-items-center overflow-hidden rounded-full bg-[#f1f7f3] text-navy transition-colors duration-300 hover:text-white focus-visible:text-white"
               >
                 <span

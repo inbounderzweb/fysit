@@ -24,7 +24,7 @@ export function AboutIntro() {
             <h6 className={LABEL}>{intro.label}</h6>
 
             <div className="flex flex-col justify-center md:w-[512px]">
-              <div className="flex items-start">
+              <div className="flex items-start justify-center md:justify-start">
                 {/* The reference sets its "12" at 200px on a phone; our wider "25"
                     steps down to 170px there so the caption beside it still fits. */}
                 <h3
@@ -43,7 +43,7 @@ export function AboutIntro() {
                 </h6>
               </div>
 
-              <div className="ml-[20px] mt-[50px] flex items-center gap-[18px]">
+              <div className="mt-[50px] flex items-center justify-center gap-[18px] text-center md:ml-[20px] md:justify-start md:text-left">
                 {/* <div className="flex shrink-0">
                   {intro.avatars.map((src, index) => (
                     <Image

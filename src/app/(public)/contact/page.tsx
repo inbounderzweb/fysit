@@ -8,15 +8,30 @@ import { EyebrowPill } from "@/components/ui/EyebrowPill";
 import { PageBanner } from "@/components/ui/PageBanner";
 import { siteConfig } from "@/config/site";
 import { CONTACT_PAGE } from "@/lib/content";
-import { buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/services/settings.service";
 import { getDoctorNames } from "@/lib/doctors";
 import { ContactForm } from "./contact-form";
 
 export const metadata: Metadata = buildMetadata(
   { canonical: `${siteConfig.url}/contact` },
-  { title: "Contact Us", description: "Get in touch with The Fysit — we usually respond the same day." }
+  {
+    title: "Contact Us — Book a Physiotherapy Appointment",
+    description:
+      "Contact The Fysit to book a physiotherapy appointment in Bangalore. Call, email or send an enquiry, and we usually respond the same day.",
+  }
 );
+
+const jsonLd = [
+  breadcrumbJsonLd([{ name: CONTACT_PAGE.banner.title, path: "/contact" }]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    url: `${siteConfig.url}/contact`,
+    name: CONTACT_PAGE.banner.title,
+    about: { "@id": `${siteConfig.url}/#organization` },
+  },
+];
 
 /**
  * The address, email and phone saved under Admin → Settings, falling back
@@ -49,6 +64,7 @@ export default async function ContactPage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PageBanner
         title={CONTACT_PAGE.banner.title}
         crumbs={[{ label: CONTACT_PAGE.banner.title }]}

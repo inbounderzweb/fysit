@@ -17,3 +17,5 @@ Original artwork from the Mednix theme icon font, downloaded October 13, 2026, f
 | `whatsapp.svg` | `whatsapp` | `U+F106` |
 
 Converted the same way as `../physio-departments/`: FontTools `SVGPathPen` on the original outlines, `fill="currentColor"` so the artwork can serve as a CSS mask. No artwork was redrawn.
+
+`instagram.svg` and `youtube.svg` were added later (November 2026) for the Fysit social links. They are simple single-colour glyphs drawn for this site, not taken from the Mednix font, and use `fill="currentColor"` so they work as CSS masks like the others.
