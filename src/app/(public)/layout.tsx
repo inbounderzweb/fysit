@@ -56,10 +56,10 @@ const baseMetadata: Metadata = {
     description: SITE.description,
     images: [
       {
-        url: "/images/hero-slide-1.jpg",
-        width: 1920,
-        height: 1080,
-        alt: SITE.tagline,
+        url: siteConfig.defaultOgImage,
+        width: 1038,
+        height: 1038,
+        alt: `${SITE.name} — Wellness Simplified`,
       },
     ],
   },
@@ -67,7 +67,7 @@ const baseMetadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
-    images: ["/images/hero-slide-1.jpg"],
+    images: [siteConfig.defaultOgImage],
   },
   robots: {
     index: true,

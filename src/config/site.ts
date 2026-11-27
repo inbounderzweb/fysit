@@ -19,7 +19,8 @@ export const siteConfig = {
   // domain; NEXT_PUBLIC_SITE_URL remains the way to override it (e.g. for a
   // staging deploy on its own subdomain).
   url: process.env.NEXT_PUBLIC_SITE_URL || SITE.url,
-  defaultOgImage: "/images/hero-slide-1.jpg",
+  // The share card the SEO team set on the previous site (og-imagenew.png).
+  defaultOgImage: "/images/og-image.png",
   locale: "en_IN",
   /** Official profiles — also emitted as `sameAs` in the Organization JSON-LD. */
   socialProfiles: [
@@ -28,8 +29,18 @@ export const siteConfig = {
     "https://www.instagram.com/thefysit/",
     "https://www.youtube.com/@thefysit",
   ],
-  /** Analytics / Search Console IDs — set in the hosting environment, all optional. */
-  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "",
+  /**
+   * Analytics / Search Console fallbacks, used when Admin → Settings leaves a
+   * field blank. The defaults are the ones the SEO team set up on the previous
+   * WordPress site (GA4 runs inside that GTM container), so tracking and
+   * Search Console continue unbroken at launch. The GTM default is
+   * production-only so local development never sends visits to the live
+   * container.
+   */
+  gtmId:
+    process.env.NEXT_PUBLIC_GTM_ID ||
+    (process.env.NODE_ENV === "production" ? "GTM-K8XHQRW3" : ""),
   gaId: process.env.NEXT_PUBLIC_GA_ID || "",
-  googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  googleSiteVerification:
+    process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "KaQ79vAPw6gETaLDjNp0XiTCOL0033JtifjYmHm3SlQ",
 } as const;

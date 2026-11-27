@@ -13,6 +13,24 @@ import { LOCATIONS_COPY, OPENING_HOURS, SITE, type Location } from "@/lib/conten
 import { buildMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
+/**
+ * Local-SEO details per clinic, keyed by page slug, for the MedicalBusiness
+ * JSON-LD. Kasturi Nagar's come from the structured data the SEO team set on
+ * the previous site. Sadanandanagar's are still to be supplied — add its
+ * postcode, coordinates and Google Maps link here when available.
+ */
+const LOCATION_LOCAL_SEO: Record<
+  string,
+  { postalCode?: string; geo?: { latitude: number; longitude: number }; mapUrl?: string }
+> = {
+  "physiotherapy-center-in-kasturi-nagar": {
+    postalCode: "560043",
+    geo: { latitude: 13.0166, longitude: 77.6627 },
+    mapUrl:
+      "https://www.google.com/maps/place/The+Fysit+%7C+Kasturi+Nagar/data=!4m2!3m1!1s0x0:0xca251308768f5297",
+  },
+};
+
 const BANNER_IMAGE = "/images/banner-about.jpg";
 const TEAM_IMAGE = "/images/about-us.jpg";
 const CORPORATE_IMAGE = "/images/service-slide-exercise-therapy.jpg";
@@ -94,22 +112,31 @@ export function LocationPage({ location, others }: { location: Location; others:
   const corporateImage = location.images?.corporate ?? CORPORATE_IMAGE;
   const pageUrl = `${siteConfig.url}/${location.slug}`;
 
+  const local = LOCATION_LOCAL_SEO[location.slug];
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
       "@type": "MedicalBusiness",
       name: `${SITE.name} — ${location.name}`,
       url: pageUrl,
+      image: `${siteConfig.url}${siteConfig.defaultOgImage}`,
       telephone: location.phone,
       email: SITE.email,
       medicalSpecialty: "Physiotherapy",
+      parentOrganization: { "@id": `${siteConfig.url}/#organization` },
       address: {
         "@type": "PostalAddress",
         streetAddress: location.address.street,
         addressLocality: `${location.address.area}, ${location.address.city}`,
         addressRegion: "Karnataka",
+        ...(local?.postalCode && { postalCode: local.postalCode }),
         addressCountry: "IN",
       },
+      ...(local?.geo && {
+        geo: { "@type": "GeoCoordinates", latitude: local.geo.latitude, longitude: local.geo.longitude },
+      }),
+      ...(local?.mapUrl && { hasMap: local.mapUrl, sameAs: [local.mapUrl] }),
       openingHoursSpecification: [
         {
           "@type": "OpeningHoursSpecification",
