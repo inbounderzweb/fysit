@@ -28,6 +28,9 @@ export async function updateSettingsAction(_prev: SettingsFormState, formData: F
     googleRating: formData.get("googleRating") || undefined,
     googleReviewCount: formData.get("googleReviewCount") || undefined,
     googleReviewsUrl: formData.get("googleReviewsUrl") || undefined,
+    gtmId: formData.get("gtmId") || undefined,
+    gaId: formData.get("gaId") || undefined,
+    googleSiteVerification: formData.get("googleSiteVerification") || undefined,
   });
 
   if (!validated.success) {
@@ -37,9 +40,8 @@ export async function updateSettingsAction(_prev: SettingsFormState, formData: F
   await updateSiteSettings(validated.data, user.id);
   await logAction({ userId: user.id, action: "SETTINGS_UPDATE", entity: "SiteSettings" });
   revalidatePath("/admin/settings");
-  revalidatePath("/");
-  revalidatePath("/contact");
-  revalidatePath("/about");
+  // The tracking code sits in the public layout, so every page refreshes.
+  revalidatePath("/", "layout");
 
   return { success: true };
 }

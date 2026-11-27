@@ -9,6 +9,25 @@ export const settingsInputSchema = z.object({
   googleRating: z.coerce.number().min(1, "Between 1 and 5").max(5, "Between 1 and 5").optional(),
   googleReviewCount: z.coerce.number().int("Whole number only").min(0).optional(),
   googleReviewsUrl: z.string().trim().url("Enter a full link, starting with https://").max(500).optional(),
+  gtmId: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^GTM-[A-Z0-9]{4,12}$/, "Should look like GTM-XXXXXXX")
+    .optional(),
+  gaId: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^G-[A-Z0-9]{4,15}$/, "Should look like G-XXXXXXXXXX")
+    .optional(),
+  googleSiteVerification: z
+    .string()
+    .trim()
+    // Accept the whole <meta …> tag Search Console hands out, keeping only its code.
+    .transform((value) => value.match(/content=["']([^"']+)["']/)?.[1] ?? value)
+    .pipe(z.string().regex(/^[A-Za-z0-9_-]{10,100}$/, "Paste the code from Search Console’s HTML tag option"))
+    .optional(),
 });
 
 export type SettingsInput = z.infer<typeof settingsInputSchema>;

@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { connectToDatabase } from "@/lib/mongodb";
 import { SiteSettings } from "@/models/SiteSettings";
 // Registers the Media model so the banner's media can be populated.
@@ -20,6 +21,7 @@ export async function getSiteSettings() {
     contactPhone: "",
     address: "",
     googleReviews: undefined,
+    analytics: undefined,
   };
 }
 
@@ -36,18 +38,50 @@ export async function getGoogleReviewsSummary(): Promise<GoogleReviewsSummary | 
 
 export async function updateSiteSettings(input: SettingsInput, userId: string) {
   await connectToDatabase();
-  const { googleRating, googleReviewCount, googleReviewsUrl, ...details } = input;
+  const {
+    googleRating,
+    googleReviewCount,
+    googleReviewsUrl,
+    gtmId,
+    gaId,
+    googleSiteVerification,
+    ...details
+  } = input;
   return SiteSettings.findOneAndUpdate(
     {},
     {
       ...details,
       // A blank field clears the stored value, so the summary can be hidden again.
       googleReviews: { rating: googleRating, count: googleReviewCount, url: googleReviewsUrl || undefined },
+      analytics: { gtmId, gaId, googleSiteVerification },
       updatedBy: userId,
     },
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 }
+
+export type AnalyticsSettings = { gtmId: string; gaId: string; googleSiteVerification: string };
+
+/**
+ * Tracking IDs for the public site: Admin → Settings first, then the
+ * NEXT_PUBLIC_* environment variables. Never throws — if the database is
+ * unreachable the site still renders, using the environment values.
+ */
+export const getAnalyticsSettings = cache(async (): Promise<AnalyticsSettings> => {
+  let stored: { [K in keyof AnalyticsSettings]?: string | null } | undefined;
+  try {
+    await connectToDatabase();
+    const settings = await SiteSettings.findOne().select("analytics").lean();
+    stored = settings?.analytics ?? undefined;
+  } catch (error) {
+    console.error("Analytics settings: falling back to environment variables", error);
+  }
+  return {
+    gtmId: stored?.gtmId || siteConfig.gtmId,
+    gaId: stored?.gaId || siteConfig.gaId,
+    googleSiteVerification: stored?.googleSiteVerification || siteConfig.googleSiteVerification,
+  };
+});
 
 /** The homepage banner with its media documents populated. */
 export async function getHeroBanner() {

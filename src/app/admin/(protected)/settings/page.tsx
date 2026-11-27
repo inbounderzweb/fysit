@@ -10,7 +10,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Settings" description="Clinic details used across the website." />
+      <PageHeader title="Settings" description="Clinic details, Google reviews and tracking codes used across the website." />
       <SettingsForm
         defaultValues={{
           siteName: settings.siteName,
@@ -21,6 +21,9 @@ export default async function SettingsPage() {
           googleRating: settings.googleReviews?.rating ?? undefined,
           googleReviewCount: settings.googleReviews?.count ?? undefined,
           googleReviewsUrl: settings.googleReviews?.url ?? undefined,
+          gtmId: settings.analytics?.gtmId ?? undefined,
+          gaId: settings.analytics?.gaId ?? undefined,
+          googleSiteVerification: settings.analytics?.googleSiteVerification ?? undefined,
         }}
       />
     </div>

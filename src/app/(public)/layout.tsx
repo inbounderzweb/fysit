@@ -7,6 +7,7 @@ import { Analytics } from "@/components/layout/Analytics";
 import { siteConfig } from "@/config/site";
 import { SITE } from "@/lib/content";
 import { getNavItems } from "@/lib/locations-public";
+import { getAnalyticsSettings } from "@/services/settings.service";
 
 import "./globals.css";
 
@@ -30,7 +31,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: {
     default: `${SITE.name} — ${SITE.tagline}`,
     template: `%s | ${SITE.name}`,
@@ -46,9 +47,6 @@ export const metadata: Metadata = {
     "corporate wellness",
   ],
   authors: [{ name: SITE.name }],
-  verification: siteConfig.googleSiteVerification
-    ? { google: siteConfig.googleSiteVerification }
-    : undefined,
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
@@ -84,6 +82,14 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
   },
 };
+
+/** Adds the Search Console tag saved in Admin → Settings (or the env fallback). */
+export async function generateMetadata(): Promise<Metadata> {
+  const { googleSiteVerification } = await getAnalyticsSettings();
+  return googleSiteVerification
+    ? { ...baseMetadata, verification: { google: googleSiteVerification } }
+    : baseMetadata;
+}
 
 export const viewport: Viewport = {
   themeColor: "#17a2b8",

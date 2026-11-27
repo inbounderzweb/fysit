@@ -19,6 +19,9 @@ export function SettingsForm({
     googleRating?: number;
     googleReviewCount?: number;
     googleReviewsUrl?: string;
+    gtmId?: string;
+    gaId?: string;
+    googleSiteVerification?: string;
   };
 }) {
   const [state, formAction, pending] = useActionState<SettingsFormState, FormData>(updateSettingsAction, undefined);
@@ -114,6 +117,56 @@ export function SettingsForm({
               placeholder="https://maps.app.goo.gl/…"
               defaultValue={defaultValues.googleReviewsUrl}
               invalid={!!errors?.googleReviewsUrl}
+            />
+          </Field>
+        </FormSection>
+
+        <FormSection
+          title="Google Analytics & Search Console"
+          description="Tracking for the public website (never the admin panel). Use either Tag Manager or Analytics: when a Tag Manager ID is set, the Analytics ID is ignored, so add the GA4 tag inside Tag Manager instead. Leave a field blank to turn it off."
+        >
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Google Tag Manager ID" htmlFor="gtmId" error={errors?.gtmId} hint="For example GTM-ABC1234">
+              <Input
+                id="gtmId"
+                name="gtmId"
+                placeholder="GTM-XXXXXXX"
+                autoComplete="off"
+                spellCheck={false}
+                defaultValue={defaultValues.gtmId}
+                invalid={!!errors?.gtmId}
+              />
+            </Field>
+            <Field
+              label="Google Analytics 4 ID"
+              htmlFor="gaId"
+              error={errors?.gaId}
+              hint="The Measurement ID, for example G-AB12CD34EF"
+            >
+              <Input
+                id="gaId"
+                name="gaId"
+                placeholder="G-XXXXXXXXXX"
+                autoComplete="off"
+                spellCheck={false}
+                defaultValue={defaultValues.gaId}
+                invalid={!!errors?.gaId}
+              />
+            </Field>
+          </div>
+          <Field
+            label="Google Search Console verification"
+            htmlFor="googleSiteVerification"
+            error={errors?.googleSiteVerification}
+            hint="From Search Console → HTML tag. Paste the whole <meta> tag or just its code."
+          >
+            <Input
+              id="googleSiteVerification"
+              name="googleSiteVerification"
+              autoComplete="off"
+              spellCheck={false}
+              defaultValue={defaultValues.googleSiteVerification}
+              invalid={!!errors?.googleSiteVerification}
             />
           </Field>
         </FormSection>
