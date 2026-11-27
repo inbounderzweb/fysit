@@ -152,7 +152,7 @@ export const ABOUT_PAGE = {
     accent: "Experienced Doctor",
     stat: "250+",
     statLabel: "Our experienced healthcare professionals are dedicated to providing personalised care, expert guidance, and effective treatment to help you achieve a healthier, pain-free life.",
-    cta: { label: "Explore More", href: "/#team" },
+    cta: { label: "Book A Consultation", href: "/contact" },
   },
 } as const;
 
