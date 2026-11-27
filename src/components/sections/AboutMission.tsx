@@ -62,11 +62,11 @@ export function AboutMission() {
   );
 
   return (
-    <section className="bg-white pb-[10px] pt-[80px] md:pt-[120px]">
-      <div className="mx-auto w-full max-w-[1320px] px-[30px] min-[1400px]:px-0">
+    <section className="bg-white pb-[10px] pt-[60px] md:pt-[120px]">
+      <div className="mx-auto w-full max-w-[1320px] px-[20px] md:px-[30px] min-[1400px]:px-0">
         <h2
           ref={ref}
-          className="mx-auto max-w-[990px] text-center text-[60px] font-normal leading-[70px] tracking-[-3px] text-navy"
+          className="mx-auto max-w-[990px] text-center text-[30px] font-normal leading-[40px] tracking-[-1px] text-navy md:text-[46px] md:leading-[56px] md:tracking-[-2px] lg:text-[60px] lg:leading-[70px] lg:tracking-[-3px]"
         >
           <span className="sr-only">{text}</span>
           <span aria-hidden>

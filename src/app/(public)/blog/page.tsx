@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { PageBanner } from "@/components/ui/PageBanner";
 import { listPublishedBlogPosts } from "@/services/blog.service";
 import { getCategoryBySlug, getTagBySlug } from "@/services/taxonomy.service";
-import { buildMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { siteConfig } from "@/config/site";
 import { formatPostDate, toDateTimeAttr } from "@/lib/utils";
 import { asPopulatedMedia } from "@/types/media";
@@ -17,10 +17,29 @@ import { asPopulatedAuthor, asPopulatedTerm } from "@/types/blog";
 /** Three cards per row, three rows — the reference grid's page size. */
 const POSTS_PER_PAGE = 9;
 
-export const metadata: Metadata = buildMetadata(
+const blogMetadata = buildMetadata(
   { canonical: `${siteConfig.url}/blog` },
-  { title: "Blog", description: "Health, recovery, and wellness insights from The Fysit." }
+  {
+    title: "Physiotherapy & Wellness Blog",
+    description:
+      "Physiotherapy tips, injury recovery advice and wellness insights from the physiotherapists at The Fysit, Bangalore.",
+  }
 );
+
+/**
+ * Search-result pages (?q=) are kept out of the index — they're thin,
+ * near-duplicate listings — but their links are still followed.
+ */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}): Promise<Metadata> {
+  const { q } = await searchParams;
+  return q ? { ...blogMetadata, robots: { index: false, follow: true } } : blogMetadata;
+}
+
+const jsonLd = breadcrumbJsonLd([{ name: "Blog", path: "/blog" }]);
 
 export default async function BlogIndexPage({
   searchParams,
@@ -48,6 +67,7 @@ export default async function BlogIndexPage({
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PageBanner
         title={activeCategory?.name ?? activeTag?.name ?? "Blog"}
         crumbs={

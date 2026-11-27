@@ -20,5 +20,16 @@ export const siteConfig = {
   // staging deploy on its own subdomain).
   url: process.env.NEXT_PUBLIC_SITE_URL || SITE.url,
   defaultOgImage: "/images/hero-slide-1.jpg",
-  locale: "en_US",
+  locale: "en_IN",
+  /** Official profiles — also emitted as `sameAs` in the Organization JSON-LD. */
+  socialProfiles: [
+    "https://www.linkedin.com/company/thefysit/",
+    "https://www.facebook.com/profile.php?id=61552058424229",
+    "https://www.instagram.com/thefysit/",
+    "https://www.youtube.com/@thefysit",
+  ],
+  /** Analytics / Search Console IDs — set in the hosting environment, all optional. */
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "",
+  gaId: process.env.NEXT_PUBLIC_GA_ID || "",
+  googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
 } as const;

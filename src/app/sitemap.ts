@@ -8,6 +8,7 @@ import { listPublishedServiceSlugs } from "@/services/service.service";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteConfig.url, lastModified: new Date() },
+    { url: `${siteConfig.url}/about`, lastModified: new Date() },
     { url: `${siteConfig.url}/services`, lastModified: new Date() },
     // Published clinics, or the built-in pair (getWebsiteLocations never throws).
     ...(await getWebsiteLocations()).map((location) => ({

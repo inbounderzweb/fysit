@@ -15,22 +15,36 @@ import { PhysioServices } from "@/components/sections/PhysioServices";
 import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY } from "@/lib/content";
+import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY, SITE } from "@/lib/content";
 import { getHeroMedia } from "@/lib/hero-public";
 import { AboutTeam } from "@/components/sections/AboutTeam";
 
-export const metadata: Metadata = buildMetadata(
+const HOME_TITLE = `${siteConfig.name} | Physiotherapy Clinic in Bangalore`;
+
+const baseMetadata = buildMetadata(
   { canonical: siteConfig.url },
-  { title: siteConfig.name, description: siteConfig.description }
+  { title: HOME_TITLE, description: siteConfig.description }
 );
+
+// `absolute` skips the layout's "%s | The Fysit" template, which would
+// otherwise repeat the brand name.
+export const metadata: Metadata = { ...baseMetadata, title: { absolute: HOME_TITLE } };
 
 const jsonLd = [
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["Organization", "MedicalBusiness"],
+    "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
+    logo: `${siteConfig.url}/icon.png`,
+    image: `${siteConfig.url}${siteConfig.defaultOgImage}`,
     description: siteConfig.description,
+    telephone: SITE.phone,
+    email: SITE.email,
+    medicalSpecialty: "Physiotherapy",
+    areaServed: { "@type": "City", name: "Bangalore" },
+    sameAs: siteConfig.socialProfiles,
   },
   {
     "@context": "https://schema.org",

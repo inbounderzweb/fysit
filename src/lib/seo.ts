@@ -1,6 +1,20 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 
+/** schema.org BreadcrumbList for a page one or more levels below Home. */
+export function breadcrumbJsonLd(trail: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [{ name: "Home", path: "" }, ...trail].map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: `${siteConfig.url}${crumb.path}`,
+    })),
+  };
+}
+
 export type SeoFields = {
   title?: string | null;
   description?: string | null;
@@ -30,10 +44,16 @@ export function buildMetadata(fields: SeoFields, fallback: { title: string; desc
     keywords: fields.keywords ?? undefined,
     alternates: canonical ? { canonical } : undefined,
     robots: fields.robots ?? undefined,
+    // A page-level `openGraph` replaces the layout's block wholesale rather
+    // than merging into it, so type, locale and url are restated here or
+    // every page would lose them.
     openGraph: {
+      type: "website",
+      locale: siteConfig.locale,
+      url: canonical,
       title: fields.ogTitle || title,
       description: fields.ogDescription || description,
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      images: ogImage ? [{ url: ogImage, alt: fields.ogTitle || title }] : undefined,
       siteName: siteConfig.name,
     },
     twitter: {
