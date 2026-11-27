@@ -101,7 +101,7 @@ export const ABOUT = {
   statImage: "/images/stat-fill.jpg",
   statHeading: "Leading the Way in Physiotherapy",
   body: "At The Fysit, we are committed to helping you achieve optimal physical and mental well-being. We take a holistic approach to ensure lasting improvements in your overall health and quality of life.",
-  cta: { label: "Discover More", href: "#services" },
+  cta: { label: "Discover More", href: "/services" },
 } as const;
 
 /* -------------------------------------------------------------------------
@@ -704,7 +704,7 @@ export const BANNER = {
   eyebrow: "Why Choose Us",
   heading: { lead: "Leading the Way in", accent: "Physiotherapy" },
   body: "At Fysit, we go beyond traditional physiotherapy and step up our care by offering personalised solutions that meet your specific & diverse needs.",
-  cta: { label: "Discover More", href: "#services" },
+  cta: { label: "Discover More", href: "/services" },
   image: "/images/case-physio.jpg",
   imageAlt: "Physiotherapist stretching a patient’s leg on a treatment table",
   /** The floating label on the photo — the clinic's Google rating. */
