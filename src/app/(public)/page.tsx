@@ -19,11 +19,15 @@ import { MARQUEE_EMERGENCY, MARQUEE_PRIMARY, SITE } from "@/lib/content";
 import { getHeroMedia } from "@/lib/hero-public";
 import { AboutTeam } from "@/components/sections/AboutTeam";
 
-const HOME_TITLE = `${siteConfig.name} | Physiotherapy Clinic in Bangalore`;
+// Title and description carried over from the previous site, as the SEO team
+// set them, so the home page keeps the wording it already ranks with.
+const HOME_TITLE = `${siteConfig.name} - Physiotherapy Centre in Bangalore`;
+const HOME_DESCRIPTION =
+  "Discover the best physiotherapy centre in Bangalore for effective treatment and rehabilitation tailored to your needs.";
 
 const baseMetadata = buildMetadata(
   { canonical: siteConfig.url },
-  { title: HOME_TITLE, description: siteConfig.description }
+  { title: HOME_TITLE, description: HOME_DESCRIPTION }
 );
 
 // `absolute` skips the layout's "%s | The Fysit" template, which would
