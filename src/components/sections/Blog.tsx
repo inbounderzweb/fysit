@@ -1,17 +1,37 @@
-import Image from "next/image";
-import Link from "next/link";
-
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/animations/Reveal";
+import { BlogCard } from "@/components/blog/BlogCard";
 import { Container } from "@/components/ui/Container";
 import { EyebrowPill } from "@/components/ui/EyebrowPill";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { BLOG_AUTHOR, BLOG_HEADING, BLOG_POSTS } from "@/lib/content";
+import { BLOG_HEADING } from "@/lib/content";
+import { formatPostDate, toDateTimeAttr } from "@/lib/utils";
+import { listPublishedBlogPosts } from "@/services/blog.service";
+import { asPopulatedAuthor, asPopulatedTerm } from "@/types/blog";
+import { asPopulatedMedia } from "@/types/media";
+
+/** How many of the newest posts the home page shows. */
+const POST_COUNT = 3;
 
 /**
- * Figma 1:581 … 1:631 — three 417px cards. The date sits in a pill notched
- * into the foot of each image (nodes 1:601–1:604).
+ * The three most recently published posts from Admin → Blog, drawn with the
+ * same card as /blog. Returns null when the database can't be reached or
+ * nothing is published yet, so the home page never shows placeholder posts
+ * that link nowhere.
  */
-export function Blog() {
+async function getLatestPosts() {
+  try {
+    const { items } = await listPublishedBlogPosts({ limit: POST_COUNT });
+    return items;
+  } catch (error) {
+    console.error("Home blog section: could not load posts", error);
+    return [];
+  }
+}
+
+export async function Blog() {
+  const posts = await getLatestPosts();
+  if (posts.length === 0) return null;
+
   return (
     <section id="blog" className="bg-white pb-[64px] pt-[60px] lg:pb-[120px] lg:pt-[105px]">
       <Container>
@@ -26,45 +46,26 @@ export function Blog() {
 
         <StaggerGroup
           as="ul"
-          className="mt-[40px] grid list-none grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-[40px] grid list-none grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-3 lg:gap-[30px]"
         >
-          {BLOG_POSTS.map((post) => (
-            <StaggerItem as="li" key={post.id} className="h-full">
-              <article className="group flex h-full flex-col rounded-[10px] border border-line bg-white p-px">
-                <div className="relative overflow-hidden rounded-[9px]">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    width={415}
-                    height={356}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 415px"
-                    className="aspect-[415/356] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
-                  <p className="absolute bottom-0 left-[50px] rounded-t-[8px] bg-white px-[24px] py-[9px] text-[14px] leading-[19px] text-navy">
-                    <time dateTime={post.date}>{post.date}</time>
-                  </p>
-                </div>
+          {posts.map((post) => {
+            const image = asPopulatedMedia(post.featuredImage);
+            const author = asPopulatedAuthor(post.author);
 
-                <div className="flex flex-1 flex-col px-[35px] pb-[30px] pt-[29px]">
-                  <h3 className="text-[28px] leading-[39px] tracking-[-1.12px] text-navy">
-                    <Link
-                      href={post.href}
-                      className="transition-colors hover:text-teal"
-                    >
-                      {post.title}
-                    </Link>
-                  </h3>
-
-                  <div className="mt-auto flex items-center gap-[19px] pt-[28px] text-[14px] leading-[17px] text-body">
-                    <span>{BLOG_AUTHOR}</span>
-                    <span className="rounded-[6px] bg-mint px-[17px] py-[8px] text-navy">
-                      {post.category}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            </StaggerItem>
-          ))}
+            return (
+              <StaggerItem as="li" key={post.slug} className="h-full">
+                <BlogCard
+                  slug={post.slug}
+                  title={post.title}
+                  image={image ? { src: image.secureUrl, alt: image.altText ?? post.title } : null}
+                  date={formatPostDate(post.publishedAt)}
+                  dateTime={toDateTimeAttr(post.publishedAt)}
+                  author={author?.name ?? null}
+                  category={asPopulatedTerm(post.category)}
+                />
+              </StaggerItem>
+            );
+          })}
         </StaggerGroup>
       </Container>
     </section>

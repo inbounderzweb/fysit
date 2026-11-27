@@ -21,6 +21,13 @@ const siteSettingsSchema = new Schema(
       count: { type: Number, min: 0 },
       url: { type: String, trim: true },
     },
+    // Tracking and Search Console, managed by the SEO team. Each blank value
+    // falls back to its NEXT_PUBLIC_* environment variable (config/site.ts).
+    analytics: {
+      gtmId: { type: String, trim: true },
+      gaId: { type: String, trim: true },
+      googleSiteVerification: { type: String, trim: true },
+    },
     // The homepage banner behind the hero heading. "video" keeps the built-in
     // clip until one is uploaded; "image" shows the desktop/mobile pair.
     heroBanner: {

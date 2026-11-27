@@ -1,21 +1,21 @@
 import Script from "next/script";
 
-import { siteConfig } from "@/config/site";
+import { getAnalyticsSettings } from "@/services/settings.service";
 
 /**
  * Google Tag Manager or Google Analytics 4 for the public site only (admin
- * routes never load it). Driven by environment variables so the SEO team can
- * switch tracking on without a code change:
+ * routes never load it). The IDs come from Admin → Settings, falling back to
+ * the NEXT_PUBLIC_GTM_ID / NEXT_PUBLIC_GA_ID environment variables:
  *
- * - NEXT_PUBLIC_GTM_ID (e.g. GTM-XXXXXXX) — preferred; GA4 and any other tags
- *   are then managed inside the GTM container.
- * - NEXT_PUBLIC_GA_ID (e.g. G-XXXXXXXXXX) — used only when no GTM ID is set,
- *   so a GA4 tag set up inside GTM is never double-counted.
+ * - Tag Manager ID (GTM-XXXXXXX) — preferred; GA4 and any other tags are then
+ *   managed inside the GTM container.
+ * - GA4 Measurement ID (G-XXXXXXXXXX) — used only when no GTM ID is set, so a
+ *   GA4 tag set up inside GTM is never double-counted.
  *
  * With neither set, nothing is rendered.
  */
-export function Analytics() {
-  const { gtmId, gaId } = siteConfig;
+export async function Analytics() {
+  const { gtmId, gaId } = await getAnalyticsSettings();
 
   if (gtmId) {
     return (
